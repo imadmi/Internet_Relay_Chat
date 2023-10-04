@@ -4,7 +4,7 @@ SRC = main.cpp
 OBJ = $(SRC:.cpp=.o)
 FLAGS = -Wall -Wextra -Werror -std=c++98
 INC = irc_header.hpp
-NAME = ft_irc
+NAME = ircserv
 CC = c++
 
 all: $(NAME)
@@ -12,7 +12,7 @@ all: $(NAME)
 $(NAME): $(OBJ) $(INC)
 	@ $(CC) $(FLAGS) $(OBJ) -o $(NAME)
 	@ clear
-	@echo "\033[0;92m./ft_irc :\033[0m"
+	@echo "\033[0;92m./ircserv :\033[0m"
 
 clean:
 	@ rm -f $(OBJ)
