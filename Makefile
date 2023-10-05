@@ -13,7 +13,6 @@ $(NAME): $(OBJ) $(INC)
 	@ $(CC) $(FLAGS) $(OBJ) -o $(NAME)
 	@ clear
 	@echo "\033[0;92m./ircserv :\033[0m"
-	@./ircserv 6666 pass
 
 clean:
 	@ rm -f $(OBJ)
@@ -26,6 +25,7 @@ fclean: clean
 	@echo "\033[0;93mThe object files and the executable are removed.\033[0m"
 
 re: fclean $(NAME)
+	# @./ircserv 6666 pass
 
 %.o: %.cpp $(INC)
 	@$(CC) -c $< -o $@

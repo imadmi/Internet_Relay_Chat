@@ -29,6 +29,7 @@
 # define WHITE "\033[0;37m"
 
 # define BUFFER_SIZE 1000
+# define  MAX_CLIENTS 10
 
 class irc
 {
