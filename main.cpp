@@ -3,8 +3,14 @@
 
 
 
-int main(int argc, char const *argv[])
+int main(int ac, char const *argv[])
 {
+    if (ac != 3)
+    {
+        std::cerr << "try ./ircserv [port] [password]" << std::endl;
+        exit(EXIT_FAILURE);
+    }
+
     int server_sock_fd, connected_sock_fd[MAX_CLIENTS];
     struct sockaddr_in serverAddr, clientAddr;
     socklen_t clientLen = sizeof(clientAddr);
@@ -21,7 +27,7 @@ int main(int argc, char const *argv[])
     
     memset(&serverAddr, 0, sizeof(serverAddr));
     serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(std::atoi(argv[1]));
+    serverAddr.sin_port = htons(std::stoi(argv[1]));
     serverAddr.sin_addr.s_addr = INADDR_ANY;
 
     if (bind(server_sock_fd, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) < 0)
@@ -64,6 +70,7 @@ int main(int argc, char const *argv[])
                 activeClients++;
             }
         }
+        std::cout << "active clients " << activeClients << std::endl;
 
         // Use poll() to wait for events on server and client sockets
         
@@ -100,7 +107,7 @@ int main(int argc, char const *argv[])
             {
                 if (connected_sock_fd[i] != -1 && fds[i + 1].revents & POLLIN)
                 {
-                    memset(buffer, 0, BUFFER_SIZE);
+                    // memset(buffer, 0, BUFFER_SIZE);
                     int bytesRead = recv(connected_sock_fd[i], buffer, sizeof(buffer), 0);
                     if (bytesRead < 0)
                     {
@@ -114,7 +121,7 @@ int main(int argc, char const *argv[])
                     }
                     else
                     {
-                        std::cout << "Received from client #" << i + 1 << ": " << buffer << std::endl;
+                        std::cout << "Received from client # " << i + 1 << ": " << buffer << std::endl;
                         
                     }
                 }
