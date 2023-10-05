@@ -1,100 +1,86 @@
 #include "irc_header.hpp"
 
-// int main(int argc, char const *argv[])
-//
-// {
-// 	if (argc == 3)
-// 	{
-
-// 		return (0);
-// 	}
-// 	else
-// 	{
-// 		std::cout << "Try ./ircserv [port] [password] :)" << std::endl;
-// 		return (1);
-// 	}
-//     return (0);
-// }
-
-#include <iostream>
-#include <cstring>
-#include <cstdlib>
-#include <unistd.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-
-const int PORT = 6666;
-const int BUFFER_SIZE = 1024;
-
-int main()
+int main(int argc, char const *argv[])
 {
-    int serverSocket, clientSocket;
-    struct sockaddr_in serverAddr, clientAddr;
-    socklen_t clientLen = sizeof(clientAddr);
-    char buffer[BUFFER_SIZE];
 
-    // Create socket
-    serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-    if (serverSocket < 0)
-    {
-        perror("socket");
-        exit(EXIT_FAILURE);
-    }
+	if (argc == 3)
+	{
+        int server_sock_fd, connected_sock_fd;
+        struct sockaddr_in serverAddr, clientAddr;
+        socklen_t clientLen = sizeof(clientAddr);
+        char buffer[BUFFER_SIZE];
 
-    // Bind to a specific IP address and port
-    memset(&serverAddr, 0, sizeof(serverAddr));
-    serverAddr.sin_family = AF_INET;
-    serverAddr.sin_port = htons(PORT);
-    serverAddr.sin_addr.s_addr = INADDR_ANY;
-
-    if (bind(serverSocket, (struct sockaddr*)&serverAddr, sizeof(serverAddr)) < 0)
-    {
-        perror("bind");
-        exit(EXIT_FAILURE);
-    }
-
-    // Listen for incoming connections
-    if (listen(serverSocket, 1) < 0)
-    {
-        perror("listen");
-        exit(EXIT_FAILURE);
-    }
-
-    std::cout << "Waiting for a connection..." << std::endl;
-
-    // Accept a connection from a client
-    clientSocket = accept(serverSocket, (struct sockaddr*)&clientAddr, &clientLen);
-    if (clientSocket < 0)
-    {
-        perror("accept");
-        exit(EXIT_FAILURE);
-    }
-
-    std::cout << "Connected to a client." << std::endl;
-
-    // Read data from the client and process it
-    while (true)
-    {
-        memset(buffer, 0, BUFFER_SIZE);
-        int bytesRead = recv(clientSocket, buffer, sizeof(buffer), 0);
-        if (bytesRead < 0)
+        // Create socket
+        server_sock_fd = socket(AF_INET, SOCK_STREAM, 0);
+        if (server_sock_fd < 0)
         {
-            perror("recv");
+            perror("socket");
             exit(EXIT_FAILURE);
-        } else if (bytesRead == 0)
-        {
-            std::cout << "Connection closed by the client." << std::endl;
-            break;
         }
 
-        std::cout << "Received: " << buffer << std::endl;
+        // Bind to a specific IP address and port
 
-        // Add your processing logic here
-    }
+        // memset(&serverAddr, 0, sizeof(serverAddr));
+        serverAddr.sin_family = AF_INET;
+        serverAddr.sin_port = htons(std::atoi(argv[1]));
+        serverAddr.sin_addr.s_addr = INADDR_ANY;
 
-    // Close the sockets
-    close(clientSocket);
-    close(serverSocket);
+        if (bind(server_sock_fd, (struct sockaddr*)&serverAddr, clientLen) < 0)
+        {
+            perror("bind");
+            exit(EXIT_FAILURE);
+        }
 
-    return 0;
+        // Listen for incoming connections
+        if (listen(server_sock_fd, 2) < 0)
+        {
+            perror("listen");
+            exit(EXIT_FAILURE);
+        }
+
+        std::cout << "Waiting for a connection..." << std::endl;
+
+        // Accept a connection from a client
+        connected_sock_fd = accept(server_sock_fd, (struct sockaddr*)&clientAddr, &clientLen);
+        if (connected_sock_fd < 0)
+        {
+            perror("accept");
+            exit(EXIT_FAILURE);
+        }
+
+        std::cout << "Connected to a client." << std::endl;
+
+        // Read data from the client and process it
+        while (true)
+        {
+            memset(buffer, 0, BUFFER_SIZE);
+            int bytesRead = recv(connected_sock_fd, buffer, sizeof(buffer), 0);
+            if (bytesRead < 0)
+            {
+                perror("recv");
+                exit(EXIT_FAILURE);
+            }
+            else if (bytesRead == 0)
+            {
+                // std::cout << "Connection closed by the client." << std::endl;
+                // break;
+            }
+
+            std::cout << "Received: " << buffer << std::endl;
+
+            // Add your processing logic here
+        }
+
+        // Close the sockets
+        close(connected_sock_fd);
+        close(server_sock_fd);
+		
+        return (EXIT_SUCCESS);
+	}
+	else
+	{
+		std::cout << "Try ./ircserv [port] [password] :)" << std::endl;
+		return (EXIT_FAILURE);
+	}
+    return (EXIT_SUCCESS);
 }
