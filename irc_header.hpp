@@ -16,7 +16,6 @@
 # include <string>
 # include <cerrno>
 # include <ctime>
-#define IMAD 1
 class irc
 {
     private:
