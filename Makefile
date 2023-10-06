@@ -1,6 +1,6 @@
 
 
-SRC = main.cpp
+SRC = main.cpp clients.cpp
 OBJ = $(SRC:.cpp=.o)
 FLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
 INC = irc_header.hpp

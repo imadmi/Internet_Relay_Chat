@@ -11,6 +11,8 @@ int main(int ac, char const *argv[])
         exit(EXIT_FAILURE);
     }
 
+    Irc irc;
+
     int server_sock_fd, connected_sock_fd[MAX_CLIENTS];
     struct sockaddr_in serverAddr, clientAddr;
     socklen_t clientLen = sizeof(clientAddr);
@@ -58,9 +60,8 @@ int main(int ac, char const *argv[])
 
         
         fds[0].fd = server_sock_fd;
-        fds[0].events = POLLIN;
+        fds[0].events = POLLIN; // POLLIN : There is data to read.
 
-        
         for (int i = 0; i < MAX_CLIENTS; ++i)
         {
             if (connected_sock_fd[i] != -1)
@@ -74,7 +75,7 @@ int main(int ac, char const *argv[])
 
         // Use poll() to wait for events on server and client sockets
         
-        int pollResult = poll(fds, activeClients + 1, -1);
+        int pollResult = poll(fds, activeClients + 1, -1); //  -1 : no timeout
 
         if (pollResult < 0)
         {
@@ -92,12 +93,17 @@ int main(int ac, char const *argv[])
                     if (connected_sock_fd[i] == -1)
                     {
                         connected_sock_fd[i] = accept(server_sock_fd, (struct sockaddr*)&clientAddr, &clientLen);
+                        
+
                         if (connected_sock_fd[i] < 0)
                         {
                             perror("accept");
                             continue;
                         }
-                        std::cout << "Accepted connection from client #" << i + 1 << std::endl;
+                        
+                        irc.add_new_client(connected_sock_fd[i]);
+
+                        std::cout << GREEN << "Accepted connection from client # " << i + 1 << RESET << std::endl;
                         break;
                     }
                 }
@@ -107,7 +113,7 @@ int main(int ac, char const *argv[])
             {
                 if (connected_sock_fd[i] != -1 && fds[i + 1].revents & POLLIN)
                 {
-                    // memset(buffer, 0, BUFFER_SIZE);
+                    memset(buffer, 0, BUFFER_SIZE);
                     int bytesRead = recv(connected_sock_fd[i], buffer, sizeof(buffer), 0);
                     if (bytesRead < 0)
                     {
@@ -115,7 +121,7 @@ int main(int ac, char const *argv[])
                     }
                     else if (bytesRead == 0)
                     {
-                        std::cout << "Connection closed by client #" << i + 1 << std::endl;
+                        std::cout << "Connection closed by client # " << i + 1 << std::endl;
                         close(connected_sock_fd[i]);
                         connected_sock_fd[i] = -1;
                     }
