@@ -8,10 +8,9 @@ int main(int ac, char const *argv[])
         exit(EXIT_FAILURE);
     }
 
-    Irc irc;
-
-    int server_sock_fd, connected_sock_fd[MAX_CLIENTS];
-    struct sockaddr_in serverAddr, clientAddr;
+    int server_sock_fd;
+    std::vector<int> connected_sock_fd(MAX_CLIENTS);
+    sockaddr_in serverAddr, clientAddr;
     socklen_t clientLen = sizeof(clientAddr);
     char buffer[BUFFER_SIZE];
 
@@ -26,7 +25,12 @@ int main(int ac, char const *argv[])
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(std::stoi(argv[1]));
     serverAddr.sin_addr.s_addr = INADDR_ANY;
-
+    // to prevent the adress already in use error
+    int reuse = 1;
+    if (setsockopt(server_sock_fd, SOL_SOCKET, SO_REUSEADDR, &reuse, sizeof(reuse)) == -1)
+    {
+        perror("setsockopt(SO_REUSEADDR) failed");
+    }
     if (bind(server_sock_fd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
     {
         perror("bind");
