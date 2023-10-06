@@ -36,7 +36,7 @@ fclean: clean
 	@echo "\033[0;93mThe object files and the executable are removed.\033[0m"
 
 re: fclean $(NAME)
-	# @./ircserv 6666 pass
+	@./ircserv 6778 pass
 
 
 

@@ -1,12 +1,22 @@
 #include "../headers/irc_header.hpp"
 
+void	signal_handler(int signal)
+{
+	(void)signal;
+	std::cout << RED << "BYE BYE" << RESET << std::flush;
+    exit(EXIT_SUCCESS);
+}
+
+
 int main(int ac, char const *argv[])
 {
     if (ac != 3)
     {
-        std::cerr << "try ./ircserv [port] [password]" << std::endl;
+        std::cerr << RED << "try ./ircserv [port] [password]" << RESET << std::endl;
         exit(EXIT_FAILURE);
     }
+
+    signal(SIGINT, signal_handler);
 
     Irc irc;
 
@@ -46,7 +56,7 @@ int main(int ac, char const *argv[])
         exit(EXIT_FAILURE);
     }
 
-    std::cout << "Waiting for a connection..." << std::endl;
+    std::cout << BLUE << "Waiting for a connection..." << RESET << std::endl;
 
     for (int i = 0; i < MAX_CLIENTS; ++i)
     {
@@ -63,7 +73,7 @@ int main(int ac, char const *argv[])
 
         for (int i = 0; i < MAX_CLIENTS; ++i)
         {
-            std::cout << connected_sock_fd[i] << std::endl;
+            // std::cout << connected_sock_fd[i] << std::endl;
             if (connected_sock_fd[i] != -1)
             {
                 fds[activeClients + 1].fd = connected_sock_fd[i];
@@ -83,38 +93,54 @@ int main(int ac, char const *argv[])
             exit(EXIT_FAILURE);
         }
 
-        if (pollResult > 0)
+        if (fds[0].revents & POLLIN)
         {
-
-            if (fds[0].revents & POLLIN)
-            {
-                for (int i = 0; i < MAX_CLIENTS; ++i)
-                {
-                    if (connected_sock_fd[i] == -1)
-                    {
-                        connected_sock_fd[i] = accept(server_sock_fd, (struct sockaddr*)&clientAddr, &clientLen);
-                        
-
-                        if (connected_sock_fd[i] < 0)
-                        {
-                            perror("accept");
-                            continue;
-                        }
-                        
-                        irc.add_new_client(connected_sock_fd[i]);
-
-                        std::cout << GREEN << "Accepted connection from client # " << i + 1 << RESET << std::endl;
-                        break;
-                    }
-                }
-            }
-
             for (int i = 0; i < MAX_CLIENTS; ++i)
             {
-                if (connected_sock_fd[i] != -1 && fds[i + 1].revents & POLLIN)
+                if (connected_sock_fd[i] == -1)
+                {
+                    connected_sock_fd[i] = accept(server_sock_fd, (struct sockaddr*)&clientAddr, &clientLen);
+                    
+
+                    if (connected_sock_fd[i] < 0)
+                    {
+                        perror("accept");
+                        continue;
+                    }
+                    
+                    irc.add_new_client(connected_sock_fd[i]);
+
+                    std::cout << GREEN << "Accepted connection from client # " << i + 1 << RESET << std::endl;
+                    break;
+                }
+            }
+        }
+
+
+        activeClients = 0;
+        for (int i = 0; i < MAX_CLIENTS; ++i)
+        {
+            // std::cout << connected_sock_fd[i] << std::endl;
+            if (connected_sock_fd[i] != -1)
+            {
+                fds[activeClients + 1].fd = connected_sock_fd[i];
+                fds[activeClients + 1].events = POLLIN;
+                activeClients++;
+            }
+        }
+
+
+        for (int i = 0; i < MAX_CLIENTS; ++i)
+        {
+            if (fds[i + 1].revents & POLLIN)
+            {
+                if (connected_sock_fd[i] != -1)
                 {
                     memset(buffer, 0, BUFFER_SIZE);
                     int bytesRead = recv(connected_sock_fd[i], buffer, sizeof(buffer), 0);
+                    
+                    // i should copy the buffer to the struct here
+
                     if (bytesRead < 0)
                     {
                         perror("recv");
@@ -128,12 +154,13 @@ int main(int ac, char const *argv[])
                         irc.remove_client(connected_sock_fd[i]);
                         
                         connected_sock_fd[i] = -1;
+                        i = 0;
                     }
                     else
                     {
-                        std::cout << PURPLE << "Received from client # [" << i + 1 << " / " << activeClients<< "]: " << buffer << RESET << std::endl;
+                        // buffer[bytesRead] = '\0';
+                        std::cout << PURPLE << "Client [" << i + 1 << "/" << activeClients<< "]: " << buffer << RESET << std::flush;
                     }
-
                 }
             }
         }
