@@ -1,4 +1,4 @@
-#include "irc_header.hpp"
+#include "../headers/irc_header.hpp"
 
 
 void Irc::add_new_client(int client_fd)

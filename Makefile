@@ -1,21 +1,32 @@
 
 
-SRC = main.cpp clients.cpp
-OBJ = $(SRC:.cpp=.o)
-FLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
-INC = irc_header.hpp
 NAME = ircserv
-CC = c++
+# FLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
+CC = c++  
+OBJ_DIR = obj
+SRC_DIR = src
+HEADER_DIR = headers
 
 all: $(NAME)
 
-$(NAME): $(OBJ) $(INC)
-	@ $(CC) $(FLAGS) $(OBJ) -o $(NAME)
-	@ clear
-	@echo "\033[0;92m./ircserv :\033[0m"
+SRC = $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/*/*.cpp) $(wildcard $(SRC_DIR)/*/*/*.cpp)
+
+OBJ = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
+
+HEADER = $(wildcard $(HEADER_DIR)/*.h)
+
+$(NAME): $(OBJ) $(HEADER)
+	@$(CC) $(FLAGS) $(OBJ) -o $@
+	@clear
+	@echo "\033[0;92m./$(NAME) :\033[0m"
+
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER)
+	@mkdir -p $(@D)
+	$(CC) $(FLAGS) -c $< -o $@
+
 
 clean:
-	@ rm -f $(OBJ)
+	@ rm -rf $(OBJ_DIR)
 	@ clear
 	@echo "\033[0;93mObject files removed.\033[0m"
 
@@ -27,7 +38,8 @@ fclean: clean
 re: fclean $(NAME)
 	# @./ircserv 6666 pass
 
-%.o: %.cpp $(INC)
-	@$(CC) -c $< -o $@
+
 
 .PHONY: all clean fclean re
+
+
