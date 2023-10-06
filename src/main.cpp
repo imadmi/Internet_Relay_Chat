@@ -154,7 +154,7 @@ int main(int ac, char const *argv[])
                         irc.remove_client(connected_sock_fd[i]);
 
                         connected_sock_fd[i] = -1;
-                        i = 0;
+                        i = 1;
                     }
                     else
                     {
