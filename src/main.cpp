@@ -21,11 +21,18 @@ int main(int ac, char const *argv[])
         perror("socket");
         exit(EXIT_FAILURE);
     }
+	
+    int optvalue = 1; // enables the re-use of a port if the IP address is different
+	if (setsockopt(server_sock_fd, SOL_SOCKET, SO_REUSEADDR, &optvalue, sizeof(optvalue)) == -1)
+	{
+		std::cerr << RED << "Impossible to reuse the address" << RESET << std::endl;
+        exit(EXIT_FAILURE);
+	}
 
     memset(&serverAddr, 0, sizeof(serverAddr));
     serverAddr.sin_family = AF_INET;
     serverAddr.sin_port = htons(std::stoi(argv[1]));
-    serverAddr.sin_addr.s_addr = INADDR_ANY;
+    serverAddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 
     if (bind(server_sock_fd, (struct sockaddr *)&serverAddr, sizeof(serverAddr)) < 0)
     {
@@ -56,6 +63,7 @@ int main(int ac, char const *argv[])
 
         for (int i = 0; i < MAX_CLIENTS; ++i)
         {
+            std::cout << connected_sock_fd[i] << std::endl;
             if (connected_sock_fd[i] != -1)
             {
                 fds[activeClients + 1].fd = connected_sock_fd[i];
@@ -63,7 +71,7 @@ int main(int ac, char const *argv[])
                 activeClients++;
             }
         }
-        std::cout << "active clients " << activeClients << std::endl;
+        // std::cout << "active clients " << activeClients << std::endl;
 
         // Use poll() to wait for events on server and client sockets
         
@@ -110,17 +118,22 @@ int main(int ac, char const *argv[])
                     if (bytesRead < 0)
                     {
                         perror("recv");
+                        exit(EXIT_FAILURE);
                     }
                     else if (bytesRead == 0)
                     {
-                        std::cout << "Connection closed by client # " << i + 1 << std::endl;
+                        std::cout << YELLOW << "client # " << i + 1  << " disconnected" << RESET << std::endl;
                         close(connected_sock_fd[i]);
+                        
+                        irc.remove_client(connected_sock_fd[i]);
+                        
                         connected_sock_fd[i] = -1;
                     }
                     else
                     {
-                        std::cout << "Received from client # " << i + 1 << ": " << buffer << std::endl;
+                        std::cout << PURPLE << "Received from client # [" << i + 1 << " / " << activeClients<< "]: " << buffer << RESET << std::endl;
                     }
+
                 }
             }
         }
