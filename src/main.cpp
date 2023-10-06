@@ -31,13 +31,13 @@ int main(int ac, char const *argv[])
         perror("socket");
         exit(EXIT_FAILURE);
     }
-	
+
     int optvalue = 1; // enables the re-use of a port if the IP address is different
-	if (setsockopt(server_sock_fd, SOL_SOCKET, SO_REUSEADDR, &optvalue, sizeof(optvalue)) == -1)
-	{
-		std::cerr << RED << "Impossible to reuse the address" << RESET << std::endl;
+    if (setsockopt(server_sock_fd, SOL_SOCKET, SO_REUSEADDR, &optvalue, sizeof(optvalue)) == -1)
+    {
+        std::cerr << RED << "Impossible to reuse the address" << RESET << std::endl;
         exit(EXIT_FAILURE);
-	}
+    }
 
     memset(&serverAddr, 0, sizeof(serverAddr));
     serverAddr.sin_family = AF_INET;
@@ -84,7 +84,7 @@ int main(int ac, char const *argv[])
         // std::cout << "active clients " << activeClients << std::endl;
 
         // Use poll() to wait for events on server and client sockets
-        
+
         int pollResult = poll(fds, activeClients + 1, -1); //  -1 : no timeout
 
         if (pollResult < 0)
@@ -148,11 +148,11 @@ int main(int ac, char const *argv[])
                     }
                     else if (bytesRead == 0)
                     {
-                        std::cout << YELLOW << "client # " << i + 1  << " disconnected" << RESET << std::endl;
+                        std::cout << YELLOW << "client # " << i + 1 << " disconnected" << RESET << std::endl;
                         close(connected_sock_fd[i]);
-                        
+
                         irc.remove_client(connected_sock_fd[i]);
-                        
+
                         connected_sock_fd[i] = -1;
                         i = 0;
                     }

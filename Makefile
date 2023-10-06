@@ -18,7 +18,8 @@ HEADER = $(wildcard $(HEADER_DIR)/*.h)
 $(NAME): $(OBJ) $(HEADER)
 	@$(CC) $(FLAGS) $(OBJ) -o $@
 	@clear
-	@echo "\033[0;92m./$(NAME) :\033[0m"
+	@echo ./$(NAME) "\033[0;31m9898\033[0m pass"
+	@./$(NAME) 9898 pass
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER)
 	@mkdir -p $(@D)
