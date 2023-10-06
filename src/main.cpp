@@ -49,7 +49,6 @@ int main(int ac, char const *argv[])
         perror("bind");
         exit(EXIT_FAILURE);
     }
-
     if (listen(server_sock_fd, MAX_CLIENTS) < 0)
     {
         perror("listen");
@@ -65,6 +64,7 @@ int main(int ac, char const *argv[])
 
     while (true)
     {
+
         struct pollfd fds[MAX_CLIENTS + 1];
         int activeClients = 0;
 
@@ -73,7 +73,7 @@ int main(int ac, char const *argv[])
 
         for (int i = 0; i < MAX_CLIENTS; ++i)
         {
-            // std::cout << connected_sock_fd[i] << std::endl;
+            // std::cout << connected_sock_fd[i] ;
             if (connected_sock_fd[i] != -1)
             {
                 fds[activeClients + 1].fd = connected_sock_fd[i];
@@ -116,7 +116,6 @@ int main(int ac, char const *argv[])
             }
         }
 
-
         activeClients = 0;
         for (int i = 0; i < MAX_CLIENTS; ++i)
         {
@@ -154,7 +153,6 @@ int main(int ac, char const *argv[])
                         irc.remove_client(connected_sock_fd[i]);
 
                         connected_sock_fd[i] = -1;
-                        i = 1;
                     }
                     else
                     {
