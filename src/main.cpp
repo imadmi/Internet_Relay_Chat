@@ -71,7 +71,8 @@ int main(int ac, char const *argv[])
         fds[0].fd = server_sock_fd;
         fds[0].events = POLLIN; // POLLIN : There is data to read.
 
-        for (int i = 0; i < MAX_CLIENTS; ++i)
+
+        for (int i = 2; i < MAX_CLIENTS; ++i)
         {
             // std::cout << connected_sock_fd[i] ;
             if (connected_sock_fd[i] != -1)
@@ -81,9 +82,10 @@ int main(int ac, char const *argv[])
                 activeClients++;
             }
         }
-        // std::cout << "active clients " << activeClients << std::endl;
+        // std::cout << "active clients " << activeClients;
 
         // Use poll() to wait for events on server and client sockets
+        
 
         int pollResult = poll(fds, activeClients + 1, -1); //  -1 : no timeout
 
@@ -128,6 +130,7 @@ int main(int ac, char const *argv[])
             }
         }
 
+        // start:
 
         for (int i = 0; i < MAX_CLIENTS; ++i)
         {
@@ -153,6 +156,8 @@ int main(int ac, char const *argv[])
                         irc.remove_client(connected_sock_fd[i]);
 
                         connected_sock_fd[i] = -1;
+                        
+                        // goto start;
                     }
                     else
                     {
