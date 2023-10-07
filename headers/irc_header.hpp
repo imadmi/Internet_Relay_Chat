@@ -17,6 +17,7 @@
 #include <string>
 #include <cerrno>
 #include <ctime>
+#include "channel.hpp"
 
 /* colors */
 #define RESET "\033[0m"
@@ -31,10 +32,11 @@
 #define BUFFER_SIZE 1000
 #define MAX_CLIENTS 10
 
+class Channel;
 class Client
 {
 private:
-    int _socket_fd;
+    // int _socket_fd;
     std::string _username;
     std::string _nickname;
     std::vector<pollfd> poll_fds;
@@ -49,9 +51,10 @@ class Irc
 {
 private:
     std::map<const int, Client> _clients;
-    std::map<std::string, Channel> _channels;
 
 public:
+    std::map<std::string, Channel> channels;
     void add_new_client(int client_fd);
     void remove_client(int client_fd);
+    Client &get_client(int client_fd);
 };

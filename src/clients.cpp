@@ -1,5 +1,5 @@
 #include "../headers/irc_header.hpp"
-#include "../headers/Channel.hpp"
+#include "../headers/channel.hpp"
 
 void Irc::add_new_client(int client_fd)
 {
@@ -26,4 +26,9 @@ int Client::join_channel(Channel &channel)
         return (1);
     _channels.insert(std::pair<std::string, Channel>(channel.get_name(), channel));
     return (0);
+}
+
+Client &Irc::get_client(int client_fd)
+{
+    return _clients[client_fd];
 }

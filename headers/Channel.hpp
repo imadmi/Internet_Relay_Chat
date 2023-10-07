@@ -6,7 +6,7 @@
 /*   By: otait-ta <otait-ta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 14:36:54 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/07 11:27:10 by otait-ta         ###   ########.fr       */
+/*   Updated: 2023/10/07 12:55:58 by otait-ta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 #include "irc_header.hpp"
 #include <map>
 
+class Client;
 class Channel
 {
 private:

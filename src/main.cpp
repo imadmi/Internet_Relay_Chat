@@ -1,5 +1,5 @@
 #include "../headers/irc_header.hpp"
-
+#include "../headers/exec.hpp"
 int main(int ac, char const *argv[])
 {
     if (ac != 3)
@@ -130,7 +130,8 @@ int main(int ac, char const *argv[])
                     }
                     else
                     {
-                        std::cout << PURPLE << "Received from client # [" << i + 1 << " / " << activeClients << "]: " << buffer << RESET << std::endl;
+                        // std::cout << PURPLE << "Received from client # [" << i + 1 << " / " << activeClients << "]: " << buffer << RESET << std::endl;
+                        excute_command(buffer, irc.get_client(connected_sock_fd[i]), irc.channels);
                     }
                 }
             }
