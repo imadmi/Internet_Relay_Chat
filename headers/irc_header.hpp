@@ -76,7 +76,7 @@ class Irc
 
         void addClient();
         
-        void printc();
+        void printc(std::string, std::string,int);
 
         
         // void add_new_client(int client_fd);

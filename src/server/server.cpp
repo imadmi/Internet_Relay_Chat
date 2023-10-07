@@ -10,8 +10,8 @@ Irc::Irc(int port, char *password)
     bindSocket();
     listeningToClients();
 
-    std::cout << GREEN << "IRC Server is running on port " << _port << RESET << std::endl;
-
+    printc("IRC Server is running on port", BLUE, 0);
+    
 }
 
 void Irc::createSocket()
@@ -108,15 +108,12 @@ void Irc::runServer()
 
                     int bytesRead = recv(_pollfds[i].fd, buffer, sizeof(buffer) - 1, 0);
 
-                    // copy the message to he class 
-                    
                     if (bytesRead <= 0)
                     {
                         // Handle client disconnection or error
                         if (bytesRead == 0)
                         {
-                            // Client disconnected
-                            std::cout << "Client " << _pollfds[i].fd << " disconnected." << std::endl;
+                            std::cout << BLUE << "Client " << _pollfds[i].fd << " disconnected." << RESET << std::endl;
                         }
                         else
                         {
@@ -133,20 +130,21 @@ void Irc::runServer()
                     {
                         // Process the received message
                         std::string message(buffer);
-                        std::cout << "Received from client " << _pollfds[i].fd << ": " << message << std::endl;
+                        std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "/" << _pollfds.size() << "] : " << message << std::endl;
 
-                        // Handle the received message here
+                        // Handle the received message here                     // copy the message to he the client class 
                         // You can implement your message processing logic within this block
                     }
                 }
                 else if (_pollfds[i].revents & POLLHUP)
                 {
                     // Handle client disconnection
-                    std::cout << "Client " << _pollfds[i].fd << " disconnected." << std::endl;
+                    std::cout << BLUE << "Client " << _pollfds[i].fd << " disconnected." << RESET << std::endl;
 
                     // Close the socket and remove it from the poll list
                     close(_pollfds[i].fd);
                     _pollfds.erase(_pollfds.begin() + i);
+                    
                     // Decrement i to account for the removed socket
                     --i;
                 }
@@ -164,26 +162,16 @@ void Irc::addClient()
     _newSocket = accept(_serverSocket, (struct sockaddr*)&clientAddr, &clientAddrLen);
 
     if (_newSocket < 0)
-    {
-        std::cerr << RED << "Error accepting client connection: " << strerror(errno) << RESET << std::endl;
-        return;
-    }
+        printc("Error accepting client connection" , RED, 1);
 
     // Set the new socket to non-blocking mode
     int flags = fcntl(_newSocket, F_GETFL, 0);
     if (flags < 0)
-    {
-        std::cerr << RED << "Error getting socket flags: " << strerror(errno) << RESET << std::endl;
-        close(_newSocket);
-        return;
-    }
+        printc("Error getting socket flags", RED, 1);
+
     flags |= O_NONBLOCK;
     if (fcntl(_newSocket, F_SETFL, flags) < 0)
-    {
-        std::cerr << RED << "Error setting socket to non-blocking mode: " << strerror(errno) << RESET << std::endl;
-        close(_newSocket);
-        return;
-    }
+        printc("Error setting socket to non-blocking mode", RED, 1);
 
 	Client new_client;
 
@@ -195,3 +183,9 @@ void Irc::addClient()
 }
 
 
+void Irc::printc(std::string msg, std::string color,int ex)
+{
+    std::cout << color << msg << RESET << std::endl;
+    if (ex)
+        exit(EXIT_SUCCESS);
+}
