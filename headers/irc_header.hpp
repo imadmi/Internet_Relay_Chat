@@ -35,6 +35,7 @@
 class Client
 {
     private:
+        char buffer[BUFFER_SIZE];
         int _socket_fd;
         std::string _username;
         std::string _nickname;
@@ -75,6 +76,8 @@ class Irc
 
         void addClient();
         
+        void printc();
+
         
         // void add_new_client(int client_fd);
         // void remove_client(int client_fd);
