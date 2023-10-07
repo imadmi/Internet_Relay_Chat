@@ -38,17 +38,18 @@ private:
     std::string _username;
     std::string _nickname;
     std::vector<pollfd> poll_fds;
-    std::map<std::string, int> _channels;
+    std::map<std::string, Channel> _channels;
 
 public:
     std::string get_nickname();
-    int join_channel(std::string channel_name);
+    int join_channel(Channel &channel);
 };
 
 class Irc
 {
 private:
     std::map<const int, Client> _clients;
+    std::map<std::string, Channel> _channels;
 
 public:
     void add_new_client(int client_fd);
