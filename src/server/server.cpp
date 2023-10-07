@@ -113,7 +113,9 @@ void Irc::runServer()
                         // Handle client disconnection or error
                         if (bytesRead == 0)
                         {
-                            std::cout << BLUE << "Client " << _pollfds[i].fd << " disconnected." << RESET << std::endl;
+                            std::cout << YELLOW << "Client " << _pollfds[i].fd << " disconnected." << RESET << std::endl;
+                            // close(_pollfds[i].fd);
+                            // _pollfds.erase(_pollfds.begin() + i);
                         }
                         else
                         {
@@ -130,7 +132,7 @@ void Irc::runServer()
                     {
                         // Process the received message
                         std::string message(buffer);
-                        std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "/" << _pollfds.size() << "] : " << message << std::endl;
+                        std::cout << BLUE << "Received from client [" << _pollfds[i].fd - 3 << "/" << _pollfds.size() - 1 << "] : " << message << std::flush;
 
                         // Handle the received message here                     // copy the message to he the client class 
                         // You can implement your message processing logic within this block
@@ -178,8 +180,10 @@ void Irc::addClient()
     pollfd client_pollfd = {_newSocket, POLLIN | POLLOUT, 0};
 	_pollfds.push_back(client_pollfd);
 
-	_clients.insert(std::pair<std::string, Client>("static_cast<std::string>_newSocket", new_client)); // insert a new nod in client map with the fd as key
-	std::cout << PURPLE << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
+
+
+	_clients.insert(std::pair<std::string, Client>(std::to_string(_newSocket), new_client)); // insert a new nod in client map with the fd as key
+	std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
 }
 
 
