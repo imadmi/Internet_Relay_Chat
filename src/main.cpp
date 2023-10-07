@@ -63,7 +63,7 @@ int main(int ac, char const *argv[])
 
         for (int i = 0; i < MAX_CLIENTS; ++i)
         {
-            std::cout << connected_sock_fd[i] << std::endl;
+            // std::cout << connected_sock_fd[i] << std::endl;
             if (connected_sock_fd[i] != -1)
             {
                 fds[activeClients + 1].fd = connected_sock_fd[i];
