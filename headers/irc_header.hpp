@@ -76,7 +76,9 @@ class Irc
 
 
         void addClient();
-        
+
+        void Handle_activity();
+
         void printc(std::string, std::string,int);
 
         void buffer_msg();
