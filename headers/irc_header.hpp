@@ -60,8 +60,6 @@ class Irc
         std::vector<pollfd> _pollfds;
         std::map<std::string , Client> _clients;
 
-        // std::vector<Client> _clients;
-
     public:
         std::map<std::string , Client> _chanels;
 
@@ -74,7 +72,6 @@ class Irc
 
         void runServer();
 
-
         void addClient();
 
         void Handle_activity();
@@ -82,6 +79,7 @@ class Irc
         void printc(std::string, std::string,int);
 
         void buffer_msg();
+
         // void add_new_client(int client_fd);
         // void remove_client(int client_fd);
 };
