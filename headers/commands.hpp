@@ -1,7 +1,7 @@
 #pragma once
 
 #include "irc_header.hpp"
-#include "channel.hpp"
+#include "Channel.hpp"
 
 /**
  * @brief execute the command given by the client

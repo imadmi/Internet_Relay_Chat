@@ -17,7 +17,7 @@
 #include <string>
 #include <cerrno>
 #include <ctime>
-#include "channel.hpp"
+#include "Channel.hpp"
 #include <fcntl.h>
 
 /* colors */
@@ -39,10 +39,10 @@ class Client
 private:
     std::string _buffer;
     // char _buffer[BUFFER_SIZE];
-    int _socket_fd;
+    // int _socket_fd;
     std::string _username;
     std::string _nickname;
-    std::map<std::string, int> _channels;
+    std::map<std::string, Channel> _channels;
 
 public:
     std::string get_nickname();

@@ -6,11 +6,11 @@
 /*   By: otait-ta <otait-ta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:46:19 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/08 10:52:45 by otait-ta         ###   ########.fr       */
+/*   Updated: 2023/10/08 17:06:20 by otait-ta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/channel.hpp"
+#include "../../headers/Channel.hpp"
 #include "../../headers/irc_header.hpp"
 
 Channel::Channel(std::string channel_name)

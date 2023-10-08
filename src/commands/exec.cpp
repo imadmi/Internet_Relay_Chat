@@ -6,12 +6,12 @@
 /*   By: otait-ta <otait-ta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 11:51:53 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/08 10:19:38 by otait-ta         ###   ########.fr       */
+/*   Updated: 2023/10/08 17:09:20 by otait-ta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/irc_header.hpp"
-#include "../../headers/channel.hpp"
+#include "../../headers/Channel.hpp"
 #include "../../headers/commands.hpp"
 
 void excute_command(std::string command, Client &client, std::map<std::string, Channel> &channels)
