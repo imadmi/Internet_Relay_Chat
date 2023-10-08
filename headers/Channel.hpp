@@ -6,7 +6,7 @@
 /*   By: otait-ta <otait-ta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 14:36:54 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/07 12:55:58 by otait-ta         ###   ########.fr       */
+/*   Updated: 2023/10/08 10:46:39 by otait-ta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,5 +53,5 @@ public:
      * @param client to remove.
      * @return status of the operation (0 if success).
      */
-    int remove(Client &client);
+    int remove_client(Client &client);
 };
