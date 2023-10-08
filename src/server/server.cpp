@@ -164,7 +164,7 @@ void Irc::Handle_activity()
 
                 std::string message(buffer);
 
-                excute_command(message, _clients[std::to_string(_pollfds[i].fd)], _channels);
+                excute_command(message, _clients[std::to_string(_pollfds[i].fd)], _channels, _clients);
 
                 std::cout
                     << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << message << std::flush;
