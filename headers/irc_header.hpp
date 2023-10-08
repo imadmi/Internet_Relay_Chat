@@ -32,6 +32,7 @@
 
 #define BUFFER_SIZE 1000
 #define MAX_CLIENTS 10
+#define PRINT(x) std::cout << x << std::endl;
 
 class Channel;
 class Client
@@ -63,7 +64,7 @@ private:
     std::map<std::string, Client> _clients;
 
 public:
-    std::map<std::string, Client> _chanels;
+    std::map<std::string, Channel> _channels;
 
     Irc(int port, char *password);
 

@@ -17,7 +17,7 @@ HEADER = $(wildcard $(HEADER_DIR)/*.hpp)
 
 $(NAME): $(OBJ) $(HEADER)
 	@$(CC) $(FLAGS) $(OBJ) -o $@
-	# @clear
+	@clear
 	@echo ./$(NAME) "\033[0;31m6667\033[0m pass"
 	@./$(NAME) 6667 pass
 
@@ -38,6 +38,6 @@ fclean: clean
 
 re: fclean $(NAME)
 
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re $(NAME)
 
 

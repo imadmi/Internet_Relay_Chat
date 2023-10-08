@@ -1,4 +1,6 @@
 #include "../../headers/irc_header.hpp"
+#include "../../headers/Channel.hpp"
+#include "../../headers/commands.hpp"
 
 Irc::Irc(int port, char *password)
 {
@@ -112,54 +114,6 @@ void Irc::addClient()
     pollfd client_pollfd = {_newSocket, POLLIN | POLLOUT, 0};
     _pollfds.push_back(client_pollfd);
 
-    //
-
-    // std::vector<pollfd> destinationVector;
-
-    // // Copy elements from the source vector to the destination vector
-    // for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); ++it) {
-    //     destinationVector.push_back(*it);
-    // }
-
-    // for (int i = 1; i < _pollfds.size(); ++i)
-    // {
-    //     if (_pollfds[i].revents & POLLIN)
-    //     {
-    //         char buffer[BUFFER_SIZE];
-    //         memset(buffer, 0, sizeof(buffer));
-
-    //         int bytesRead = recv(_pollfds[i].fd, buffer, BUFFER_SIZE, 0);
-    //         // int bytesRead = -1;
-
-    //         if (bytesRead <= 0)
-    //         {
-    //             // Handle client disconnection or error
-    //             if (bytesRead == 0)
-    //             {
-    //                 std::cout << YELLOW << "Client " << _pollfds[i].fd << " disconnected." << RESET << std::endl;
-    //                 std::cout << PURPLE << "Total clients is : " << _pollfds.size() - 2 << RESET << std::endl;
-    //                 close(_pollfds[i].fd);
-    //                 _pollfds.erase(_pollfds.begin() + i);
-    //                 --i; // Decrement i to account for the removed socket
-    //             }
-    //             else
-    //             {
-    //                 std::cerr << RED << "Error reading from client " << _pollfds[i].fd << RESET << std::endl;
-    //             }
-    //         }
-    //         else
-    //         {
-    //             std::string message(buffer);
-
-    //             std::cout << RED << "Received from client [" << _pollfds[i].fd << "] : " << message << std::flush;
-
-    //             // buffer the message in the client class
-    //         }
-    //     }
-    // }
-
-    //
-
     _clients.insert(std::pair<std::string, Client>(std::to_string(_newSocket), new_client)); // insert a new nod in client map with the fd as key
     std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
 
@@ -212,16 +166,10 @@ void Irc::Handle_activity()
 
                 std::string message(buffer);
 
-                if (message == "exit\n")
-                {
+                excute_command(message, _clients[std::to_string(_pollfds[i].fd)], _channels);
 
-                    close(_pollfds[i].fd);
-                    _pollfds.erase(_pollfds.begin() + i);
-                    std::cerr << RED << "exit\n";
-                    exit(1);
-                }
-
-                std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << message << std::flush;
+                std::cout
+                    << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << message << std::flush;
 
                 // buffer the message in the client class
             }
