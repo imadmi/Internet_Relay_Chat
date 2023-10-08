@@ -106,7 +106,7 @@ void Irc::runServer()
                     char buffer[BUFFER_SIZE];
                     memset(buffer, 0, sizeof(buffer));
 
-                    int bytesRead = recv(_pollfds[i].fd, buffer, sizeof(buffer) - 1, 0);
+                    int bytesRead = recv(_pollfds[i].fd, buffer, BUFFER_SIZE, 0);
 
                     if (bytesRead <= 0)
                     {
@@ -130,12 +130,12 @@ void Irc::runServer()
                     }
                     else
                     {
-                        // Process the received message
+
                         std::string message(buffer);
+
                         std::cout << BLUE << "Received from client [" << _pollfds[i].fd - 3 << "/" << _pollfds.size() - 1 << "] : " << message << std::flush;
 
-                        // Handle the received message here                     // copy the message to he the client class 
-                        // You can implement your message processing logic within this block
+                        // buffer the message in the client class 
                     }
                 }
                 else if (_pollfds[i].revents & POLLHUP)
@@ -181,9 +181,15 @@ void Irc::addClient()
 	_pollfds.push_back(client_pollfd);
 
 
+    //
 
 	_clients.insert(std::pair<std::string, Client>(std::to_string(_newSocket), new_client)); // insert a new nod in client map with the fd as key
 	std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
+
+
+    std::string welcomeMsg;
+    welcomeMsg = "\033[0;32mConnected...\n\033[0m";
+    send(_newSocket, welcomeMsg.c_str(), strlen(welcomeMsg.c_str()), 0);
 }
 
 
@@ -193,3 +199,4 @@ void Irc::printc(std::string msg, std::string color,int ex)
     if (ex)
         exit(EXIT_SUCCESS);
 }
+
