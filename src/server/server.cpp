@@ -83,19 +83,17 @@ void Irc::runServer()
             std::cerr << RED << "Error in poll" << RESET << std::endl;
             continue;
         }
-
         if (activity == 0)
         {
             continue; // No activity, continue waiting
         }
-
         // Check for incoming connections on the server socket
         if (_pollfds[0].revents & POLLIN)
         {
             addClient();
         }
-
         Handle_activity();
+        // print_map();
     }
 }
 
@@ -114,60 +112,12 @@ void Irc::addClient()
     pollfd client_pollfd = {_newSocket, POLLIN | POLLOUT, 0};
 	_pollfds.push_back(client_pollfd);
 
-
-    //
-
-
-    // std::vector<pollfd> destinationVector;
-
-    // // Copy elements from the source vector to the destination vector
-    // for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); ++it) {
-    //     destinationVector.push_back(*it);
-    // }
-
-    // for (int i = 1; i < _pollfds.size(); ++i)
-    // {
-    //     if (_pollfds[i].revents & POLLIN)
-    //     {
-    //         char buffer[BUFFER_SIZE];
-    //         memset(buffer, 0, sizeof(buffer));
-
-    //         int bytesRead = recv(_pollfds[i].fd, buffer, BUFFER_SIZE, 0);
-    //         // int bytesRead = -1;
-
-    //         if (bytesRead <= 0)
-    //         {
-    //             // Handle client disconnection or error
-    //             if (bytesRead == 0)
-    //             {
-    //                 std::cout << YELLOW << "Client " << _pollfds[i].fd << " disconnected." << RESET << std::endl;
-    //                 std::cout << PURPLE << "Total clients is : " << _pollfds.size() - 2 << RESET << std::endl;
-    //                 close(_pollfds[i].fd);
-    //                 _pollfds.erase(_pollfds.begin() + i);
-    //                 --i; // Decrement i to account for the removed socket
-    //             }
-    //             else
-    //             {
-    //                 std::cerr << RED << "Error reading from client " << _pollfds[i].fd << RESET << std::endl;
-    //             }
-    //         }
-    //         else
-    //         {
-    //             std::string message(buffer);
-
-    //             std::cout << RED << "Received from client [" << _pollfds[i].fd << "] : " << message << std::flush;
-
-    //             // buffer the message in the client class 
-    //         }
-    //     }
-    // }
-
-
-
-    //
-
 	_clients.insert(std::pair<std::string, Client>(std::to_string(_newSocket), new_client)); // insert a new nod in client map with the fd as key
 	std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
+
+
+    
+
 
 
     // send welcome msg to the client
@@ -180,7 +130,7 @@ void Irc::addClient()
 }
 
 
-void Irc::printc(std::string msg, std::string color,int ex)
+void Irc::printc(std::string msg, std::string color, int ex)
 {
     std::cout << color << msg << RESET << std::endl;
     if (ex)
@@ -198,7 +148,6 @@ void Irc::Handle_activity()
             memset(buffer, 0, sizeof(buffer));
 
             int bytesRead = recv(_pollfds[i].fd, buffer, BUFFER_SIZE, 0);
-            // int bytesRead = -1;
 
             if (bytesRead <= 0)
             {
@@ -209,6 +158,7 @@ void Irc::Handle_activity()
                     std::cout << PURPLE << "Total clients is : " << _pollfds.size() - 2 << RESET << std::endl;
                     close(_pollfds[i].fd);
                     _pollfds.erase(_pollfds.begin() + i);
+                    _clients.erase(std::to_string(_pollfds[i].fd));
                     --i; // Decrement i to account for the removed socket
                 }
                 else
@@ -231,10 +181,12 @@ void Irc::Handle_activity()
                 }
 
 
-                std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << message << std::flush;
+                std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << message << RESET << std::flush;
 
                 // buffer the message in the client class 
+
             }
+            print_map();
         }
         else if (_pollfds[i].revents & POLLHUP)
         {
@@ -242,7 +194,18 @@ void Irc::Handle_activity()
             // std::cout << "Total clients is : " << _pollfds.size() - 1 << RESET << std::endl;
             // close(_pollfds[i].fd);
             // _pollfds.erase(_pollfds.begin() + i);
+            // _clients.erase(std::to_string(_pollfds[i].fd));
             // --i; // Decrement i to account for the removed socket
         }
     }
+}
+
+
+void Irc::print_map()
+{
+
+    for (std::map<std::string, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+        {
+            std::cout << "Key: " << it->first << ", Value: [print the Client class details here]" << std::endl;
+        }
 }
