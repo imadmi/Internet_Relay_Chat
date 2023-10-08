@@ -1,5 +1,5 @@
 #include "../headers/irc_header.hpp"
-#include "../headers/exec.hpp"
+#include "../headers/commands.hpp"
 int main(int ac, char const *argv[])
 {
     if (ac != 3)
