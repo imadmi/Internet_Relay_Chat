@@ -37,7 +37,6 @@ fclean: clean
 	@echo "\033[0;93mThe object files and the executable are removed.\033[0m"
 
 re: fclean $(NAME)
-	# @./ircserv 6667 pass
 
 .PHONY: all clean fclean re
 
