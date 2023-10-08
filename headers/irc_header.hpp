@@ -17,6 +17,7 @@
 #include <string>
 #include <cerrno>
 #include <ctime>
+#include <fcntl.h>
 
 /* colors */
 #define RESET "\033[0m"
@@ -33,25 +34,53 @@
 
 class Client
 {
-private:
-    int _socket_fd;
-    std::string _username;
-    std::string _nickname;
-    std::vector<pollfd> poll_fds;
-    std::map<std::string, Channel> _channels;
+    private:
+        std::string _buffer;
+        // char _buffer[BUFFER_SIZE];
+        int _socket_fd;
+        std::string _username;
+        std::string _nickname;
+        std::map<std::string, int> _channels;
 
-public:
-    std::string get_nickname();
-    int join_channel(Channel &channel);
+    public:
+        std::string get_nickname();
+        int join_channel(std::string channel_name);
 };
 
 class Irc
 {
-private:
-    std::map<const int, Client> _clients;
-    std::map<std::string, Channel> _channels;
+    private:
+        char * _passWord;
+        int _port;
+        std::string _serverName;
 
-public:
-    void add_new_client(int client_fd);
-    void remove_client(int client_fd);
+        int _serverSocket, _newSocket;
+        struct sockaddr_in _server_addr;
+
+        std::vector<pollfd> _pollfds;
+        std::map<std::string , Client> _clients;
+
+    public:
+        std::map<std::string , Client> _chanels;
+
+
+        Irc(int port, char *password);
+
+        void createSocket();
+        void bindSocket();
+        void listeningToClients();
+
+        void runServer();
+
+        void addClient();
+
+        void Handle_activity();
+
+        void printc(std::string, std::string,int);
+
+        void buffer_msg();
+        void print_map();
+
+        // void add_new_client(int client_fd);
+        // void remove_client(int client_fd);
 };

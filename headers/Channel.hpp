@@ -6,7 +6,7 @@
 /*   By: otait-ta <otait-ta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 14:36:54 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/07 11:27:10 by otait-ta         ###   ########.fr       */
+/*   Updated: 2023/10/06 16:21:21 by otait-ta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@ class Channel
 {
 private:
     std::string _name;
+    int _socket_fd;
     std::map<std::string, Client> _clients;
 
 public:
@@ -33,11 +34,8 @@ public:
      *
      */
     ~Channel();
-    /**
-     * @brief get the name of the channel.
-     *
-     * @return std::string
-     */
+    void set_socket_fd(int socket_fd);
+    int get_socket_fd();
     std::string get_name();
     /**
      * @brief join a client to a channel.
@@ -45,7 +43,7 @@ public:
      * @param client to add.
      * @return status of the operation (0 if success).
      */
-    int add_client(Client &new_client);
+    int add(Client &new_client);
     /**
      * @brief remove a client from a channel.
      *
@@ -53,4 +51,7 @@ public:
      * @return status of the operation (0 if success).
      */
     int remove(Client &client);
+    // asigne a new socket to the channel and add it to the pollfds
+    void add_socket(int socket_fd, pollfd *fds);
+    
 };

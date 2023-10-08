@@ -18,8 +18,7 @@ HEADER = $(wildcard $(HEADER_DIR)/*.h)
 $(NAME): $(OBJ) $(HEADER)
 	@$(CC) $(FLAGS) $(OBJ) -o $@
 	@clear
-	@echo ./$(NAME) "\033[0;31m9898\033[0m pass"
-	@./$(NAME) 9898 pass
+	@./ircserv 6667 pass
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER)
 	@mkdir -p $(@D)
@@ -37,8 +36,6 @@ fclean: clean
 	@echo "\033[0;93mThe object files and the executable are removed.\033[0m"
 
 re: fclean $(NAME)
-	# @./ircserv 6666 pass
-
 
 
 .PHONY: all clean fclean re
