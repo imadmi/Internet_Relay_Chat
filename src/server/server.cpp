@@ -97,6 +97,17 @@ void Irc::runServer()
     }
 }
 
+Client::Client(int fd)
+{
+	_fd = fd;
+	_authenticated = 0;
+	_pwd = false;
+
+	_nickname = "";
+	_username = "";
+	_buffer = "";
+}
+
 void Irc::addClient()
 {
     // Accept a new client connection
@@ -107,7 +118,7 @@ void Irc::addClient()
     if (_newSocket < 0)
         printc("Error accepting client connection" , RED, 1);
 
-	Client new_client;
+	Client new_client(_newSocket);
 
     pollfd client_pollfd = {_newSocket, POLLIN | POLLOUT, 0};
 	_pollfds.push_back(client_pollfd);
@@ -171,6 +182,10 @@ void Irc::Handle_activity()
 
                 std::string message(buffer);
 
+
+
+
+
                 if (message == "exit\n")
                 {
 
@@ -186,7 +201,7 @@ void Irc::Handle_activity()
                 // buffer the message in the client class 
 
             }
-            print_map();
+            // print_map();
         }
         else if (_pollfds[i].revents & POLLHUP)
         {

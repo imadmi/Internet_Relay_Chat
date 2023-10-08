@@ -35,6 +35,10 @@
 class Client
 {
     private:
+        int _fd;
+	    int _authenticated;
+	    int _pwd;
+
         std::string _buffer;
         // char _buffer[BUFFER_SIZE];
         int _socket_fd;
@@ -43,6 +47,7 @@ class Client
         std::map<std::string, int> _channels;
 
     public:
+        Client(int);
         std::string get_nickname();
         int join_channel(std::string channel_name);
 };
@@ -53,6 +58,8 @@ class Irc
         char * _passWord;
         int _port;
         std::string _serverName;
+
+        std::string _buffer;
 
         int _serverSocket, _newSocket;
         struct sockaddr_in _server_addr;
