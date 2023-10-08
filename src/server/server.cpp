@@ -118,46 +118,49 @@ void Irc::addClient()
     //
 
 
-    std::vector<pollfd> destinationVector;
+    // std::vector<pollfd> destinationVector;
 
-    // Copy elements from the source vector to the destination vector
-    for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); ++it) {
-        destinationVector.push_back(*it);
-    }
+    // // Copy elements from the source vector to the destination vector
+    // for (std::vector<pollfd>::iterator it = _pollfds.begin(); it != _pollfds.end(); ++it) {
+    //     destinationVector.push_back(*it);
+    // }
 
-    pollfd lastElement = destinationVector.back();
+    // for (int i = 1; i < _pollfds.size(); ++i)
+    // {
+    //     if (_pollfds[i].revents & POLLIN)
+    //     {
+    //         char buffer[BUFFER_SIZE];
+    //         memset(buffer, 0, sizeof(buffer));
 
-    if (_pollfds[0].revents & POLLIN)
-    {
-        char buffer[BUFFER_SIZE];
-        memset(buffer, 0, sizeof(buffer));
+    //         int bytesRead = recv(_pollfds[i].fd, buffer, BUFFER_SIZE, 0);
+    //         // int bytesRead = -1;
 
-        int bytesRead = recv(lastElement.fd, buffer, BUFFER_SIZE, 0);
-        // int bytesRead = -1;
+    //         if (bytesRead <= 0)
+    //         {
+    //             // Handle client disconnection or error
+    //             if (bytesRead == 0)
+    //             {
+    //                 std::cout << YELLOW << "Client " << _pollfds[i].fd << " disconnected." << RESET << std::endl;
+    //                 std::cout << PURPLE << "Total clients is : " << _pollfds.size() - 2 << RESET << std::endl;
+    //                 close(_pollfds[i].fd);
+    //                 _pollfds.erase(_pollfds.begin() + i);
+    //                 --i; // Decrement i to account for the removed socket
+    //             }
+    //             else
+    //             {
+    //                 std::cerr << RED << "Error reading from client " << _pollfds[i].fd << RESET << std::endl;
+    //             }
+    //         }
+    //         else
+    //         {
+    //             std::string message(buffer);
 
-        if (bytesRead <= 0)
-        {
-            if (bytesRead == 0)
-            {
-                std::cout << YELLOW << "Client " << lastElement.fd << " disconnected." << RESET << std::endl;
-                std::cout << PURPLE << "Total clients is : " << _pollfds.size() - 2 << RESET << std::endl;
-                // close(lastElement.fd);
-                // _pollfds.erase(_pollfds.begin() + i);
-                // --i; // Decrement i to account for the removed socket
-            }
-            else
-            {
-            std::cerr << RED << "Error reading from client " << lastElement.fd << RESET << std::endl;
-            }
-        }
-        else
-        {
-            std::string message(buffer);
+    //             std::cout << RED << "Received from client [" << _pollfds[i].fd << "] : " << message << std::flush;
 
-            std::cout << RED << "Received from client [" << lastElement.fd << "] : " << message << std::flush;
-
-        }
-    }
+    //             // buffer the message in the client class 
+    //         }
+    //     }
+    // }
 
 
 
@@ -215,7 +218,18 @@ void Irc::Handle_activity()
             }
             else
             {
+
                 std::string message(buffer);
+
+                if (message == "exit\n")
+                {
+
+                    close(_pollfds[i].fd);
+                    _pollfds.erase(_pollfds.begin() + i);
+                    std::cerr << RED << "exit\n" ;
+                    exit(1);
+                }
+
 
                 std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << message << std::flush;
 
