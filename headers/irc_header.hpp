@@ -68,9 +68,9 @@ class Irc
 
         Irc(int port, char *password);
 
-         void createSocket();
-         void bindSocket();
-         void listeningToClients();
+        void createSocket();
+        void bindSocket();
+        void listeningToClients();
 
         void runServer();
 

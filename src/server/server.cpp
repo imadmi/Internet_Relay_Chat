@@ -10,7 +10,7 @@ Irc::Irc(int port, char *password)
     bindSocket();
     listeningToClients();
 
-    printc("IRC Server is running on port", BLUE, 0);
+    std::cout << BLACK << "IRC Server is running on port : " << _port << RESET << std::endl;
     
 }
 
@@ -117,12 +117,56 @@ void Irc::addClient()
 
     //
 
+
+
+    // pollfd lastElement = _pollfds.back();
+
+    // if (lastElement.revents & POLLIN)
+    // {
+    //     char buffer[BUFFER_SIZE];
+    //     memset(buffer, 0, sizeof(buffer));
+
+    //     int bytesRead = recv(lastElement.fd, buffer, BUFFER_SIZE, 0);
+    //     // int bytesRead = -1;
+
+    //     if (bytesRead <= 0)
+    //     {
+    //         if (bytesRead == 0)
+    //         {
+    //             std::cout << YELLOW << "Client " << lastElement.fd << " disconnected." << RESET << std::endl;
+    //             std::cout << PURPLE << "Total clients is : " << _pollfds.size() - 2 << RESET << std::endl;
+    //             // close(lastElement.fd);
+    //             // _pollfds.erase(_pollfds.begin() + i);
+    //             // --i; // Decrement i to account for the removed socket
+    //         }
+    //         else
+    //         {
+    //         std::cerr << RED << "Error reading from client " << lastElement.fd << RESET << std::endl;
+    //         }
+    //     }
+    //     else
+    //     {
+    //         std::string message(buffer);
+
+    //         std::cout << RED << "Received from client [" << lastElement.fd << "] : " << message << std::flush;
+
+    //     }
+    // }
+
+
+
+    //
+
 	_clients.insert(std::pair<std::string, Client>(std::to_string(_newSocket), new_client)); // insert a new nod in client map with the fd as key
 	std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
 
 
+    // send welcome msg to the client
     std::string welcomeMsg;
-    welcomeMsg = "\033[0;32mConnected...\n\033[0m";
+    welcomeMsg = "\033[0;32mClient nbr #";
+    send(_newSocket, welcomeMsg.c_str(), strlen(welcomeMsg.c_str()), 0);
+    send(_newSocket, std::to_string(_newSocket).c_str(), strlen(std::to_string(_newSocket).c_str()), 0);
+    welcomeMsg = " connected...\n\033[0m";
     send(_newSocket, welcomeMsg.c_str(), strlen(welcomeMsg.c_str()), 0);
 }
 
@@ -145,6 +189,7 @@ void Irc::Handle_activity()
             memset(buffer, 0, sizeof(buffer));
 
             int bytesRead = recv(_pollfds[i].fd, buffer, BUFFER_SIZE, 0);
+            // int bytesRead = -1;
 
             if (bytesRead <= 0)
             {
