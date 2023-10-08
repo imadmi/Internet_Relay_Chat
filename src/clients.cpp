@@ -18,10 +18,12 @@ std::string Client::get_nickname()
     return _nickname;
 }
 
-int Client::join_channel(std::string channel_name)
+int Client::join_channel(Channel &channel)
 {
-    if (_channels.find(channel_name) != _channels.end())
+    if (this->_channels.find(channel.get_name()) != _channels.end())
         return (1);
-    _channels.insert(std::make_pair(channel_name, 1));
+    if (channel.add_client(*this) == 1)
+        return (1);
+    _channels.insert(std::pair<std::string, Channel>(channel.get_name(), channel));
     return (0);
 }

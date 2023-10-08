@@ -6,7 +6,7 @@
 /*   By: otait-ta <otait-ta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 15:46:19 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/06 16:22:04 by otait-ta         ###   ########.fr       */
+/*   Updated: 2023/10/08 17:06:20 by otait-ta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,21 +16,10 @@
 Channel::Channel(std::string channel_name)
 {
     _name = channel_name;
-    _socket_fd = -1;
 }
 
 Channel::~Channel()
 {
-}
-
-void Channel::set_socket_fd(int socket_fd)
-{
-    _socket_fd = socket_fd;
-}
-
-int Channel::get_socket_fd()
-{
-    return _socket_fd;
 }
 
 std::string Channel::get_name()
@@ -38,10 +27,18 @@ std::string Channel::get_name()
     return _name;
 }
 
-int Channel::add(Client &new_client)
+int Channel::add_client(Client &new_client)
 {
     if (_clients.find(new_client.get_nickname()) != _clients.end())
-        return (1);
+        return (-1);
     _clients.insert(std::pair<std::string, Client>(new_client.get_nickname(), new_client));
+    return (0);
+}
+
+int Channel::remove_client(Client &client)
+{
+    if (_clients.find(client.get_nickname()) == _clients.end())
+        return (-1);
+    _clients.erase(client.get_nickname());
     return (0);
 }

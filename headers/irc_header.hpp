@@ -17,6 +17,7 @@
 #include <string>
 #include <cerrno>
 #include <ctime>
+#include "Channel.hpp"
 #include <fcntl.h>
 
 /* colors */
@@ -31,56 +32,56 @@
 
 #define BUFFER_SIZE 1000
 #define MAX_CLIENTS 10
+#define PRINT(x) std::cout << x << std::endl;
 
+class Channel;
 class Client
 {
-    private:
-        std::string _buffer;
-        // char _buffer[BUFFER_SIZE];
-        int _socket_fd;
-        std::string _username;
-        std::string _nickname;
-        std::map<std::string, int> _channels;
+private:
+    std::string _buffer;
+    // char _buffer[BUFFER_SIZE];
+    // int _socket_fd;
+    std::string _username;
+    std::string _nickname;
+    std::map<std::string, Channel> _channels;
 
-    public:
-        std::string get_nickname();
-        int join_channel(std::string channel_name);
+public:
+    std::string get_nickname();
+    int join_channel(Channel &channel);
 };
 
 class Irc
 {
-    private:
-        char * _passWord;
-        int _port;
-        std::string _serverName;
+private:
+    char *_passWord;
+    int _port;
+    std::string _serverName;
 
-        int _serverSocket, _newSocket;
-        struct sockaddr_in _server_addr;
+    int _serverSocket, _newSocket;
+    struct sockaddr_in _server_addr;
 
-        std::vector<pollfd> _pollfds;
-        std::map<std::string , Client> _clients;
+    std::vector<pollfd> _pollfds;
+    std::map<std::string, Client> _clients;
 
-    public:
-        std::map<std::string , Client> _chanels;
+public:
+    std::map<std::string, Channel> _channels;
 
+    Irc(int port, char *password);
 
-        Irc(int port, char *password);
+    void createSocket();
+    void bindSocket();
+    void listeningToClients();
 
-        void createSocket();
-        void bindSocket();
-        void listeningToClients();
+    void runServer();
 
-        void runServer();
+    void addClient();
 
-        void addClient();
+    void Handle_activity();
 
-        void Handle_activity();
+    void printc(std::string, std::string, int);
 
-        void printc(std::string, std::string,int);
+    void buffer_msg();
 
-        void buffer_msg();
-        void print_map();
-
-        // void add_new_client(int client_fd);
-        // void remove_client(int client_fd);
+    // void add_new_client(int client_fd);
+    // void remove_client(int client_fd);
 };

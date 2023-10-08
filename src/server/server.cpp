@@ -1,4 +1,6 @@
 #include "../../headers/irc_header.hpp"
+#include "../../headers/Channel.hpp"
+#include "../../headers/commands.hpp"
 
 Irc::Irc(int port, char *password)
 {
@@ -11,7 +13,6 @@ Irc::Irc(int port, char *password)
     listeningToClients();
 
     std::cout << BLACK << "IRC Server is running on port : " << _port << RESET << std::endl;
-    
 }
 
 void Irc::createSocket()
@@ -64,7 +65,6 @@ void Irc::listeningToClients()
     }
 }
 
-
 // establish connections and start communication
 void Irc::runServer()
 {
@@ -102,23 +102,18 @@ void Irc::addClient()
     // Accept a new client connection
     struct sockaddr_in clientAddr;
     socklen_t clientAddrLen = sizeof(clientAddr);
-    _newSocket = accept(_serverSocket, (struct sockaddr*)&clientAddr, &clientAddrLen);
+    _newSocket = accept(_serverSocket, (struct sockaddr *)&clientAddr, &clientAddrLen);
 
     if (_newSocket < 0)
-        printc("Error accepting client connection" , RED, 1);
+        printc("Error accepting client connection", RED, 1);
 
-	Client new_client;
+    Client new_client;
 
     pollfd client_pollfd = {_newSocket, POLLIN | POLLOUT, 0};
-	_pollfds.push_back(client_pollfd);
+    _pollfds.push_back(client_pollfd);
 
-	_clients.insert(std::pair<std::string, Client>(std::to_string(_newSocket), new_client)); // insert a new nod in client map with the fd as key
-	std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
-
-
-    
-
-
+    _clients.insert(std::pair<std::string, Client>(std::to_string(_newSocket), new_client)); // insert a new nod in client map with the fd as key
+    std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
 
     // send welcome msg to the client
     std::string welcomeMsg;
@@ -129,7 +124,6 @@ void Irc::addClient()
     send(_newSocket, welcomeMsg.c_str(), strlen(welcomeMsg.c_str()), 0);
 }
 
-
 void Irc::printc(std::string msg, std::string color, int ex)
 {
     std::cout << color << msg << RESET << std::endl;
@@ -137,10 +131,9 @@ void Irc::printc(std::string msg, std::string color, int ex)
         exit(EXIT_SUCCESS);
 }
 
-
 void Irc::Handle_activity()
 {
-    for (int i = 1; i < _pollfds.size(); ++i)
+    for (size_t i = 1; i < _pollfds.size(); ++i)
     {
         if (_pollfds[i].revents & POLLIN)
         {
@@ -171,22 +164,14 @@ void Irc::Handle_activity()
 
                 std::string message(buffer);
 
-                if (message == "exit\n")
-                {
+                excute_command(message, _clients[std::to_string(_pollfds[i].fd)], _channels);
 
-                    close(_pollfds[i].fd);
-                    _pollfds.erase(_pollfds.begin() + i);
-                    std::cerr << RED << "exit\n" ;
-                    exit(1);
-                }
+                std::cout
+                    << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << message << std::flush;
 
-
-                std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << message << RESET << std::flush;
-
-                // buffer the message in the client class 
-
+                // buffer the message in the client class
             }
-            print_map();
+            //print_map();
         }
         else if (_pollfds[i].revents & POLLHUP)
         {
@@ -201,11 +186,11 @@ void Irc::Handle_activity()
 }
 
 
-void Irc::print_map()
-{
+// void Irc::print_map()
+// {
 
-    for (std::map<std::string, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
-        {
-            std::cout << "Key: " << it->first << ", Value: [print the Client class details here]" << std::endl;
-        }
-}
+//     for (std::map<std::string, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+//         {
+//             std::cout << "Key: " << it->first << ", Value: [print the Client class details here]" << std::endl;
+//         }
+// }
