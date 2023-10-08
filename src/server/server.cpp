@@ -127,10 +127,6 @@ void Irc::addClient()
 	std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
 
 
-    
-
-
-
     // send welcome msg to the client
     std::string welcomeMsg;
     welcomeMsg = "\033[0;32mClient nbr #";
@@ -179,11 +175,12 @@ void Irc::Handle_activity()
             }
             else
             {
+                std::string clientKey = std::to_string(_pollfds[i].fd);
+                std::map<std::string , Client>::iterator  it = _clients.find(clientKey);
+                recvClientsMsg(it->second, buffer);
+                // recvClientsMsg(_clients[std::to_string(_pollfds[i].fd)], buffer);
 
                 std::string message(buffer);
-
-
-
 
 
                 if (message == "exit\n")
@@ -214,6 +211,16 @@ void Irc::Handle_activity()
         }
     }
 }
+
+void Irc::recvClientsMsg(Client client, char *buffer)
+{
+    std::string message(buffer);
+    std::string tmp;
+    tmp += buffer;
+    
+    client.set_buffer(tmp);
+}
+
 
 
 void Irc::print_map()

@@ -50,6 +50,17 @@ class Client
         Client(int);
         std::string get_nickname();
         int join_channel(std::string channel_name);
+
+
+        void set_buffer(std::string newValue)
+        {
+            _buffer = newValue;
+        }
+
+        std::string get_buffer() 
+        {
+            return _buffer;
+        }
 };
 
 class Irc
@@ -59,7 +70,7 @@ class Irc
         int _port;
         std::string _serverName;
 
-        std::string _buffer;
+        // std::string _buffer;
 
         int _serverSocket, _newSocket;
         struct sockaddr_in _server_addr;
@@ -87,6 +98,9 @@ class Irc
 
         void buffer_msg();
         void print_map();
+
+        void recvClientsMsg(Client , char *);
+        
 
         // void add_new_client(int client_fd);
         // void remove_client(int client_fd);
