@@ -10,7 +10,7 @@
  * @param channels the channels of the server
  * @return void
  */
-void excute_command(std::string command, Client &client, std::map<std::string, Channel> &channels);
+void excute_command(std::string command, Client &client, std::map<std::string, Channel &> &channels);
 
 /**
  * @brief join a channel
@@ -20,4 +20,4 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
  * @return int 0 if success, 1 if error
  */
 
-int join(Client &client, std::map<std::string, Channel> &channels, std::string &channel_name);
+int join(Client &client, std::map<std::string, Channel &> &channels, std::string &channel_name);

@@ -83,20 +83,29 @@ void Irc::runServer()
             std::cerr << RED << "Error in poll" << RESET << std::endl;
             continue;
         }
-
         if (activity == 0)
         {
             continue; // No activity, continue waiting
         }
-
         // Check for incoming connections on the server socket
         if (_pollfds[0].revents & POLLIN)
         {
             addClient();
         }
-
         Handle_activity();
+        // print_map();
     }
+}
+
+Client::Client(int fd)
+{
+    _fd = fd;
+    _authenticated = 0;
+    _pwd = 0;
+
+    _nickname = "";
+    _username = "";
+    _buffer = "";
 }
 
 void Irc::addClient()
@@ -109,12 +118,15 @@ void Irc::addClient()
     if (_newSocket < 0)
         printc("Error accepting client connection", RED, 1);
 
-    Client new_client;
+    Client new_client(_newSocket);
 
     pollfd client_pollfd = {_newSocket, POLLIN | POLLOUT, 0};
     _pollfds.push_back(client_pollfd);
 
-    _clients.insert(std::pair<std::string, Client>(std::to_string(_newSocket), new_client)); // insert a new nod in client map with the fd as key
+    _clients.insert(std::pair<int, Client>(_newSocket, new_client)); // insert a new nod in client map with the fd as key
+    std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
+
+    _clients.insert(std::pair<int, Client>(_newSocket, new_client)); // insert a new nod in client map with the fd as key
     std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
 
     // send welcome msg to the client
@@ -143,7 +155,6 @@ void Irc::Handle_activity()
             memset(buffer, 0, sizeof(buffer));
 
             int bytesRead = recv(_pollfds[i].fd, buffer, BUFFER_SIZE, 0);
-            // int bytesRead = -1;
 
             if (bytesRead <= 0)
             {
@@ -154,6 +165,7 @@ void Irc::Handle_activity()
                     std::cout << PURPLE << "Total clients is : " << _pollfds.size() - 2 << RESET << std::endl;
                     close(_pollfds[i].fd);
                     _pollfds.erase(_pollfds.begin() + i);
+                    _clients.erase(_pollfds[i].fd);
                     --i; // Decrement i to account for the removed socket
                 }
                 else
@@ -163,16 +175,19 @@ void Irc::Handle_activity()
             }
             else
             {
-
                 std::string message(buffer);
 
-                excute_command(message, _clients[std::to_string(_pollfds[i].fd)], _channels);
+                std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << message << RESET << std::flush;
 
-                std::cout
-                    << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << message << std::flush;
+                // std::map<std::string , Client>::iterator  it = _clients.find(_pollfds[i].fd);
 
-                // buffer the message in the client class
+                // recvClientsMsg(it->second, message);
+
+                // it->second.get_buffer();
+
+                // std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << it->second.get_buffer() << RESET << std::flush;
             }
+            // print_map();
         }
         else if (_pollfds[i].revents & POLLHUP)
         {
@@ -180,7 +195,28 @@ void Irc::Handle_activity()
             // std::cout << "Total clients is : " << _pollfds.size() - 1 << RESET << std::endl;
             // close(_pollfds[i].fd);
             // _pollfds.erase(_pollfds.begin() + i);
+            // _clients.erase(_pollfds[i].fd);
             // --i; // Decrement i to account for the removed socket
         }
+    }
+}
+
+void Irc::recvClientsMsg(Client client, std::string buffer)
+{
+    (void)buffer;
+    // std::string tmp;
+    // client.addt_buffer(buffer);
+
+    // std::cout << client.get_buffer() << std::endl;
+
+    client.set_buffer(client.get_buffer());
+}
+
+void Irc::print_map()
+{
+
+    for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+    {
+        std::cout << "Key: " << it->first << ", Value: [print the Client class details here]" << std::endl;
     }
 }

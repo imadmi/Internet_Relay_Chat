@@ -1,15 +1,18 @@
 
+
 #pragma once
 
 #include "irc_header.hpp"
+#include "Client.hpp"
+#include <map>
 
 class Client;
 class Channel
 {
 private:
     std::string _name;
-    std::map<std::string, Client> _clients;
-    std::map<std::string, Client> _moderators;
+    std::map<int, Client> _clients;
+    std::map<int, Client> _moderators;
     std::string _topic;
     std::map<char, char> _modes;
 
@@ -50,7 +53,7 @@ public:
      *
      * @return std::map<std::string, Client>
      */
-    std::map<std::string, Client> get_clients();
+    std::map<int, Client> get_clients();
     /**
      * set the topic of the channel.
      * @param topic to set.

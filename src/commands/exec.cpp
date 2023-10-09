@@ -6,7 +6,7 @@
 /*   By: otait-ta <otait-ta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 11:51:53 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/08 17:46:49 by otait-ta         ###   ########.fr       */
+/*   Updated: 2023/10/09 11:31:20 by otait-ta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include "../../headers/Channel.hpp"
 #include "../../headers/commands.hpp"
 
-void excute_command(std::string command, Client &client, std::map<std::string, Channel> &channels)
+void excute_command(std::string command, Client &client, std::map<std::string, Channel &> &channels)
 {
     // if commade is #JOIN <channel>
     if (command.substr(0, 5) == "/JOIN")
@@ -23,7 +23,7 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
         join(client, channels, channel_name);
         std::cout << "joined channel " << channel_name << std::endl;
         PRINT("LIST OF CHANNELS:")
-        for (std::map<std::string, Channel>::iterator it = channels.begin(); it != channels.end(); ++it)
+        for (std::map<std::string, Channel &>::iterator it = channels.begin(); it != channels.end(); ++it)
         {
             std::cout << it->first << std::endl;
         }

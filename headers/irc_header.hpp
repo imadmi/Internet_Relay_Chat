@@ -34,25 +34,10 @@
 #define MAX_CLIENTS 10
 #define PRINT(x) std::cout << x << std::endl;
 
-class Channel;
-class Client
-{
-private:
-    std::string _buffer;
-    // char _buffer[BUFFER_SIZE];
-    int _socket_fd;
-    std::string _username;
-    std::string _nickname;
-    std::map<std::string, Channel> _channels;
+#include "Client.hpp"
+#include "Channel.hpp"
 
-public:
-    std::string get_nickname();
-    std::string get_username();
-    int get_socket_fd();
-    std::string get_socket_fd_str();
-    int join_channel(Channel &);
-    int kick_user(Client &, Channel &);
-};
+class Client;
 
 class Irc
 {
@@ -61,14 +46,16 @@ private:
     int _port;
     std::string _serverName;
 
+    // std::string _buffer;
+
     int _serverSocket, _newSocket;
     struct sockaddr_in _server_addr;
 
     std::vector<pollfd> _pollfds;
-    std::map<std::string, Client> _clients;
+    std::map<int, Client> _clients;
 
 public:
-    std::map<std::string, Channel> _channels;
+    std::map<std::string, Channel &> _channels;
 
     Irc(int port, char *password);
 
@@ -85,6 +72,10 @@ public:
     void printc(std::string, std::string, int);
 
     void buffer_msg();
+
+    void print_map();
+
+    void recvClientsMsg(Client, std::string);
 
     // void add_new_client(int client_fd);
     // void remove_client(int client_fd);
