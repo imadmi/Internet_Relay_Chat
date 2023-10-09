@@ -22,9 +22,10 @@ public:
     std::string get_nickname();
     std::string get_username();
     std::string view_topic(Channel &);
-    int set_topic(Channel &, std::string);
-    int get_socket_fd();
     std::string get_socket_fd_str();
+    int set_topic(Channel &, std::string);
+    bool is_operator(Channel &);
+    int get_socket_fd();
     int join_channel(Channel &channel);
     int kick_user(Client &, Channel &);
 

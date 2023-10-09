@@ -66,4 +66,23 @@ public:
      * @return std::string
      */
     std::string get_topic();
+    /**
+     * @brief set the mode of the channel.
+     * @param mode to set [i-t-k-o-l].
+     * @param param of the mode (+ , -).
+     */
+    int set_mode(char mode, char sign);
+    /**
+     * @brief get the mode of the channel.
+     *
+     * @return std::map<char, char>
+     */
+    std::map<char, char> get_modes();
+    /**
+     * @brief get the sign of the mode.
+     *
+     * @param mode to get the sign.
+     * @return  the signe of the mode.
+     */
+    char get_signe_mode(char mode);
 };
