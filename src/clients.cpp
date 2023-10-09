@@ -13,6 +13,9 @@
 //     _clients.erase(client_fd);
 // }
 
+Client::Client() : _is_registered(false), _is_authenticated(false)
+{
+}
 std::string Client::get_nickname()
 {
     return _nickname;
@@ -61,4 +64,32 @@ std::string Client::get_username()
 {
     return _username;
 }
+// bool client_already_exist(std::string nickname, std::map<std::string, Client> &clients)
+// {
+//     if (clients.find(nickname) != clients.end())
+//         return (true);
+//     return (false);
+// }
 
+// void Client::nick(std::string messgae){
+//     std::string nickname = messgae.substr(6, messgae.length() - 6);
+//     //check if nickname is valid
+//     //check if nickname is already taken
+//     if (client_already_exist(nickname, _clients) == true)
+//     {
+//         std::cout << "nickname already taken" << std::endl;
+//         return;
+//     }
+//     this->set_nickname(nickname);
+//     std::cout << "nickname set to " << nickname << std::endl;
+// }
+
+std::string Client::get_pass()
+{
+    return (_password);
+}
+
+void Client::set_pass(std::string pass)
+{
+    _password = pass;
+}

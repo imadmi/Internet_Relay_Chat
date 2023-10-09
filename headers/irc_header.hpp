@@ -44,10 +44,13 @@ private:
     std::string _username;
     std::string _nickname;
     std::map<std::string, Channel> _channels;
-    bool _is_authenticated;
+    std::string _realname;
+    std::string _password;
     bool _is_registered;
+    bool _is_authenticated ;
 
 public:
+    Client();
     std::string get_nickname();
     void set_nickname(std::string nickname);
     int join_channel(Channel &channel);
@@ -57,6 +60,11 @@ public:
     void set_authenticated(bool);
     void set_username(std::string);
     std::string get_username();
+    std::string get_pass();
+    void set_pass(std::string);
+    //registration
+
+
 };
 
 class Irc
