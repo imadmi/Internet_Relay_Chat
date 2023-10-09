@@ -18,20 +18,20 @@ Irc::Irc(int port, char *password)
 //  create server socket and initialize it
 void Irc::createSocket()
 {
-    _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+    _serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (_serverSocket < 0)
     {
         perror("socket");
         exit(EXIT_FAILURE);
     }
-    _server_addr.sin_addr.s_addr = INADDR_ANY;
-    _server_addr.sin_family = AF_INET;
-    _server_addr.sin_port = htons(_port);
+    _server_addr.sin_addr.s_addr = INADDR_ANY; // the server listening on all available network interfaces
+    _server_addr.sin_family = AF_INET; // the addr family for IPv4
+    _server_addr.sin_port = htons(_port); // convert to network byte order (big-endian).
 }
 
+// here we allow the server socket fd to be reusable
 void Irc::bindSocket()
 {
-    // here we allow the server socket fd to be reusable
     int optval = 1;
     if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) == -1)
     {
