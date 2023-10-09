@@ -55,7 +55,7 @@ class Irc
         struct sockaddr_in _server_addr;
 
         std::vector<pollfd> _pollfds;
-        std::map<std::string , Client> _clients;
+        std::map<int , Client> _clients;
 
     public:
         std::map<std::string , Channel&> _chanels;

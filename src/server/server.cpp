@@ -123,7 +123,7 @@ void Irc::addClient()
     pollfd client_pollfd = {_newSocket, POLLIN | POLLOUT, 0};
 	_pollfds.push_back(client_pollfd);
 
-	_clients.insert(std::pair<std::string, Client>(std::to_string(_newSocket), new_client)); // insert a new nod in client map with the fd as key
+	_clients.insert(std::pair<int, Client>(_newSocket, new_client)); // insert a new nod in client map with the fd as key
 	std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
 
 
@@ -165,7 +165,7 @@ void Irc::Handle_activity()
                     std::cout << PURPLE << "Total clients is : " << _pollfds.size() - 2 << RESET << std::endl;
                     close(_pollfds[i].fd);
                     _pollfds.erase(_pollfds.begin() + i);
-                    _clients.erase(std::to_string(_pollfds[i].fd));
+                    _clients.erase(_pollfds[i].fd);
                     --i; // Decrement i to account for the removed socket
                 }
                 else
@@ -183,7 +183,7 @@ void Irc::Handle_activity()
 
 
 
-                // std::map<std::string , Client>::iterator  it = _clients.find(std::to_string(_pollfds[i].fd));
+                // std::map<std::string , Client>::iterator  it = _clients.find(_pollfds[i].fd);
 
                 // recvClientsMsg(it->second, message);
 
@@ -200,7 +200,7 @@ void Irc::Handle_activity()
             // std::cout << "Total clients is : " << _pollfds.size() - 1 << RESET << std::endl;
             // close(_pollfds[i].fd);
             // _pollfds.erase(_pollfds.begin() + i);
-            // _clients.erase(std::to_string(_pollfds[i].fd));
+            // _clients.erase(_pollfds[i].fd);
             // --i; // Decrement i to account for the removed socket
         }
     }
@@ -221,7 +221,7 @@ void Irc::recvClientsMsg(Client client, std::string buffer)
 void Irc::print_map()
 {
 
-    for (std::map<std::string, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
+    for (std::map<int, Client>::iterator it = _clients.begin(); it != _clients.end(); ++it)
         {
             std::cout << "Key: " << it->first << ", Value: [print the Client class details here]" << std::endl;
         }
