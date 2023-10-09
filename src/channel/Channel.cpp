@@ -9,7 +9,6 @@ Channel::Channel(std::string channel_name)
     _modes['i'] = '+';
     _modes['t'] = '+';
     _modes['k'] = '+';
-    _modes['o'] = '+';
     _modes['l'] = '+';
 }
 
@@ -40,8 +39,8 @@ int Channel::remove_client(Client &client)
     if (this->_clients.find(client.get_socket_fd()) == this->_clients.end())
         return (-1);
     this->_clients.erase(client.get_socket_fd());
-    if (this->_moderators.find(client.get_socket_fd()) != this->_moderators.end())
-        this->_moderators.erase(client.get_socket_fd());
+    if (this->_operators.find(client.get_socket_fd()) != this->_operators.end())
+        this->_operators.erase(client.get_socket_fd());
     return (0);
 }
 
@@ -72,4 +71,12 @@ char Channel::get_signe_mode(char mode)
     if (this->_modes.find(mode) == this->_modes.end())
         return (0);
     return (this->_modes[mode]);
+}
+
+int Channel::set_operator(Client &client)
+{
+    if (this->_clients.find(client.get_socket_fd()) == this->_clients.end())
+        return (-1);
+    this->_operators.insert(std::pair<int, Client>(client.get_socket_fd(), client));
+    return (0);
 }

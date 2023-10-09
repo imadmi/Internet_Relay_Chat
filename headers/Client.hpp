@@ -20,7 +20,7 @@ private:
 
 public:
     Client(int);
-    std::map<std::string, Channel > _channels;
+    std::map<std::string, Channel> _channels;
 
     std::string get_nickname();
     std::string get_username();
@@ -37,6 +37,9 @@ public:
     void set_authenticated(bool);
     void set_username(std::string);
     void set_nickname(std::string nickname);
+    int set_operator(Channel &, Client &);
+    int remove_operator(Channel &, Client &);
+    int add_channel(Channel &);
 
     std::string get_pass()
     {
