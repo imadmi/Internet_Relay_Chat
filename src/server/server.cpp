@@ -178,42 +178,47 @@ void Irc::Handle_activity()
                 std::string message(buffer);
 
 
-                std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << message << RESET << std::flush;
-
-
-
-
-                // std::map<std::string , Client>::iterator  it = _clients.find(_pollfds[i].fd);
-
-                // recvClientsMsg(it->second, message);
-
-                // it->second.get_buffer();
+                // std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << message << RESET << std::flush;
                 
-                // std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << it->second.get_buffer() << RESET << std::flush;
+
+                std::map<int , Client>::iterator  it = _clients.find(_pollfds[i].fd);
+
+
+                if (it != _clients.end())
+                {
+
+                    recvClientsMsg(it->second, message);
+                    
+                    // std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << "'" << it->second.get_buffer() << "'" << RESET << std::endl;
+                }
 
             }
             // print_map();
         }
-        else if (_pollfds[i].revents & POLLHUP)
-        {
+        // else if (_pollfds[i].revents & POLLHUP)
+        // {
             // std::cout << YELLOW << "Client " << _pollfds[i].fd << " disconnected." << RESET << std::endl;
             // std::cout << "Total clients is : " << _pollfds.size() - 1 << RESET << std::endl;
             // close(_pollfds[i].fd);
             // _pollfds.erase(_pollfds.begin() + i);
             // _clients.erase(_pollfds[i].fd);
             // --i; // Decrement i to account for the removed socket
-        }
+        // }
     }
 }
 
-void Irc::recvClientsMsg(Client client, std::string buffer)
+void Irc::recvClientsMsg(Client &client, std::string buffer)
 {
-    // std::string tmp;
     client.addt_buffer(buffer);
     
-    // std::cout << client.get_buffer() << std::endl;
+    // int found = client.get_buffer().find('\n');
 
-    client.set_buffer(client.get_buffer());
+    if (client.get_buffer().find('\n') != std::string::npos)
+    {
+        std::cout << BLUE << "Received from client [" << client.get_fd() << "] : " << client.get_buffer() << RESET << std::endl;
+        client.set_buffer("");
+    }
+
 }
 
 

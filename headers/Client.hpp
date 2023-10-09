@@ -42,7 +42,18 @@ class Client
 
         void addt_buffer(std::string tmp) 
         {
-            // std::cout << BLUE << "Received from client [" << _fd << "] : " << _buffer << RESET << std::flush;
             _buffer += tmp;
+
+        }
+
+
+        void set_fd(int newValue)
+        {
+            _fd = newValue;
+        }
+
+        int get_fd() 
+        {
+            return _fd;
         }
 };

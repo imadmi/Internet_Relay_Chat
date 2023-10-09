@@ -78,7 +78,7 @@ class Irc
         void buffer_msg();
         void print_map();
 
-        void recvClientsMsg(Client , std::string);
+        void recvClientsMsg(Client &, std::string);
         
 
         // void add_new_client(int client_fd);
