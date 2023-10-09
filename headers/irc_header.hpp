@@ -40,14 +40,18 @@ class Client
 private:
     std::string _buffer;
     // char _buffer[BUFFER_SIZE];
-    // int _socket_fd;
+    int _socket_fd;
     std::string _username;
     std::string _nickname;
     std::map<std::string, Channel> _channels;
 
 public:
     std::string get_nickname();
-    int join_channel(Channel &channel);
+    std::string get_username();
+    int get_socket_fd();
+    std::string get_socket_fd_str();
+    int join_channel(Channel &);
+    int kick_user(Client &, Channel &);
 };
 
 class Irc

@@ -6,7 +6,7 @@
 /*   By: otait-ta <otait-ta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/06 14:36:54 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/08 17:24:13 by otait-ta         ###   ########.fr       */
+/*   Updated: 2023/10/08 19:45:50 by otait-ta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@ class Channel
 private:
     std::string _name;
     std::map<std::string, Client> _clients;
-    // moderators of the channel
     std::map<std::string, Client> _moderators;
 
 public:
@@ -56,4 +55,10 @@ public:
      * @return status of the operation (0 if success).
      */
     int remove_client(Client &client);
+    /**
+     * @brief get the clients of the channel.
+     *
+     * @return std::map<std::string, Client>
+     */
+    std::map<std::string, Client> get_clients();
 };
