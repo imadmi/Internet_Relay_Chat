@@ -1,19 +1,7 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Channel.hpp                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: otait-ta <otait-ta@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/06 14:36:54 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/08 19:45:50 by otait-ta         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
 
 #pragma once
 
 #include "irc_header.hpp"
-#include <map>
 
 class Client;
 class Channel
@@ -22,6 +10,8 @@ private:
     std::string _name;
     std::map<std::string, Client> _clients;
     std::map<std::string, Client> _moderators;
+    std::string _topic;
+    std::map<char, char> _modes;
 
 public:
     /**
@@ -61,4 +51,16 @@ public:
      * @return std::map<std::string, Client>
      */
     std::map<std::string, Client> get_clients();
+    /**
+     * set the topic of the channel.
+     * @param topic to set.
+     * @return status of the operation (0 if success).
+     */
+    int set_topic(std::string topic);
+    /**
+     * @brief get the topic of the channel.
+     *
+     * @return std::string
+     */
+    std::string get_topic();
 };
