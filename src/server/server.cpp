@@ -15,16 +15,15 @@ Irc::Irc(int port, char *password)
     std::cout << BLACK << "IRC Server is running on port : " << _port << RESET << std::endl;
 }
 
+//  create server socket and initialize it
 void Irc::createSocket()
 {
-    //  create server socket and initialize it
     _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (_serverSocket < 0)
     {
         perror("socket");
         exit(EXIT_FAILURE);
     }
-
     _server_addr.sin_addr.s_addr = INADDR_ANY;
     _server_addr.sin_family = AF_INET;
     _server_addr.sin_port = htons(_port);
@@ -178,7 +177,7 @@ void Irc::Handle_activity()
                 if (it->second.get_buffer().find('\n') != std::string::npos)
                 {
                     excute_command(it->second.get_buffer(), it->second, _channels, _clients);
-                    std::cout << BLUE << "Received from client [" << it->second.get_fd() << "] : " << it->second.get_buffer() << RESET << std::endl;
+                    std::cout << BLUE << "Client [" << it->second.get_fd() << "] : " << it->second.get_buffer() << RESET << std::flush;
                     it->second.set_buffer("");
                 }
             }
