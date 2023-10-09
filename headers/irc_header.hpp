@@ -1,5 +1,7 @@
 #pragma once
 
+
+
 /* includes */
 #include <iostream>
 #include <sys/types.h>
@@ -19,6 +21,7 @@
 #include <ctime>
 #include <fcntl.h>
 
+
 /* colors */
 #define RESET "\033[0m"
 #define RED "\033[0;31m"
@@ -32,36 +35,12 @@
 #define BUFFER_SIZE 1000
 #define MAX_CLIENTS 10
 
-class Client
-{
-    private:
-        int _fd;
-	    int _authenticated;
-	    int _pwd;
 
-        std::string _buffer;
-        // char _buffer[BUFFER_SIZE];
-        int _socket_fd;
-        std::string _username;
-        std::string _nickname;
-        std::map<std::string, int> _channels;
-
-    public:
-        Client(int);
-        std::string get_nickname();
-        int join_channel(std::string channel_name);
+#include "Client.hpp"
+#include "Channel.hpp"
 
 
-        void set_buffer(std::string newValue)
-        {
-            _buffer = newValue;
-        }
-
-        std::string get_buffer() 
-        {
-            return _buffer;
-        }
-};
+class Client;
 
 class Irc
 {
@@ -79,7 +58,7 @@ class Irc
         std::map<std::string , Client> _clients;
 
     public:
-        std::map<std::string , Client> _chanels;
+        std::map<std::string , Channel&> _chanels;
 
 
         Irc(int port, char *password);
@@ -99,7 +78,7 @@ class Irc
         void buffer_msg();
         void print_map();
 
-        void recvClientsMsg(Client , char *);
+        void recvClientsMsg(Client , std::string);
         
 
         // void add_new_client(int client_fd);

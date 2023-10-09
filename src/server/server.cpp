@@ -175,27 +175,21 @@ void Irc::Handle_activity()
             }
             else
             {
-                std::string clientKey = std::to_string(_pollfds[i].fd);
-                std::map<std::string , Client>::iterator  it = _clients.find(clientKey);
-                recvClientsMsg(it->second, buffer);
-                // recvClientsMsg(_clients[std::to_string(_pollfds[i].fd)], buffer);
-
                 std::string message(buffer);
-
-
-                if (message == "exit\n")
-                {
-
-                    close(_pollfds[i].fd);
-                    _pollfds.erase(_pollfds.begin() + i);
-                    std::cerr << RED << "exit\n" ;
-                    exit(1);
-                }
 
 
                 std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << message << RESET << std::flush;
 
-                // buffer the message in the client class 
+
+
+
+                // std::map<std::string , Client>::iterator  it = _clients.find(std::to_string(_pollfds[i].fd));
+
+                // recvClientsMsg(it->second, message);
+
+                // it->second.get_buffer();
+                
+                // std::cout << BLUE << "Received from client [" << _pollfds[i].fd << "] : " << it->second.get_buffer() << RESET << std::flush;
 
             }
             // print_map();
@@ -212,13 +206,14 @@ void Irc::Handle_activity()
     }
 }
 
-void Irc::recvClientsMsg(Client client, char *buffer)
+void Irc::recvClientsMsg(Client client, std::string buffer)
 {
-    std::string message(buffer);
-    std::string tmp;
-    tmp += buffer;
+    // std::string tmp;
+    client.addt_buffer(buffer);
     
-    client.set_buffer(tmp);
+    // std::cout << client.get_buffer() << std::endl;
+
+    client.set_buffer(client.get_buffer());
 }
 
 
