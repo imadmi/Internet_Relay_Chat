@@ -175,9 +175,9 @@ void Irc::Handle_activity()
 
                 if (it != _clients.end())
                     recvClientsMsg(it->second, message);
-                excute_command(it->second.get_buffer(), it->second, _channels, _clients);
                 if (it->second.get_buffer().find('\n') != std::string::npos)
                 {
+                    excute_command(it->second.get_buffer(), it->second, _channels, _clients);
                     std::cout << BLUE << "Received from client [" << it->second.get_fd() << "] : " << it->second.get_buffer() << RESET << std::endl;
                     it->second.set_buffer("");
                 }
