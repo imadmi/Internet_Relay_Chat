@@ -17,7 +17,7 @@
 #include <string>
 #include <cerrno>
 #include <ctime>
-#include "Channel.hpp"
+
 #include <fcntl.h>
 
 /* colors */
@@ -55,7 +55,7 @@ private:
     std::map<int, Client> _clients;
 
 public:
-    std::map<std::string, Channel &> _channels;
+    std::map<std::string, Channel > _channels;
 
     Irc(int port, char *password);
 
@@ -73,8 +73,8 @@ public:
 
     void buffer_msg();
 
-        void recvClientsMsg(Client &, std::string);
-        
-        // void add_new_client(int client_fd);
-        // void remove_client(int client_fd);
+    void recvClientsMsg(Client &, std::string);
+
+    // void add_new_client(int client_fd);
+    // void remove_client(int client_fd);
 };

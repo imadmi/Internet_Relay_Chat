@@ -16,7 +16,7 @@ int Client::join_channel(Channel &channel)
         return (1);
     if (channel.add_client(*this) == 1)
         return (1);
-    _channels.insert(std::pair<std::string, Channel&>(channel.get_name(), channel));
+    _channels.insert(std::pair<std::string, Channel>(channel.get_name(), channel));
     return (0);
 }
 
@@ -65,3 +65,37 @@ int Client::set_topic(Channel &channel, std::string topic)
     }
     return (1);
 }
+
+
+
+void Client::set_nickname(std::string nickname)
+{
+    _nickname = nickname;
+}
+
+
+bool Client::is_registered()
+{
+    return _is_registered;
+}
+
+bool Client::is_authenticated()
+{
+    return _is_authenticated;
+}
+
+void Client::set_registered(bool is_registered)
+{
+    _is_registered = is_registered;
+}
+
+void Client::set_authenticated(bool is_authenticated)
+{
+    _is_authenticated = is_authenticated;
+}
+
+void Client::set_username(std::string username)
+{
+    _username = username;
+}
+

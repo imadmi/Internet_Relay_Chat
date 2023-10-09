@@ -16,6 +16,7 @@
 
 int join(Client &client, std::map<std::string, Channel &> &channels, std::string &channel_name)
 {
+    
     if (channels.find(channel_name) == channels.end())
     {
         Channel new_channel(channel_name);

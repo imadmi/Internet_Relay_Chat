@@ -99,7 +99,8 @@ void Irc::runServer()
 Client::Client(int fd)
 {
     _fd = fd;
-    _authenticated = 0;
+    _is_authenticated = false;
+    _is_registered = false;
     _pwd = 0;
 
     _nickname = "";
@@ -121,9 +122,6 @@ void Irc::addClient()
 
     pollfd client_pollfd = {_newSocket, POLLIN | POLLOUT, 0};
     _pollfds.push_back(client_pollfd);
-
-    _clients.insert(std::pair<int, Client>(_newSocket, new_client)); // insert a new nod in client map with the fd as key
-    std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
 
     _clients.insert(std::pair<int, Client>(_newSocket, new_client)); // insert a new nod in client map with the fd as key
     std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
@@ -162,7 +160,7 @@ void Irc::Handle_activity()
                 std::cout << PURPLE << "Total clients is : " << _pollfds.size() - 2 << RESET << std::endl;
                 close(_pollfds[i].fd);
                 // _pollfds.erase(_pollfds.begin() + i);
-                _clients.erase(_pollfds[i].fd);
+                // _clients.erase(_pollfds[i].fd);
                 // --i; // Decrement i to account for the removed socket
             }
             if (bytesRead < 0)
@@ -173,13 +171,20 @@ void Irc::Handle_activity()
             {
                 std::string message(buffer);
 
-                std::map<int , Client>::iterator  it = _clients.find(_pollfds[i].fd);
+                std::map<int, Client>::iterator it = _clients.find(_pollfds[i].fd);
 
                 if (it != _clients.end())
                     recvClientsMsg(it->second, message);
+                excute_command(it->second.get_buffer(), it->second, _channels, _clients);
+                if (it->second.get_buffer().find('\n') != std::string::npos)
+                {
+                    std::cout << BLUE << "Received from client [" << it->second.get_fd() << "] : " << it->second.get_buffer() << RESET << std::endl;
+                    it->second.set_buffer("");
+                }
             }
             if (_pollfds[i].revents & POLLIN && bytesRead == 0)
             {
+                _clients.erase(_pollfds[i].fd);
                 _pollfds.erase(_pollfds.begin() + i);
             }
         }
@@ -199,11 +204,10 @@ void Irc::Handle_activity()
 void Irc::recvClientsMsg(Client &client, std::string buffer)
 {
     client.addt_buffer(buffer);
-    
-    if (client.get_buffer().find('\n') != std::string::npos)
-    {
-        std::cout << BLUE << "Received from client [" << client.get_fd() << "] : " << client.get_buffer() << RESET << std::endl;
-        client.set_buffer("");
-    }
 
+    // if (client.get_buffer().find('\n') != std::string::npos)
+    // {
+    //     std::cout << BLUE << "Received from client [" << client.get_fd() << "] : " << client.get_buffer() << RESET << std::endl;
+    //     // client.set_buffer("");
+    // }
 }

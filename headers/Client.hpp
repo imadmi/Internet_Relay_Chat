@@ -7,17 +7,20 @@ class Client
 {
 private:
     int _fd;
-    int _authenticated;
     int _pwd;
 
     std::string _buffer;
     int _socket_fd;
     std::string _username;
     std::string _nickname;
+    std::string _realname;
+    std::string _password;
+    bool _is_registered;
+    bool _is_authenticated;
 
 public:
     Client(int);
-    std::map<std::string, Channel &> _channels;
+    std::map<std::string, Channel > _channels;
 
     std::string get_nickname();
     std::string get_username();
@@ -28,6 +31,21 @@ public:
     int get_socket_fd();
     int join_channel(Channel &channel);
     int kick_user(Client &, Channel &);
+    bool is_registered();
+    bool is_authenticated();
+    void set_registered(bool);
+    void set_authenticated(bool);
+    void set_username(std::string);
+    void set_nickname(std::string nickname);
+
+    std::string get_pass()
+    {
+        return _password;
+    };
+    void set_pass(std::string pass)
+    {
+        _password = pass;
+    };
 
     void set_buffer(std::string newValue)
     {
