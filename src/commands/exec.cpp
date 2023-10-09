@@ -14,12 +14,16 @@
 #include "../../headers/Channel.hpp"
 #include "../../headers/commands.hpp"
 
-bool client_already_exist(std::string nickname, Client client, std::map<int, Client> &clients)
-{
-    // TODO: check for nick name
-    if (clients.find(client.get_fd()) != clients.end() && client.get_nickname() == nickname)
-        return (true);
-    return (false);
+bool client_already_exist(std::string nickname, std::map<int, Client> clients) {
+    std::map<int, Client>::const_iterator it;
+    for (it = clients.begin(); it != clients.end(); ++it) {
+        Client  cl = it->second;
+        std::cout<< nickname <<std::endl;
+        if (cl.get_nickname() == nickname){
+            return true; // Nickname already exists
+        }
+    }
+    return false; // Nickname does not exist
 }
 
 std::string filteredString(std::string str)
@@ -39,6 +43,7 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
 {
     (void)channels;
     // if command is #NICK <nickname>
+    
     if (command.substr(0, 4) == "PASS" && client.is_authenticated() == false && client.get_pass() == "")
     {
             std::string password = filteredString (command.substr(5, command.length() - 5)) ;
@@ -64,7 +69,7 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
      if (command.substr(0, 4) == "NICK")
         {
             std::string nickname = filteredString( command.substr(5, command.length() - 5));
-            if (client_already_exist(nickname, client, clients) == true)
+            if (client_already_exist(nickname, clients) == true)
             {
                 std::cout << "nickname already taken" << std::endl;
             }
