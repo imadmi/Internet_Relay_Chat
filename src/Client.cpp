@@ -49,16 +49,16 @@ int Client::kick_user(Client &client, Channel &channel)
     return (1);
 }
 
-bool is_operator(Channel &channel)
+bool Client::is_operator(Channel &channel)
 {
-    if (channel._moderators.find(this->get_socket_fd()) != channel._moderators.end())
+    if (channel._moderators.find(get_socket_fd()) != channel._moderators.end())
         return (true);
     return (false);
 }
 
-int set_topic(Channel &channel, std::string topic)
+int Client::set_topic(Channel &channel, std::string topic)
 {
-  if (is_operator(channel) || channel._modes['t'] == '-')
+  if (is_operator(channel) || channel.get_signe_mode('t') == '-')
     {
       channel.set_topic(topic);
       return (0);

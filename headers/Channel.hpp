@@ -12,11 +12,11 @@ class Channel
 private:
     std::string _name;
     std::map<int, Client> _clients;
-    std::map<int, Client> _moderators;
     std::string _topic;
     std::map<char, char> _modes;
 
 public:
+    std::map<int, Client> _moderators;
     /**
      * @brief Construct a new Channel object
      *
