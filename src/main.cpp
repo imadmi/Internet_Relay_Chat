@@ -1,4 +1,4 @@
-#include "../headers/irc_header.hpp"
+#include "../headers/Irc.hpp"
 
 void signal_handler(int signal)
 {
