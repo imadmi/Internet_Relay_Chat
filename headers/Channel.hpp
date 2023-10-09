@@ -1,14 +1,4 @@
-/* ************************************************************************** */
-/*                                                                            */
-/*                                                        :::      ::::::::   */
-/*   Channel.hpp                                        :+:      :+:    :+:   */
-/*                                                    +:+ +:+         +:+     */
-/*   By: imimouni <imimouni@student.42.fr>          +#+  +:+       +#+        */
-/*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/10/06 14:36:54 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/09 10:20:46 by imimouni         ###   ########.fr       */
-/*                                                                            */
-/* ************************************************************************** */
+
 
 #pragma once
 
@@ -16,12 +6,15 @@
 #include "Client.hpp"
 #include <map>
 
+class Client;
 class Channel
 {
 private:
     std::string _name;
-    int _socket_fd;
-    std::map<std::string, Client> _clients;
+    std::map<int, Client> _clients;
+    std::map<int, Client> _moderators;
+    std::string _topic;
+    std::map<char, char> _modes;
 
 public:
     /**
@@ -35,8 +28,11 @@ public:
      *
      */
     ~Channel();
-    void set_socket_fd(int socket_fd);
-    int get_socket_fd();
+    /**
+     * @brief get the name of the channel.
+     *
+     * @return std::string
+     */
     std::string get_name();
     /**
      * @brief join a client to a channel.
@@ -44,15 +40,49 @@ public:
      * @param client to add.
      * @return status of the operation (0 if success).
      */
-    int add(Client &new_client);
+    int add_client(Client &new_client);
     /**
      * @brief remove a client from a channel.
      *
      * @param client to remove.
      * @return status of the operation (0 if success).
      */
-    int remove(Client &client);
-    // asigne a new socket to the channel and add it to the pollfds
-    void add_socket(int socket_fd, pollfd *fds);
-    
+    int remove_client(Client &client);
+    /**
+     * @brief get the clients of the channel.
+     *
+     * @return std::map<std::string, Client>
+     */
+    std::map<int, Client> get_clients();
+    /**
+     * set the topic of the channel.
+     * @param topic to set.
+     * @return status of the operation (0 if success).
+     */
+    int set_topic(std::string topic);
+    /**
+     * @brief get the topic of the channel.
+     *
+     * @return std::string
+     */
+    std::string get_topic();
+    /**
+     * @brief set the mode of the channel.
+     * @param mode to set [i-t-k-o-l].
+     * @param param of the mode (+ , -).
+     */
+    int set_mode(char mode, char sign);
+    /**
+     * @brief get the mode of the channel.
+     *
+     * @return std::map<char, char>
+     */
+    std::map<char, char> get_modes();
+    /**
+     * @brief get the sign of the mode.
+     *
+     * @param mode to get the sign.
+     * @return  the signe of the mode.
+     */
+    char get_signe_mode(char mode);
 };

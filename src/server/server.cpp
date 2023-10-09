@@ -1,4 +1,6 @@
 #include "../../headers/irc_header.hpp"
+#include "../../headers/Channel.hpp"
+#include "../../headers/commands.hpp"
 
 Irc::Irc(int port, char *password)
 {
@@ -11,7 +13,6 @@ Irc::Irc(int port, char *password)
     listeningToClients();
 
     std::cout << BLACK << "IRC Server is running on port : " << _port << RESET << std::endl;
-    
 }
 
 void Irc::createSocket()
@@ -64,7 +65,6 @@ void Irc::listeningToClients()
     }
 }
 
-
 // establish connections and start communication
 void Irc::runServer()
 {
@@ -98,13 +98,13 @@ void Irc::runServer()
 
 Client::Client(int fd)
 {
-	_fd = fd;
-	_authenticated = 0;
-	_pwd = 0;
+    _fd = fd;
+    _authenticated = 0;
+    _pwd = 0;
 
-	_nickname = "";
-	_username = "";
-	_buffer = "";
+    _nickname = "";
+    _username = "";
+    _buffer = "";
 }
 
 void Irc::addClient()
@@ -112,19 +112,21 @@ void Irc::addClient()
     // Accept a new client connection
     struct sockaddr_in clientAddr;
     socklen_t clientAddrLen = sizeof(clientAddr);
-    _newSocket = accept(_serverSocket, (struct sockaddr*)&clientAddr, &clientAddrLen);
+    _newSocket = accept(_serverSocket, (struct sockaddr *)&clientAddr, &clientAddrLen);
 
     if (_newSocket < 0)
-        printc("Error accepting client connection" , RED, 1);
+        printc("Error accepting client connection", RED, 1);
 
-	Client new_client(_newSocket);
+    Client new_client(_newSocket);
 
     pollfd client_pollfd = {_newSocket, POLLIN | POLLOUT, 0};
-	_pollfds.push_back(client_pollfd);
+    _pollfds.push_back(client_pollfd);
 
-	_clients.insert(std::pair<int, Client>(_newSocket, new_client)); // insert a new nod in client map with the fd as key
-	std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
+    _clients.insert(std::pair<int, Client>(_newSocket, new_client)); // insert a new nod in client map with the fd as key
+    std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
 
+    _clients.insert(std::pair<int, Client>(_newSocket, new_client)); // insert a new nod in client map with the fd as key
+    std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
 
     // send welcome msg to the client
     std::string welcomeMsg;
@@ -135,7 +137,6 @@ void Irc::addClient()
     send(_newSocket, welcomeMsg.c_str(), strlen(welcomeMsg.c_str()), 0);
 }
 
-
 void Irc::printc(std::string msg, std::string color, int ex)
 {
     std::cout << color << msg << RESET << std::endl;
@@ -143,10 +144,9 @@ void Irc::printc(std::string msg, std::string color, int ex)
         exit(EXIT_SUCCESS);
 }
 
-
 void Irc::Handle_activity()
 {
-    for (int i = 1; i < _pollfds.size(); ++i)
+    for (size_t i = 1; i < _pollfds.size(); ++i)
     {
         if (_pollfds[i].revents & POLLIN)
         {

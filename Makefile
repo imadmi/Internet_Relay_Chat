@@ -14,12 +14,13 @@ SRC = $(wildcard $(SRC_DIR)/*.cpp) $(wildcard $(SRC_DIR)/*/*.cpp) $(wildcard $(S
 
 OBJ = $(patsubst $(SRC_DIR)/%.cpp,$(OBJ_DIR)/%.o,$(SRC))
 
-HEADER = $(wildcard $(HEADER_DIR)/*.h)
+HEADER = $(wildcard $(HEADER_DIR)/*.hpp)
 
 $(NAME): $(OBJ) $(HEADER)
 	@$(CC) $(FLAGS) $(OBJ) -o $@
 	@clear
-	@./ircserv 6667 pass
+	@echo ./$(NAME) "\033[0;31m6667\033[0m pass"
+	@./$(NAME) 6667 pass
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER)
 	@mkdir -p $(@D)
@@ -38,7 +39,6 @@ fclean: clean
 
 re: fclean $(NAME)
 
-
-.PHONY: all clean fclean re
+.PHONY: all clean fclean re $(NAME)
 
 

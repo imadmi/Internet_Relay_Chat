@@ -1,7 +1,5 @@
 #pragma once
 
-
-
 /* includes */
 #include <iostream>
 #include <sys/types.h>
@@ -19,8 +17,8 @@
 #include <string>
 #include <cerrno>
 #include <ctime>
+#include "Channel.hpp"
 #include <fcntl.h>
-
 
 /* colors */
 #define RESET "\033[0m"
@@ -34,46 +32,46 @@
 
 #define BUFFER_SIZE 1000
 #define MAX_CLIENTS 10
-
+#define PRINT(x) std::cout << x << std::endl;
 
 #include "Client.hpp"
 #include "Channel.hpp"
-
 
 class Client;
 
 class Irc
 {
-    private:
-        char * _passWord;
-        int _port;
-        std::string _serverName;
+private:
+    char *_passWord;
+    int _port;
+    std::string _serverName;
 
-        // std::string _buffer;
+    // std::string _buffer;
 
-        int _serverSocket, _newSocket;
-        struct sockaddr_in _server_addr;
+    int _serverSocket, _newSocket;
+    struct sockaddr_in _server_addr;
 
-        std::vector<pollfd> _pollfds;
-        std::map<int , Client> _clients;
+    std::vector<pollfd> _pollfds;
+    std::map<int, Client> _clients;
 
-    public:
-        std::map<std::string , Channel&> _chanels;
+public:
+    std::map<std::string, Channel &> _channels;
 
+    Irc(int port, char *password);
 
-        Irc(int port, char *password);
+    void createSocket();
+    void bindSocket();
+    void listeningToClients();
 
-        void createSocket();
-        void bindSocket();
-        void listeningToClients();
+    void runServer();
 
-        void runServer();
+    void addClient();
 
-        void addClient();
+    void Handle_activity();
 
-        void Handle_activity();
+    void printc(std::string, std::string, int);
 
-        void printc(std::string, std::string,int);
+    void buffer_msg();
 
         void recvClientsMsg(Client &, std::string);
         

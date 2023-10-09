@@ -20,12 +20,11 @@ int main(int ac, char *argv[])
     {
         Irc irc(std::stoi(argv[1]), argv[2]);
         irc.runServer();
-
     }
-    catch(const std::exception& e)
+    catch (const std::exception &e)
     {
         std::cerr << e.what() << '\n';
     }
-    
+
     return (EXIT_SUCCESS);
 }
