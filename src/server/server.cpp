@@ -101,7 +101,7 @@ Client::Client(int fd)
 {
 	_fd = fd;
 	_authenticated = 0;
-	_pwd = false;
+	_pwd = 0;
 
 	_nickname = "";
 	_username = "";
