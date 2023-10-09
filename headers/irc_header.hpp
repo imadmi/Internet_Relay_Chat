@@ -75,12 +75,8 @@ class Irc
 
         void printc(std::string, std::string,int);
 
-        void buffer_msg();
-        void print_map();
-
         void recvClientsMsg(Client &, std::string);
         
-
         // void add_new_client(int client_fd);
         // void remove_client(int client_fd);
 };
