@@ -14,10 +14,10 @@
 #include "../../headers/Channel.hpp"
 #include "../../headers/commands.hpp"
 
-bool client_already_exist(std::string nickname, std::map<int, Client> &clients)
+bool client_already_exist(std::string nickname, Client client, std::map<int, Client> &clients)
 {
     // TODO: check for nick name
-    if (clients.find(4) != clients.end())
+    if (clients.find(client.get_fd()) != clients.end() && client.get_nickname() == nickname)
         return (true);
     return (false);
 }
@@ -64,13 +64,16 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
      if (command.substr(0, 4) == "NICK")
         {
             std::string nickname = filteredString( command.substr(5, command.length() - 5));
-            if (client_already_exist(nickname, clients) == true)
+            if (client_already_exist(nickname, client, clients) == true)
             {
                 std::cout << "nickname already taken" << std::endl;
-                return;
             }
+            else
+            {
+
             client.set_nickname(nickname);
             std::cout << "nickname set to " << nickname << std::endl;
+            }
             
         }
     }
