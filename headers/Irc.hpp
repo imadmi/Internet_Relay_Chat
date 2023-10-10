@@ -1,3 +1,4 @@
+
 #pragma once
 
 /* includes */
@@ -108,7 +109,13 @@ class Irc
          */
         void runServer();
 
-        // Accept a new client connection
+        /**
+         * @brief Accept a new client connection
+         *
+         * @param sockfd : socket that has been listening for connections after a
+         * @param addr : socket operations wait
+         * @return zero on success
+         */
         void addClient();
         void Handle_activity();
         void printc(std::string, std::string, int);

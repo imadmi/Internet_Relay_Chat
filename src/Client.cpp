@@ -116,3 +116,57 @@ int Client::add_channel(Channel &channel)
     _channels.insert(std::pair<std::string, Channel>(channel.get_name(), channel));
     return (0);
 }
+void Client::set_realname(std::string realname)
+{
+    _realname = realname;
+}
+
+void Client::set_hostname(std::string hostname)
+{
+    _hostname = hostname;
+}
+
+void Client::set_servername(std::string servername)
+{
+    _servername = servername;
+}
+
+void Client::add_buffer_to_send(std::string buffer)
+{
+    _buff_to_send += buffer;
+}
+
+void Client::set_old_nick(std::string old_nick)
+{
+    _old_nick = old_nick;
+}
+
+std::string Client::get_old_nick()
+{
+    return _old_nick;
+}
+
+std::string Client::get_buff_to_send()
+{
+    return _buff_to_send;
+}
+
+std::string Client::get_realname()
+{
+    return _realname;
+}
+
+std::string Client::get_hostname()
+{
+    return _hostname;
+}
+
+std::string Client::get_servername()
+{
+    return _servername;
+}
+
+void Client::set_buff_to_send(std::string buff)
+{
+    _buff_to_send = buff;
+}
