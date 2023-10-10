@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 
 #include "../../headers/commands.hpp"
-#include "../../headers/irc_header.hpp"
+#include "../../headers/Irc.hpp"
 #include "../../headers/Channel.hpp"
 
 int join(Client &client, std::map<std::string, Channel &> &channels, std::string &channel_name)

@@ -12,6 +12,6 @@
 
 #pragma once
 
-#include "irc_header.hpp"
+#include "Irc.hpp"
 #include "channel.hpp"
 

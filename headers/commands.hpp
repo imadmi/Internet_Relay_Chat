@@ -1,6 +1,6 @@
 #pragma once
 
-#include "irc_header.hpp"
+#include "Irc.hpp"
 #include "Channel.hpp"
 
 # define ERR_NONICKNAMEGIVEN(client) (":localhost 431 " + client + " :There is no nickname.\r\n")
