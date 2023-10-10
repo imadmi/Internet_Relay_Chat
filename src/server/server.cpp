@@ -34,7 +34,7 @@ void Irc::createSocket()
 
 void Irc::settingsockopt()
 {
-    int opt = 0;
+    int opt = 1;
     if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
     {
         perror("setsockopt");
