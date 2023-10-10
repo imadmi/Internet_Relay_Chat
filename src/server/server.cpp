@@ -127,12 +127,12 @@ void Irc::addClient()
     std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
 
     // send welcome msg to the client
-    std::string welcomeMsg;
-    welcomeMsg = "\033[0;32mClient nbr #";
-    send(_newSocket, welcomeMsg.c_str(), strlen(welcomeMsg.c_str()), 0);
-    send(_newSocket, std::to_string(_newSocket).c_str(), strlen(std::to_string(_newSocket).c_str()), 0);
-    welcomeMsg = " connected...\n\033[0m";
-    send(_newSocket, welcomeMsg.c_str(), strlen(welcomeMsg.c_str()), 0);
+    // std::string welcomeMsg;
+    // welcomeMsg = "\033[0;32mClient nbr #";
+    // send(_newSocket, welcomeMsg.c_str(), strlen(welcomeMsg.c_str()), 0);
+    // send(_newSocket, std::to_string(_newSocket).c_str(), strlen(std::to_string(_newSocket).c_str()), 0);
+    // welcomeMsg = " connected...\n\033[0m";
+    // send(_newSocket, welcomeMsg.c_str(), strlen(welcomeMsg.c_str()), 0);
 }
 
 void Irc::printc(std::string msg, std::string color, int ex)

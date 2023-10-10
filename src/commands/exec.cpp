@@ -26,6 +26,31 @@ bool client_already_exist(std::string nickname, std::map<int, Client> clients) {
     return false; // Nickname does not exist
 }
 
+static bool checkForma(const std::string& username) {
+    std::istringstream iss(username);
+    std::string word;
+    int position = 1;
+    while (iss >> word) {
+        if (position == 1 || position == 4) {
+        } else if (position == 2) {
+            if (word != "0") {
+                return false;
+            }
+        } else if (position == 3) {
+            if (word != "*") {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        
+        position++;
+    }
+    
+    // Check if all required parts were found
+    return position == 5;
+}
+
 std::string filteredString(std::string str)
 {
     std::string filteredString;
@@ -43,56 +68,33 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
 {
     (void)channels;
     // if command is #NICK <nickname>
-    
-    if (command.substr(0, 4) == "PASS" && client.is_authenticated() == false && client.get_pass() == "")
-    {
-            std::string password = filteredString (command.substr(5, command.length() - 5)) ;
 
-            std::string str("pass");
-            std::cout <<"******" <<password;
-            if (password == str)
-            {
-                std::cout << "password is correct" << std::endl;
-                client.set_pass(password);
-            }
-            else
-            {
-                std::cout << "wrong password" << std::endl;
-            }
-    }
+    if (command.substr(0, 4) == "PASS")
+        pass(command, client, channels, clients);
     // else
     // {
     //         std::cout<< "inser the pass first "<<std::endl;
     // }
-    else if (client.is_authenticated() == false && client.get_pass() != ""  && client.get_nickname() == ""  )
-    {
      if (command.substr(0, 4) == "NICK")
-        {
-            std::string nickname = filteredString( command.substr(5, command.length() - 5));
-            if (client_already_exist(nickname, clients) == true)
-            {
-                std::cout << "nickname already taken" << std::endl;
-            }
-            else
-            {
-
-            client.set_nickname(nickname);
-            std::cout << "nickname set to " << nickname << std::endl;
-            }
+            nick(command, client, channels, clients);
+     if (command.substr(0, 4) == "USER")
+     {
+        user(command, client, channels, clients);
+     }
+     if (client.is_authenticated())
+        send(client.get_fd(), client.get_buff_to_send().c_str(), client.get_buff_to_send().length(), 0);
+    //  if (command.substr(0, 4) == "USER")
+    //     {
+    //         std::string username_rel = command.substr(5, command.length() - 5);
+    //         if (checkForma(username_rel) == false)
+    //             std::cout << "wrong format" << std::endl;
             
-        }
-    }
-    else if  (client.is_authenticated() == false  &&  client.get_pass() != "" && client.get_nickname() != ""  && client.get_username() == "")
-    {
-        if (command.substr(0, 4) == "USER")
-        {
-            std::string username = filteredString( command.substr(5, command.length() - 5));
-            client.set_username(username);
-            std::cout << "username set to " << username << std::endl;
-            client.set_authenticated(true);
-            std::cout << "authenticated" << std::endl;
-        }
-    }
+    //         client.set_username(username_rel);
+    //         std::cout << "username set to " << username_rel << std::endl;
+    //         client.set_authenticated(true);
+    //         std::cout << "authenticated" << std::endl;
+    //     }
+   // }
     // else if  (client.is_authenticated() == false  &&  client.get_pass() != "" && client.get_nickname() != ""  && client.get_username() != ""
     // {
     //     std::cout<< "im in"<<std::endl;
