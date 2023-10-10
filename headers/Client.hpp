@@ -19,6 +19,7 @@ private:
     std::string _servername;
     std::string _buff_to_send;
     std::string _old_nick;
+    int _send_flag;
     bool _is_registered;
     bool _is_authenticated;
 

@@ -89,14 +89,17 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
     // {
     //         std::cout<< "inser the pass first "<<std::endl;
     // }
-    if (command.substr(0, 4) == "NICK")
+    else if (command.substr(0, 4) == "NICK")
         nick(command, client, channels, clients);
-    if (command.substr(0, 4) == "USER")
+    else if (command.substr(0, 4) == "USER")
     {
         user(command, client, channels, clients);
     }
     if (client.is_authenticated())
+    {   
         send(client.get_fd(), client.get_buff_to_send().c_str(), client.get_buff_to_send().length(), 0);
+        client.set_buff_to_send("");
+    }
 
     if (command.substr(0, 5) == "/JOIN")
     {
