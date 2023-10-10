@@ -6,7 +6,7 @@
 /*   By: otait-ta <otait-ta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 11:03:59 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/10 19:30:07 by otait-ta         ###   ########.fr       */
+/*   Updated: 2023/10/10 19:34:46 by otait-ta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,11 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
     std::map<std::string, Channel>::iterator it = channels.find(channel_name);
     if (it != channels.end())
     {
-        it->second.add_client(client);
+        if (it->second.add_client(client))
+        {
+            client.add_buffer_to_send(ERR_USERONCHANNEL(client.get_nickname(), client.get_nickname(), channel_name));
+            return (1);
+        }
         client.add_channel(it->second);
     }
     else
