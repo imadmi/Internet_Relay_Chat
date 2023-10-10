@@ -9,13 +9,15 @@ Irc::Irc(int port, char *password)
     _serverName = ":MSN ";
 
     createSocket();
+    settingsockopt();
+    nonBlockFd();
     bindSocket();
     listeningToClients();
 
     std::cout << BLACK << "IRC Server is running on port : " << _port << RESET << std::endl;
 }
 
-//  create server socket and initialize it
+
 void Irc::createSocket()
 {
     _serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -24,29 +26,34 @@ void Irc::createSocket()
         perror("socket");
         exit(EXIT_FAILURE);
     }
-    _server_addr.sin_addr.s_addr = INADDR_ANY; // the server listening on all available network interfaces
-    _server_addr.sin_family = AF_INET; // the addr family for IPv4
-    _server_addr.sin_port = htons(_port); // convert to network byte order (big-endian).
+    _server_addr.sin_addr.s_addr = INADDR_ANY;
+    _server_addr.sin_family = AF_INET;
+    _server_addr.sin_port = htons(_port);
 }
 
-// here we allow the server socket fd to be reusable
-void Irc::bindSocket()
+
+void Irc::settingsockopt()
 {
-    int optval = 1;
-    if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &optval, sizeof(optval)) == -1)
+    int opt = 0;
+    if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
     {
         perror("setsockopt");
         exit(EXIT_FAILURE);
     }
+}
 
-    // here we set the server socket to be nonbloking
+
+void Irc::nonBlockFd()
+{
     if (fcntl(_serverSocket, F_SETFL, O_NONBLOCK) == -1)
     {
         perror("fcntl");
         exit(EXIT_FAILURE);
     }
+}
 
-    // bind the server host address
+void Irc::bindSocket()
+{
     if (bind(_serverSocket, (struct sockaddr *)&_server_addr, sizeof(_server_addr)) < 0)
     {
         perror("bind");
@@ -56,7 +63,6 @@ void Irc::bindSocket()
 
 void Irc::listeningToClients()
 {
-    // listening for the clients (wait for incoming connection from the client)
     if (listen(_serverSocket, MAX_CLIENTS) < 0)
     {
         perror("listen");
@@ -64,33 +70,22 @@ void Irc::listeningToClients()
     }
 }
 
-// establish connections and start communication
 void Irc::runServer()
 {
-    pollfd serverPollfd;
-    serverPollfd.fd = _serverSocket;
-    serverPollfd.events = POLLIN;
-
-    _pollfds.push_back(serverPollfd);
+    pollfd serverPoll;
+    serverPoll.fd = _serverSocket;
+    serverPoll.events = POLLIN;
+    _pollfds.push_back(serverPoll);
 
     while (true)
     {
-        int activity = poll(&_pollfds[0], _pollfds.size(), -1);
-
-        if (activity < 0)
+        if (poll(&_pollfds[0], _pollfds.size(), -1) == -1)
         {
             std::cerr << RED << "Error in poll" << RESET << std::endl;
-            continue;
+            exit(EXIT_FAILURE);
         }
-        if (activity == 0)
-        {
-            continue; // No activity, continue waiting
-        }
-        // Check for incoming connections on the server socket
         if (_pollfds[0].revents & POLLIN)
-        {
             addClient();
-        }
         Handle_activity();
     }
 }
@@ -109,7 +104,6 @@ Client::Client(int fd)
 
 void Irc::addClient()
 {
-    // Accept a new client connection
     struct sockaddr_in clientAddr;
     socklen_t clientAddrLen = sizeof(clientAddr);
     _newSocket = accept(_serverSocket, (struct sockaddr *)&clientAddr, &clientAddrLen);
@@ -119,19 +113,11 @@ void Irc::addClient()
 
     Client new_client(_newSocket);
 
-    pollfd client_pollfd = {_newSocket, POLLIN | POLLOUT, 0};
+    pollfd client_pollfd = {_newSocket, POLLIN, 0};
     _pollfds.push_back(client_pollfd);
 
     _clients.insert(std::pair<int, Client>(_newSocket, new_client)); // insert a new nod in client map with the fd as key
     std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
-
-    // send welcome msg to the client
-    std::string welcomeMsg;
-    welcomeMsg = "\033[0;32mClient nbr #";
-    send(_newSocket, welcomeMsg.c_str(), strlen(welcomeMsg.c_str()), 0);
-    send(_newSocket, std::to_string(_newSocket).c_str(), strlen(std::to_string(_newSocket).c_str()), 0);
-    welcomeMsg = " connected...\n\033[0m";
-    send(_newSocket, welcomeMsg.c_str(), strlen(welcomeMsg.c_str()), 0);
 }
 
 void Irc::printc(std::string msg, std::string color, int ex)
