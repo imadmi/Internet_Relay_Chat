@@ -6,12 +6,12 @@
 /*   By: otait-ta <otait-ta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 11:03:59 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/09 17:23:58 by otait-ta         ###   ########.fr       */
+/*   Updated: 2023/10/10 16:12:35 by otait-ta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../../headers/commands.hpp"
-#include "../../headers/irc_header.hpp"
+#include "../../headers/Irc.hpp"
 #include "../../headers/Channel.hpp"
 
 int join(Client &client, std::map<std::string, Channel> &channels, std::string &channel_name)

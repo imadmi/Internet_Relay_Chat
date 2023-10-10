@@ -6,11 +6,11 @@
 /*   By: otait-ta <otait-ta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 11:51:53 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/09 17:25:07 by otait-ta         ###   ########.fr       */
+/*   Updated: 2023/10/10 16:12:31 by otait-ta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../../headers/irc_header.hpp"
+#include "../../headers/Irc.hpp"
 #include "../../headers/Channel.hpp"
 #include "../../headers/commands.hpp"
 

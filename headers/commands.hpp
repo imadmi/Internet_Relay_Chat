@@ -1,6 +1,6 @@
 #pragma once
 
-#include "irc_header.hpp"
+#include "Irc.hpp"
 #include "Channel.hpp"
 
 /**
