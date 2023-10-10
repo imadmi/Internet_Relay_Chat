@@ -104,18 +104,12 @@ Client::Client(int fd)
 
 void Irc::addClient()
 {
-    struct sockaddr_in clientAddr;
-    socklen_t clientAddrLen = sizeof(clientAddr);
-    _newSocket = accept(_serverSocket, (struct sockaddr *)&clientAddr, &clientAddrLen);
-
+    _newSocket = accept(_serverSocket, nullptr, nullptr);
     if (_newSocket < 0)
         printc("Error accepting client connection", RED, 1);
-
     Client new_client(_newSocket);
-
     pollfd client_pollfd = {_newSocket, POLLIN, 0};
     _pollfds.push_back(client_pollfd);
-
     _clients.insert(std::pair<int, Client>(_newSocket, new_client)); // insert a new nod in client map with the fd as key
     std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
 }
