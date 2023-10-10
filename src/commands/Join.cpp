@@ -6,7 +6,7 @@
 /*   By: otait-ta <otait-ta@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 11:03:59 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/10 16:12:35 by otait-ta         ###   ########.fr       */
+/*   Updated: 2023/10/10 19:30:07 by otait-ta         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,9 +14,9 @@
 #include "../../headers/Irc.hpp"
 #include "../../headers/Channel.hpp"
 
-int join(Client &client, std::map<std::string, Channel> &channels, std::string &channel_name)
+int join(std::string command, Client &client, std::map<std::string, Channel> &channels)
 {
-
+    std::string channel_name = command.substr(5, command.length() - 5);
     if (channels.find(channel_name) == channels.end())
     {
         Channel new_channel(channel_name);
@@ -34,5 +34,6 @@ int join(Client &client, std::map<std::string, Channel> &channels, std::string &
     {
         return (1);
     }
+    client.add_buffer_to_send(RPL_JOIN(client.get_nickname(), channel_name));
     return (0);
 }

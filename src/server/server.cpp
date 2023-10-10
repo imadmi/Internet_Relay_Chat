@@ -32,7 +32,7 @@ void Irc::createSocket()
 
 void Irc::settingsockopt()
 {
-    int opt = 0;
+    int opt = 1;
     if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
     {
         perror("setsockopt");
@@ -51,6 +51,7 @@ void Irc::nonBlockFd()
 
 void Irc::bindSocket()
 {
+
     if (bind(_serverSocket, (struct sockaddr *)&_server_addr, sizeof(_server_addr)) < 0)
     {
         perror("bind");
