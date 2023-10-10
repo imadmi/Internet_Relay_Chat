@@ -6,7 +6,7 @@
 /*   By: imimouni <imimouni@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/10/07 11:51:53 by otait-ta          #+#    #+#             */
-/*   Updated: 2023/10/09 15:14:33 by imimouni         ###   ########.fr       */
+/*   Updated: 2023/10/09 16:17:51 by imimouni         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ std::string filteredString(std::string str)
     std::string filteredString;
     for (int i = 0; i < (int)str.length(); i++)
     {
-        if (str[i] != '\n' &&  str[i] != '\r' && str[i] != '\t' &&  str[i] != '\v' && str[i] != '\f')
+        if (str[i] != '\n' && str[i] != '\r' && str[i] != '\t' && str[i] != '\v' && str[i] != '\f')
         {
             filteredString += str[i];
         }
@@ -64,7 +64,7 @@ std::string filteredString(std::string str)
     return filteredString;
 }
 
-void excute_command(std::string command, Client &client, std::map<std::string, Channel> &channels , std::map<int, Client> &clients)
+void excute_command(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients)
 {
     (void)channels;
     // if command is #NICK <nickname>

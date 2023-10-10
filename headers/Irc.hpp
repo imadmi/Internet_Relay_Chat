@@ -1,14 +1,15 @@
+
 #pragma once
 
 /* includes */
 #include <iostream>
-#include <sys/types.h>
+// #include <sys/types.h>
 #include <sys/socket.h>
-#include <netinet/in.h>
+// #include <netinet/in.h>
 #include <arpa/inet.h>
-#include <netdb.h>
-#include <cstring>
-#include <cstdlib>
+// #include <netdb.h>
+// #include <cstring>
+// #include <cstdlib>
 #include <vector>
 #include <map>
 #include <poll.h>
@@ -16,9 +17,9 @@
 #include <sstream>
 #include <string>
 #include <cerrno>
-#include <ctime>
-
+// #include <ctime>
 #include <fcntl.h>
+
 
 /* colors */
 #define RESET "\033[0m"
@@ -41,40 +42,83 @@ class Client;
 
 class Irc
 {
-private:
-    char *_passWord;
-    int _port;
-    std::string _serverName;
+    private:
+        char *_passWord;
+        int _port;
+        std::string _serverName;
 
-    // std::string _buffer;
+        int _serverSocket, _newSocket;
+        struct sockaddr_in _server_addr;
 
-    int _serverSocket, _newSocket;
-    struct sockaddr_in _server_addr;
+        std::vector<pollfd> _pollfds;
+        std::map<int, Client> _clients;
 
-    std::vector<pollfd> _pollfds;
-    std::map<int, Client> _clients;
+    public:
+        std::map<std::string, Channel > _channels;
+        Irc(int port, char *password);
 
-public:
-    std::map<std::string, Channel > _channels;
+        /**
+         * @brief socket() Create server socket and initialize it
+         *
+         * @param INADDR_ANY : the server listening on all available network interfaces
+         * @param AF_INET : the addr family for IPv4
+         * @param  htons : convert to network byte order (big-endian)
+=         * @return zero on success
+         */
+        void createSocket();
 
-    Irc(int port, char *password);
+        /**
+         * @brief here we allow the server socket fd to be reusable
+         *
+         * @param AF_INET : IPv4 Internet protocol
+         * @param SOCK_STREAM : sock type, ensure reliable, two-way, without loss or duplication connection
+         * @param IPPROTO_TCP : tcp rotocol
+         * @param SOL_SOCKET : the opteions are the set to the socket level
+         * @param SO_REUSEADDR : support the use of the local address
+         * if we set the the opt to 0 we will disable this option
+         * @return zero on success
+         */
+        void settingsockopt();
 
-    void createSocket();
-    void bindSocket();
-    void listeningToClients();
+        /**
+         * @brief here we set the server socket to be nonbloking
+         *
+         * @param F_SETFL : file status flag
+         * @param O_NONBLOCK : socket operations wait
+         * @return zero on success
+         */
+        void nonBlockFd();
 
-    void runServer();
+        /**
+         * @brief here we set the server socket to be nonbloking
+         *
+         * @param F_SETFL : file status flag
+         * @param O_NONBLOCK : socket operations wait
+         * @return zero on success
+         */
+        void bindSocket();
 
-    void addClient();
+        // listening for the clients (wait for incoming connection from the client)
+        void listeningToClients();
 
-    void Handle_activity();
+        /**
+         * @brief Establish connections and start communication
+         *
+         * @return poll() returns number of elements in the pollfds whose revents,
+         * 0 on timeout -1 on error
+         */
+        void runServer();
 
-    void printc(std::string, std::string, int);
+        /**
+         * @brief Accept a new client connection
+         *
+         * @param sockfd : socket that has been listening for connections after a
+         * @param addr : socket operations wait
+         * @return zero on success
+         */
+        void addClient();
+        void Handle_activity();
+        void printc(std::string, std::string, int);
+        void recvClientsMsg(Client &, std::string);
 
-    void buffer_msg();
-
-    void recvClientsMsg(Client &, std::string);
-
-    // void add_new_client(int client_fd);
-    // void remove_client(int client_fd);
 };
