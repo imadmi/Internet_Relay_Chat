@@ -10,7 +10,6 @@ private:
     int _pwd;
 
     std::string _buffer;
-    int _socket_fd;
     std::string _username;
     std::string _nickname;
     std::string _realname;
@@ -22,6 +21,7 @@ private:
     int _send_flag;
     bool _is_registered;
     bool _is_authenticated;
+    unsigned long _start;
 
 public:
     Client(int);
@@ -88,5 +88,15 @@ public:
     int get_fd()
     {
         return _fd;
+    }
+
+    void setStart(unsigned long value)
+    {
+        _start = value;
+    }
+
+    unsigned long getStart()
+    {
+        return _start;
     }
 };

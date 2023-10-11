@@ -2,6 +2,15 @@
 #include "../../headers/Channel.hpp"
 #include "../../headers/commands.hpp"
 
+
+// unsigned long Irc::get_time(void)
+// {
+//     struct timeval time;
+
+//     gettimeofday(&time, NULL);
+//     return (time.tv_sec * 1000 + time.tv_usec / 1000);
+// }
+
 Irc::Irc(int port, char *password)
 {
     _passWord = password;
@@ -98,18 +107,65 @@ Client::Client(int fd)
     _nickname = "";
     _username = "";
     _buffer = "";
+
+
+
+    struct timeval time;
+
+    gettimeofday(&time, NULL);
+    // return (time.tv_sec * 1000 + time.tv_usec / 1000);
+    _start = (time.tv_sec * 1000 + time.tv_usec / 1000);
+
+    // // Your code here...
+    // sleep(5);
+
+    // // End measuring time
+    // end = get_time();
+    // double elapsed = static_cast<double>(end - _start) / CLOCKS_PER_SEC;
+    // // Convert to minutes and seconds
+    // int minutes = static_cast<int>(elapsed) / 60;
+    // int seconds = static_cast<int>(elapsed) % 60;
+
+    // // Format as "mm:ss"
+    // std::cout << PURPLE << "LOGTIME for client " << fd << " is " <<  minutes << " : " << seconds << std::endl;
+
+
+
+
 }
+
+
+void Irc::handleLogTime(Client &client)
+{
+    struct timeval time;
+
+    gettimeofday(&time, NULL);
+    unsigned long end = (time.tv_sec * 1000 + time.tv_usec / 1000);
+    unsigned long seconds = end / 1000;
+    unsigned long startSeconds = client.getStart() / 1000;
+    unsigned long minutes = seconds / 60 - startSeconds / 60;
+    seconds %= 60;
+    std::ostringstream oss;
+    oss << minutes << " minutes and " << seconds << " seconds";
+    std::string str = oss.str();
+    // std::string msg = ":@ " + std::to_string(001) + " " + client.get_nickname() + " LOGTIME : " + str + "\n";
+    std::string msg = ":@ " + client.get_nickname() + " LOGTIME : " + str + "\n";
+    send(client.get_fd(), msg.c_str(), strlen(msg.c_str()), 0);
+}
+
 
 void Irc::addClient()
 {
-    _newSocket = accept(_serverSocket, nullptr, nullptr);
+    _newSocket = accept(_serverSocket, NULL, NULL);
     if (_newSocket < 0)
         printc("Error accepting client connection", RED, 1);
+
     Client new_client(_newSocket);
     pollfd client_pollfd = {_newSocket, POLLIN, 0};
     _pollfds.push_back(client_pollfd);
-    _clients.insert(std::pair<int, Client>(_newSocket, new_client)); // insert a new nod in client map with the fd as key
-    std::cout << GREEN << "[Server] Added client #" << _newSocket << " successfully" << RESET << std::endl;
+    _clients.insert(std::pair<int, Client>(_newSocket, new_client));
+    std::cout << GREEN << "[Server] Added client #" << _newSocket \
+    << " successfully" << RESET << std::endl;
 }
 
 void Irc::printc(std::string msg, std::string color, int ex)
@@ -121,70 +177,49 @@ void Irc::printc(std::string msg, std::string color, int ex)
 
 void Irc::Handle_activity()
 {
-    for (size_t i = 1; i < _pollfds.size(); ++i)
+    for (int i = 1; i < _pollfds.size(); i++)
     {
         if (_pollfds[i].revents & POLLIN)
         {
             char buffer[BUFFER_SIZE];
-            memset(buffer, 0, sizeof(buffer));
-
-            int bytesRead = recv(_pollfds[i].fd, buffer, BUFFER_SIZE, 0);
-
-            // Handle client disconnection or error
-            if (bytesRead == 0)
+            bzero(buffer, sizeof(buffer));
+            int count = recv(_pollfds[i].fd, buffer, BUFFER_SIZE - 1, 0);
+            if (count == 0)
             {
-                std::cout << YELLOW << "Client " << _pollfds[i].fd << " disconnected." << RESET << std::endl;
-                std::cout << PURPLE << "Total clients is : " << _pollfds.size() - 2 << RESET << std::endl;
-                close(_pollfds[i].fd);
-                // _pollfds.erase(_pollfds.begin() + i);
-                // _clients.erase(_pollfds[i].fd);
-                // --i; // Decrement i to account for the removed socket
+                std::cout << YELLOW << "Client " << _pollfds[i].fd << " disconnected.\n";
+                std::cout << PURPLE << "Total clients : " << _pollfds.size() - 2 << RESET << std::endl;
             }
-            if (bytesRead < 0)
+            else if (count < 0)
             {
-                std::cerr << RED << "Error reading from client " << _pollfds[i].fd << RESET << std::endl;
+                std::cerr << RED << "Error reading from client " << _pollfds[i].fd << "\n";
+                std::cout << PURPLE << "Total clients : " << _pollfds.size() - 2 << RESET << std::endl;
             }
             else
             {
                 std::string message(buffer);
-
-                std::map<int, Client>::iterator it = _clients.find(_pollfds[i].fd);
+                it = _clients.find(_pollfds[i].fd);
 
                 if (it != _clients.end())
                     recvClientsMsg(it->second, message);
                 if (it->second.get_buffer().find('\n') != std::string::npos)
                 {
+                    handleLogTime(it->second);
                     excute_command(it->second.get_buffer(), it->second, _channels, _clients);
                     std::cout << BLUE << "Client [" << it->second.get_fd() << "] : " << it->second.get_buffer() << RESET << std::flush;
                     it->second.set_buffer("");
                 }
             }
-            if (_pollfds[i].revents & POLLIN && bytesRead == 0)
+            if (_pollfds[i].revents & POLLIN && count <= 0)
             {
+                close(_pollfds[i].fd);
                 _clients.erase(_pollfds[i].fd);
                 _pollfds.erase(_pollfds.begin() + i);
             }
         }
-
-        // else if (_pollfds[i].revents & POLLHUP)
-        // {
-        //     std::cout << YELLOW << "Client " << _pollfds[i].fd << " disconnected." << RESET << std::endl;
-        //     std::cout << "Total clients is : " << _pollfds.size() - 1 << RESET << std::endl;
-        //     close(_pollfds[i].fd);
-        //     _pollfds.erase(_pollfds.begin() + i);
-        //     _clients.erase(_pollfds[i].fd);
-        //     --i; // Decrement i to account for the removed socket
-        // }
     }
 }
 
 void Irc::recvClientsMsg(Client &client, std::string buffer)
 {
     client.addt_buffer(buffer);
-
-    // if (client.get_buffer().find('\n') != std::string::npos)
-    // {
-    //     std::cout << BLUE << "Received from client [" << client.get_fd() << "] : " << client.get_buffer() << RESET << std::endl;
-    //     // client.set_buffer("");
-    // }
 }
