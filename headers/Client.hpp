@@ -10,7 +10,6 @@ private:
     int _pwd;
 
     std::string _buffer;
-    int _socket_fd;
     std::string _username;
     std::string _nickname;
     std::string _realname;
@@ -18,11 +17,10 @@ private:
     bool _is_registered;
     bool _is_authenticated;
     unsigned long _start;
-    // unsigned long _end;
 
 public:
     Client(int);
-    std::map<std::string, Channel > _channels;
+    std::map<std::string, Channel> _channels;
 
     std::string get_nickname();
     std::string get_username();

@@ -2,6 +2,15 @@
 #include "../../headers/Channel.hpp"
 #include "../../headers/commands.hpp"
 
+
+// unsigned long Irc::get_time(void)
+// {
+//     struct timeval time;
+
+//     gettimeofday(&time, NULL);
+//     return (time.tv_sec * 1000 + time.tv_usec / 1000);
+// }
+
 Irc::Irc(int port, char *password)
 {
     _passWord = password;
@@ -103,14 +112,17 @@ Client::Client(int fd)
 
 
 
-    // Start measuring time
-    _start = std::clock();
+    struct timeval time;
+
+    gettimeofday(&time, NULL);
+    // return (time.tv_sec * 1000 + time.tv_usec / 1000);
+    _start = (time.tv_sec * 1000 + time.tv_usec / 1000);
 
     // // Your code here...
     // sleep(5);
 
     // // End measuring time
-    // end = std::clock();
+    // end = get_time();
     // double elapsed = static_cast<double>(end - _start) / CLOCKS_PER_SEC;
     // // Convert to minutes and seconds
     // int minutes = static_cast<int>(elapsed) / 60;
@@ -127,23 +139,19 @@ Client::Client(int fd)
 
 void Irc::handleLogTime(Client &client)
 {
+    struct timeval time;
 
-    unsigned long end = std::clock();
-    double elapsed = static_cast<double>(end - client.getStart()) / CLOCKS_PER_SEC;
-    // Convert to minutes and seconds
-    int minutes = static_cast<int>(elapsed) / 60;
-    int seconds = static_cast<int>(elapsed) % 60;
-
-    // Format as "mm:ss"
-    // std::cout << PURPLE << "LOGTIME for client " << client.get_fd() << " is " <<  minutes << " : " << seconds << std::endl;
-
-
-    // Set precision to 3
+    gettimeofday(&time, NULL);
+    unsigned long end = (time.tv_sec * 1000 + time.tv_usec / 1000);
+    unsigned long seconds = end / 1000;
+    unsigned long startSeconds = client.getStart() / 1000;
+    unsigned long minutes = seconds / 60 - startSeconds / 60;
+    seconds %= 60;
     std::ostringstream oss;
-    oss << minutes << " : " << seconds;
-    std::string x_str = oss.str();
-
-    std::string msg = ":@localhost " + std::to_string(001) + " " + client.get_nickname() + " LOGTIME :" + x_str + " minutes\n";
+    oss << minutes << " minutes and " << seconds << " seconds";
+    std::string str = oss.str();
+    // std::string msg = ":@ " + std::to_string(001) + " " + client.get_nickname() + " LOGTIME : " + str + "\n";
+    std::string msg = ":@ " + client.get_nickname() + " LOGTIME : " + str + "\n";
     send(client.get_fd(), msg.c_str(), strlen(msg.c_str()), 0);
 }
 

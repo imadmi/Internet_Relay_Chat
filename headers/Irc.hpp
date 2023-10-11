@@ -7,6 +7,7 @@
 // #include <cstring>
 // #include <cstdlib>
 #include <ctime>
+#include <sys/time.h>
 #include <iostream>
 #include <sys/socket.h>
 #include <arpa/inet.h>
@@ -137,5 +138,8 @@ class Irc
 
         //
         void handleLogTime(Client &);
+
+        //
+        // void get_time();
 
 };

@@ -2,9 +2,6 @@
 #include "../headers/Channel.hpp"
 #include "../headers/Client.hpp"
 
-
-
-
 std::string Client::get_nickname()
 {
     return _nickname;
@@ -27,12 +24,12 @@ std::string Client::get_username()
 
 int Client::get_socket_fd()
 {
-    return _socket_fd;
+    return _fd;
 }
 
 std::string Client::get_socket_fd_str()
 {
-    return std::to_string(_socket_fd);
+    return std::to_string(_fd);
 }
 
 int Client::kick_user(Client &client, Channel &channel)
@@ -58,21 +55,18 @@ bool Client::is_operator(Channel &channel)
 
 int Client::set_topic(Channel &channel, std::string topic)
 {
-  if (is_operator(channel) || channel.get_signe_mode('t') == '-')
+    if (is_operator(channel) || channel.get_signe_mode('t') == '-')
     {
-      channel.set_topic(topic);
-      return (0);
+        channel.set_topic(topic);
+        return (0);
     }
     return (1);
 }
-
-
 
 void Client::set_nickname(std::string nickname)
 {
     _nickname = nickname;
 }
-
 
 bool Client::is_registered()
 {
@@ -98,4 +92,3 @@ void Client::set_username(std::string username)
 {
     _username = username;
 }
-
