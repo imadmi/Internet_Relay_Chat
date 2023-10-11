@@ -136,10 +136,8 @@ class Irc
         // buffer the received message in the client message
         void recvClientsMsg(Client &, std::string);
 
-        //
+        // handleLogTime
         void handleLogTime(Client &);
 
-        //
-        // void get_time();
 
 };

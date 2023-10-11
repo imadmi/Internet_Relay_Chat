@@ -2,15 +2,6 @@
 #include "../../headers/Channel.hpp"
 #include "../../headers/commands.hpp"
 
-
-// unsigned long Irc::get_time(void)
-// {
-//     struct timeval time;
-
-//     gettimeofday(&time, NULL);
-//     return (time.tv_sec * 1000 + time.tv_usec / 1000);
-// }
-
 Irc::Irc(int port, char *password)
 {
     _passWord = password;
@@ -26,7 +17,6 @@ Irc::Irc(int port, char *password)
     std::cout << BLACK << "IRC Server is running on port : " << _port << RESET << std::endl;
 }
 
-
 void Irc::createSocket()
 {
     _serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
@@ -40,7 +30,6 @@ void Irc::createSocket()
     _server_addr.sin_port = htons(_port);
 }
 
-
 void Irc::settingsockopt()
 {
     int opt = 1;
@@ -50,7 +39,6 @@ void Irc::settingsockopt()
         exit(EXIT_FAILURE);
     }
 }
-
 
 void Irc::nonBlockFd()
 {
@@ -63,6 +51,7 @@ void Irc::nonBlockFd()
 
 void Irc::bindSocket()
 {
+
     if (bind(_serverSocket, (struct sockaddr *)&_server_addr, sizeof(_server_addr)) < 0)
     {
         perror("bind");
@@ -110,51 +99,26 @@ Client::Client(int fd)
     _username = "";
     _buffer = "";
 
-
-
     struct timeval time;
-
     gettimeofday(&time, NULL);
-    // return (time.tv_sec * 1000 + time.tv_usec / 1000);
-    _start = (time.tv_sec * 1000 + time.tv_usec / 1000);
-
-    // // Your code here...
-    // sleep(5);
-
-    // // End measuring time
-    // end = get_time();
-    // double elapsed = static_cast<double>(end - _start) / CLOCKS_PER_SEC;
-    // // Convert to minutes and seconds
-    // int minutes = static_cast<int>(elapsed) / 60;
-    // int seconds = static_cast<int>(elapsed) % 60;
-
-    // // Format as "mm:ss"
-    // std::cout << PURPLE << "LOGTIME for client " << fd << " is " <<  minutes << " : " << seconds << std::endl;
-
-
-
-
+    _start = time.tv_sec;
 }
-
 
 void Irc::handleLogTime(Client &client)
 {
     struct timeval time;
 
     gettimeofday(&time, NULL);
-    unsigned long end = (time.tv_sec * 1000 + time.tv_usec / 1000);
-    unsigned long seconds = end / 1000;
-    unsigned long startSeconds = client.getStart() / 1000;
-    unsigned long minutes = seconds / 60 - startSeconds / 60;
-    seconds %= 60;
+    unsigned long end = time.tv_sec - client.getStart();
+    unsigned long minutes = end / 60;
+    end %= 60;
+
     std::ostringstream oss;
-    oss << minutes << " minutes and " << seconds << " seconds";
+    oss << minutes << " minutes and " << end << " seconds";
     std::string str = oss.str();
-    // std::string msg = ":@ " + std::to_string(001) + " " + client.get_nickname() + " LOGTIME : " + str + "\n";
-    std::string msg = ":@ " + client.get_nickname() + " LOGTIME : " + str + "\n";
+    std::string msg = ":@ " + std::to_string(001) + " " + client.get_nickname() + " LOGTIME : " + str + "\n";
     send(client.get_fd(), msg.c_str(), strlen(msg.c_str()), 0);
 }
-
 
 void Irc::addClient()
 {
@@ -207,7 +171,8 @@ void Irc::Handle_activity()
                 {
                     handleLogTime(it->second);
                     excute_command(it->second.get_buffer(), it->second, _channels, _clients);
-                    std::cout << BLUE << "Client [" << it->second.get_fd() << "] : " << it->second.get_buffer() << RESET << std::flush;
+                    std::cout << BLUE << "Client [" << it->second.get_fd() << "] : " \
+                    << it->second.get_buffer()  << RESET << std::flush;
                     it->second.set_buffer("");
                 }
             }
