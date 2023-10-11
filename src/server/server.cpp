@@ -108,32 +108,10 @@ Client::Client(int fd)
     _username = "";
     _buffer = "";
 
-
-
     struct timeval time;
-
     gettimeofday(&time, NULL);
-    // return (time.tv_sec * 1000 + time.tv_usec / 1000);
     _start = (time.tv_sec * 1000 + time.tv_usec / 1000);
-
-    // // Your code here...
-    // sleep(5);
-
-    // // End measuring time
-    // end = get_time();
-    // double elapsed = static_cast<double>(end - _start) / CLOCKS_PER_SEC;
-    // // Convert to minutes and seconds
-    // int minutes = static_cast<int>(elapsed) / 60;
-    // int seconds = static_cast<int>(elapsed) % 60;
-
-    // // Format as "mm:ss"
-    // std::cout << PURPLE << "LOGTIME for client " << fd << " is " <<  minutes << " : " << seconds << std::endl;
-
-
-
-
 }
-
 
 void Irc::handleLogTime(Client &client)
 {
@@ -143,16 +121,15 @@ void Irc::handleLogTime(Client &client)
     unsigned long end = (time.tv_sec * 1000 + time.tv_usec / 1000);
     unsigned long seconds = end / 1000;
     unsigned long startSeconds = client.getStart() / 1000;
-    unsigned long minutes = seconds / 60 - startSeconds / 60;
+    unsigned long minutes = (seconds - startSeconds) / 60;
     seconds %= 60;
+
     std::ostringstream oss;
     oss << minutes << " minutes and " << seconds << " seconds";
     std::string str = oss.str();
     std::string msg = ":@ " + std::to_string(001) + " " + client.get_nickname() + " LOGTIME : " + str + "\n";
-    // std::string msg = ":@ " + client.get_nickname() + " LOGTIME : " + str + "\n";
     send(client.get_fd(), msg.c_str(), strlen(msg.c_str()), 0);
 }
-
 
 void Irc::addClient()
 {
