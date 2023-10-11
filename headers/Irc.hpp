@@ -1,14 +1,15 @@
 #pragma once
 
 /* includes */
-#include <iostream>
 // #include <sys/types.h>
-#include <sys/socket.h>
 // #include <netinet/in.h>
-#include <arpa/inet.h>
 // #include <netdb.h>
 // #include <cstring>
 // #include <cstdlib>
+#include <ctime>
+#include <iostream>
+#include <sys/socket.h>
+#include <arpa/inet.h>
 #include <vector>
 #include <map>
 #include <poll.h>
@@ -16,7 +17,6 @@
 #include <sstream>
 #include <string>
 #include <cerrno>
-// #include <ctime>
 #include <fcntl.h>
 
 
@@ -30,7 +30,7 @@
 #define BLUE "\033[0;34m"
 #define PURPLE "\033[0;35m"
 
-#define BUFFER_SIZE 1000
+#define BUFFER_SIZE 20
 #define MAX_CLIENTS 10
 #define PRINT(x) std::cout << x << std::endl;
 
@@ -45,15 +45,16 @@ class Irc
         char *_passWord;
         int _port;
         std::string _serverName;
-
         int _serverSocket, _newSocket;
         struct sockaddr_in _server_addr;
-
         std::vector<pollfd> _pollfds;
         std::map<int, Client> _clients;
+        std::map<int, Client>::iterator it;
 
     public:
         std::map<std::string, Channel > _channels;
+        
+        // Irc constructor
         Irc(int port, char *password);
 
         /**
@@ -113,11 +114,28 @@ class Irc
          *
          * @param sockfd : socket that has been listening for connections after a
          * @param addr : socket operations wait
+         * @param POLLIN : monitor the file descriptor for incoming data that is ready to be read
          * @return zero on success
          */
         void addClient();
+
+        /**
+         * @brief check for clients activities and handle them
+         *
+         * @param flags : in this case '0' , recv behave like read() 
+         * @return socket stream sends zero bytes to notifiy the server that the connection has ended
+         * -1 when an error occurred 
+         * count of bytes sent by the socket
+         */
         void Handle_activity();
+
+        // print using a color and % exit
         void printc(std::string, std::string, int);
+
+        // buffer the received message in the client message
         void recvClientsMsg(Client &, std::string);
+
+        //
+        void handleLogTime(Client &);
 
 };

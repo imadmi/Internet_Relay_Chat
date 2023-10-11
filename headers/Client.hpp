@@ -17,6 +17,8 @@ private:
     std::string _password;
     bool _is_registered;
     bool _is_authenticated;
+    unsigned long _start;
+    // unsigned long _end;
 
 public:
     Client(int);
@@ -70,5 +72,15 @@ public:
     int get_fd()
     {
         return _fd;
+    }
+
+    void setStart(unsigned long value)
+    {
+        _start = value;
+    }
+
+    unsigned long getStart()
+    {
+        return _start;
     }
 };
