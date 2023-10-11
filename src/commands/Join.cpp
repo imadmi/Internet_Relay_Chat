@@ -21,11 +21,7 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
     std::map<std::string, Channel>::iterator it = channels.find(channel_name);
     if (it != channels.end())
     {
-        if (it->second.add_client(client))
-        {
-            client.add_buffer_to_send(ERR_USERONCHANNEL(client.get_nickname(), client.get_nickname(), channel_name));
-            return (1);
-        }
+        it->second.add_client(client);
         client.join_channel(it->second);
     }
     else
