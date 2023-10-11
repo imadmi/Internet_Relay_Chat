@@ -3,26 +3,44 @@
 #include "../../headers/Irc.hpp"
 #include "../../headers/Channel.hpp"
 
-static bool isForbidden(char c)
-{
-    if (c == ' ' || c == ',' || c == '*' || c == '?' || c == '!' || c == '@' || c == '.')
-        return (true);
-    else
-        return (false);
-}
+// static bool hasInvalidCharacters(std::string nickname)
+// {
+//     if (nickname[0] == '$' || nickname[0] == ':' || nickname[0] == '#')
+//         return (true);
 
-static bool containsInvalidCharacters(std::string nickname)
+//     for (size_t i = 0; i < nickname.size(); i++)
+//     {
+//         if ((nickname[i] == ' ' || nickname[i] == ',' || nickname[i] == '*' || nickname[i] == '?' || nickname[i] == '!' || nickname[i] == '@' || nickname[i] == '.'))
+//             return (true);
+//     }
+//     return (false);
+// }
+bool hasInvalidCharacters(const std::string& name)
 {
-    if (nickname[0] == '$' || nickname[0] == ':' || nickname[0] == '#')
-        return (true);
-
-    for (size_t i = 0; i < nickname.size(); i++)
+    // Check the first character for validity
+    char firstChar = name[0];
+    if (firstChar == '$' || firstChar == ':' || firstChar == '#')
     {
-        if (isForbidden(nickname[i]) == true)
-            return (true);
+        return true;
     }
-    return (false);
+
+    // Check the rest of the string for invalid characters
+    const char invalidChars[] = " ,*?!@.";
+    for (size_t i = 0; i < name.size(); ++i)
+    {
+        for (size_t j = 0; j < sizeof(invalidChars) - 1; ++j)
+        {
+            if (name[i] == invalidChars[j])
+            {
+                return true;
+            }
+        }
+    }
+
+    // No invalid characters found
+    return false;
 }
+
 
 void nick(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> clients)
 {
@@ -39,7 +57,7 @@ void nick(std::string command, Client &client, std::map<std::string, Channel> &c
         {
             client.add_buffer_to_send(ERR_NICKNAMEINUSE(client.get_nickname(), nickname));
         }
-        else if (containsInvalidCharacters(nickname))
+        else if (hasInvalidCharacters(nickname))
         {
             client.add_buffer_to_send(ERR_ERRONEUSNICKNAME(client.get_nickname(), nickname));
         }
@@ -50,7 +68,7 @@ void nick(std::string command, Client &client, std::map<std::string, Channel> &c
     }
     else
     {
-        if (client.is_authenticated() == true && !nickname.empty())
+        if (client.is_authenticated() == true && !nickname.empty() && !client_already_exist(nickname, clients) && !hasInvalidCharacters(nickname))
         {
             client.set_old_nick(client.get_nickname());
             client.set_nickname(nickname);
