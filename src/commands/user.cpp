@@ -8,16 +8,9 @@ static std::string getCurrentTime()
     time_t currentTime;
     struct tm *timeInfo;
     char buffer[80];
-
-    // Get the current time as a Unix timestamp
     time(&currentTime);
-
-    // Convert the timestamp to a struct tm
     timeInfo = localtime(&currentTime);
-
-    // Format the time as a string
     strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeInfo);
-
     return std::string(buffer);
 }
 static bool checkForma(const std::string &username)
@@ -51,8 +44,6 @@ static bool checkForma(const std::string &username)
 
         position++;
     }
-
-    // Check if all required parts were found
     return position == 5;
 }
 
@@ -65,13 +56,9 @@ void user(std::string command, Client &client, std::map<std::string, Channel> &c
     if (client.is_authenticated() == false && client.get_pass() != "" && client.get_nickname() != "")
     {
         if (username.empty())
-        {
-            client.add_buffer_to_send(ERR_NEEDMOREPARAMS(client.get_nickname(), "USER"));
-        }
+            send(client.get_fd(), ERR_NEEDMOREPARAMS(client.get_nickname(), "USER").c_str(), ERR_NEEDMOREPARAMS(client.get_nickname(), "USER").length(), 0);
         else if (checkForma(username) == false)
-        {
-            client.add_buffer_to_send(ERR_NEEDMOREPARAMS(client.get_nickname(), "USER"));
-        }
+            send(client.get_fd(), ERR_NEEDMOREPARAMS(client.get_nickname(), "USER").c_str(), ERR_NEEDMOREPARAMS(client.get_nickname(), "USER").length(), 0);
         else
         {
             client.set_username(username);

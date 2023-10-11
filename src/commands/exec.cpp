@@ -81,20 +81,13 @@ std::string filteredString(std::string str)
 void excute_command(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients)
 {
     (void)channels;
-    // if command is #NICK <nickname>
 
     if (command.substr(0, 4) == "PASS")
         pass(command, client, channels, clients);
-    // else
-    // {
-    //         std::cout<< "inser the pass first "<<std::endl;
-    // }
     else if (command.substr(0, 4) == "NICK")
         nick(command, client, channels, clients);
     else if (command.substr(0, 4) == "USER")
-    {
         user(command, client, channels, clients);
-    }
     if (client.is_authenticated())
     {   
         send(client.get_fd(), client.get_buff_to_send().c_str(), client.get_buff_to_send().length(), 0);
