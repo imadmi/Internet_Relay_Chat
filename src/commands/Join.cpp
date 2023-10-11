@@ -23,7 +23,6 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
     if (it != channels.end())
     {
         it->second.add_client(client);
-        client.join_channel(it->second);
     }
     else
     {
