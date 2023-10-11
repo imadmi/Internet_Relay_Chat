@@ -3,26 +3,27 @@
 #include "../../headers/Irc.hpp"
 #include "../../headers/Channel.hpp"
 
-static bool isForbidden(char c)
+bool hasInvalidCharacters(const std::string& name)
 {
-    if (c == ' ' || c == ',' || c == '*' || c == '?' || c == '!' || c == '@' || c == '.')
-        return (true);
-    else
-        return (false);
-}
-
-static bool containsInvalidCharacters(std::string nickname)
-{
-    if (nickname[0] == '$' || nickname[0] == ':' || nickname[0] == '#')
-        return (true);
-
-    for (size_t i = 0; i < nickname.size(); i++)
+    char firstChar = name[0];
+    if (firstChar == '$' || firstChar == ':' || firstChar == '#')
     {
-        if (isForbidden(nickname[i]) == true)
-            return (true);
+        return true;
     }
-    return (false);
+    const char invalidChars[] = " ,*?!@.";
+    for (size_t i = 0; i < name.size(); ++i)
+    {
+        for (size_t j = 0; j < sizeof(invalidChars) - 1; ++j)
+        {
+            if (name[i] == invalidChars[j])
+            {
+                return true;
+            }
+        }
+    }
+    return false;
 }
+
 
 void nick(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> clients)
 {
@@ -37,11 +38,11 @@ void nick(std::string command, Client &client, std::map<std::string, Channel> &c
 
         else if (client_already_exist(nickname, clients))
         {
-            client.add_buffer_to_send(ERR_NICKNAMEINUSE(client.get_nickname(), nickname));
+            send(client.get_fd(), ERR_NICKNAMEINUSE(client.get_nickname(), nickname).c_str(), ERR_NICKNAMEINUSE(client.get_nickname(), nickname).length(), 0);
         }
-        else if (containsInvalidCharacters(nickname))
+        else if (hasInvalidCharacters(nickname))
         {
-            client.add_buffer_to_send(ERR_ERRONEUSNICKNAME(client.get_nickname(), nickname));
+            send(client.get_fd(), ERR_ERRONEUSNICKNAME(client.get_nickname(), nickname).c_str(), ERR_ERRONEUSNICKNAME(client.get_nickname(), nickname).length(), 0);
         }
         else
         {
@@ -50,12 +51,14 @@ void nick(std::string command, Client &client, std::map<std::string, Channel> &c
     }
     else
     {
-        if (client.is_authenticated() == true)
+        if (client.is_authenticated() == true && !nickname.empty() && !client_already_exist(nickname, clients) && !hasInvalidCharacters(nickname))
         {
             client.set_old_nick(client.get_nickname());
             client.set_nickname(nickname);
             std::cout << "[Server] Nickname change registered. new nickname is now : " << client.get_nickname() << std::endl;
             client.set_buff_to_send(RPL_NICK(client.get_old_nick(), client.get_username(), nickname));
         }
+        else if (client.is_authenticated() == true && nickname.empty())
+            send(client.get_fd(), ERR_NONICKNAMEGIVEN(client.get_nickname()).c_str(), ERR_NONICKNAMEGIVEN(client.get_nickname()).length(), 0);
     }
 }

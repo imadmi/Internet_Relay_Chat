@@ -11,14 +11,11 @@ void pass( std::string command, Client &client, std::map<std::string, Channel> &
     {
         if (pass.empty())
         {
-            client.add_buffer_to_send(ERR_NEEDMOREPARAMS(client.get_nickname(), "PASS"));
+            send(client.get_fd(), ERR_NEEDMOREPARAMS(client.get_nickname(), "PASS").c_str(), ERR_NEEDMOREPARAMS(client.get_nickname(), "PASS").length(), 0);
         }
         else if (pass != "pass")
-        {
-            client.add_buffer_to_send(ERR_PASSWDMISMATCH(client.get_nickname()));
-        }
+            send(client.get_fd(), ERR_PASSWDMISMATCH(client.get_nickname()).c_str(), ERR_PASSWDMISMATCH(client.get_nickname()).length(), 0);
         else
             client.set_pass(pass);
     }
-    return;
 }

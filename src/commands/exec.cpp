@@ -68,15 +68,12 @@ std::string filteredString(std::string str)
 
 void excute_command(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients)
 {
-
     if (command.substr(0, 4) == "PASS")
         pass(command, client, channels, clients);
-    if (command.substr(0, 4) == "NICK")
+    else if (command.substr(0, 4) == "NICK")
         nick(command, client, channels, clients);
-    if (command.substr(0, 4) == "USER")
-    {
+    else if (command.substr(0, 4) == "USER")
         user(command, client, channels, clients);
-    }
     if (command.substr(0, 4) == "JOIN")
     {
         join(command, client, channels);
