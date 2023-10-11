@@ -39,6 +39,7 @@ public:
     bool is_operator(Channel &);
     int get_socket_fd();
     int join_channel(Channel &channel);
+    int leave_channel(Channel &channel);
     int kick_user(Client &, Channel &);
     bool is_registered();
     bool is_authenticated();
@@ -54,7 +55,6 @@ public:
     void set_buff_to_send(std::string);
     int set_operator(Channel &channel, Client &client);
     int remove_operator(Channel &channel, Client &client);
-    int add_channel(Channel &channel);
     std::string get_pass()
     {
         return _password;

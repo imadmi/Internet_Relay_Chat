@@ -13,12 +13,15 @@
 // channels
 #define RPL_JOIN(nickname, channel) (":" + nickname + " JOIN " + channel + "\r\n")
 #define ERR_USERONCHANNEL(client, nick, channel) (":localhost 443 " + client + " " + nick + " " + channel + " is already on channel\r\n")
-
+#define ERR_NOSUCHCHANNEL(client, channel) (":localhost 403 " + client + " " + channel + " :No such channel\r\n")
+#define ERR_NOTONCHANNEL(client, channel) (":localhost 442 " + client + " " + channel + " :You're not on that channel.\r\n")
+#define ERR_CHANOPRIVSNEEDED(client, channel) (":localhost 482 " + client + " " + channel + " :You're not channel operator.\r\n")
+#define RPL_KICK(client, channel) (":localhost 441 " + client + " " + channel + " :You have been kicked from the channel.\r\n")
+#define ERR_NOSUCHNICK(client, nickname) (":localhost 401 " + client + " " + nickname + " :No such nick/channel\r\n")
+/// end channels
+#define ERR_PASSWDMISMATCH(client) (":localhost 464 " + client + " :Password incorrect\r\n")
 #define RPL_MYINFO(client, servername, version, user_modes, chan_modes, chan_param_modes) (":localhost 004 " + client + " " + servername + " " + version + " " + user_modes + " " + chan_modes + " " + chan_param_modes + "\r\n")
 #define ERR_NEEDMOREPARAMS(client, command) (":localhost 461 " + client + " " + command + " :Not enough parameters.\r\n")
-
-#define ERR_PASSWDMISMATCH(client) (":localhost 464 " + client + " :Password incorrect.\r\n")
-
 /**
  * @brief execute the command given by the client
  * @param command the command to execute
@@ -38,8 +41,30 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
  */
 
 int join(std::string command, Client &client, std::map<std::string, Channel> &channels);
+/**
+ * Checks if a client with the given nickname already exists in the map of clients.
+ * @param nickname The nickname to check for.
+ * @param clients The map of clients to search in.
+ * @return True if a client with the given nickname already exists in the map of clients, false otherwise.
+ */
 bool client_already_exist(std::string nickname, std::map<int, Client> clients);
+/**
+ * @brief Filters a string by removing any unwanted characters.
+ *
+ * @param str The string to be filtered.
+ * @return The filtered string.
+ */
 std::string filteredString(std::string str);
 void nick(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> clients);
 void user(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> clients);
 void pass(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
+
+/**
+ * Kicks a client from a channel.
+ *
+ * @param command The kick command to execute.
+ * @param client The client who executed the command.
+ * @param channels The map of channels in the server.
+ * @param clients The map of clients in the server.
+ */
+void kick(std::string command, Client &client, std::map<std::string, Channel> &channels);

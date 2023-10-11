@@ -17,41 +17,41 @@ bool client_already_exist(std::string nickname, std::map<int, Client> clients)
     return false; // Nickname does not exist
 }
 
-static bool checkForma(const std::string &username)
-{
-    std::istringstream iss(username);
-    std::string word;
-    int position = 1;
-    while (iss >> word)
-    {
-        if (position == 1 || position == 4)
-        {
-        }
-        else if (position == 2)
-        {
-            if (word != "0")
-            {
-                return false;
-            }
-        }
-        else if (position == 3)
-        {
-            if (word != "*")
-            {
-                return false;
-            }
-        }
-        else
-        {
-            return false;
-        }
+// static bool checkForma(const std::string &username)
+// {
+//     std::istringstream iss(username);
+//     std::string word;
+//     int position = 1;
+//     while (iss >> word)
+//     {
+//         if (position == 1 || position == 4)
+//         {
+//         }
+//         else if (position == 2)
+//         {
+//             if (word != "0")
+//             {
+//                 return false;
+//             }
+//         }
+//         else if (position == 3)
+//         {
+//             if (word != "*")
+//             {
+//                 return false;
+//             }
+//         }
+//         else
+//         {
+//             return false;
+//         }
 
-        position++;
-    }
+//         position++;
+//     }
 
-    // Check if all required parts were found
-    return position == 5;
-}
+//     // Check if all required parts were found
+//     return position == 5;
+// }
 
 std::string filteredString(std::string str)
 {
@@ -79,8 +79,11 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
     }
     if (command.substr(0, 4) == "JOIN")
     {
-
         join(command, client, channels);
+    }
+    if (command.substr(0, 4) == "KICK")
+    {
+        kick(command, client, channels);
     }
     if (client.is_authenticated())
     {

@@ -17,6 +17,16 @@ int Client::join_channel(Channel &channel)
     return (0);
 }
 
+int Client::leave_channel(Channel &channel)
+{
+    if (this->_channels.find(channel.get_name()) == _channels.end())
+        return (1);
+    if (channel.remove_client(*this) == 1)
+        return (1);
+    _channels.erase(channel.get_name());
+    return (0);
+}
+
 std::string Client::get_username()
 {
     return _username;
@@ -48,7 +58,7 @@ int Client::kick_user(Client &client, Channel &channel)
 
 bool Client::is_operator(Channel &channel)
 {
-    if (channel._operators.find(get_socket_fd()) != channel._operators.end())
+    if (channel.get_operators().find(get_socket_fd()) != channel.get_operators().end())
         return (true);
     return (false);
 }
@@ -97,7 +107,7 @@ int Client::set_operator(Channel &channel, Client &client)
 {
     if (channel.get_clients().find(client.get_socket_fd()) == channel.get_clients().end())
         return (-1);
-    channel._operators.insert(std::pair<int, Client>(client.get_socket_fd(), client));
+    channel.get_operators().insert(std::pair<int, Client>(client.get_socket_fd(), client));
     return (0);
 }
 
@@ -105,17 +115,10 @@ int Client::remove_operator(Channel &channel, Client &client)
 {
     if (channel.get_clients().find(client.get_socket_fd()) == channel.get_clients().end())
         return (-1);
-    channel._operators.erase(client.get_socket_fd());
+    channel.get_operators().erase(client.get_socket_fd());
     return (0);
 }
 
-int Client::add_channel(Channel &channel)
-{
-    if (this->_channels.find(channel.get_name()) != _channels.end())
-        return (1);
-    _channels.insert(std::pair<std::string, Channel>(channel.get_name(), channel));
-    return (0);
-}
 void Client::set_realname(std::string realname)
 {
     _realname = realname;

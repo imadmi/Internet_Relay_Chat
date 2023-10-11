@@ -5,6 +5,8 @@
 int join(std::string command, Client &client, std::map<std::string, Channel> &channels)
 {
     std::string channel_name = command.substr(5, command.length() - 5);
+    // remove the \r\n
+    channel_name = channel_name.substr(0, channel_name.length() - 2);
     if (channels.find(channel_name) == channels.end())
     {
         Channel new_channel(channel_name);
@@ -20,7 +22,7 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
     if (it != channels.end())
     {
         it->second.add_client(client);
-        client.add_channel(it->second);
+        client.join_channel(it->second);
     }
     else
     {

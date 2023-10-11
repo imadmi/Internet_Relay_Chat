@@ -39,8 +39,8 @@ int Channel::remove_client(Client &client)
     if (this->_clients.find(client.get_socket_fd()) == this->_clients.end())
         return (-1);
     this->_clients.erase(client.get_socket_fd());
-    if (this->_operators.find(client.get_socket_fd()) != this->_operators.end())
-        this->_operators.erase(client.get_socket_fd());
+    if (this->get_operators().find(client.get_socket_fd()) != this->get_operators().end())
+        this->get_operators().erase(client.get_socket_fd());
     return (0);
 }
 
@@ -77,6 +77,11 @@ int Channel::set_operator(Client &client)
 {
     if (this->_clients.find(client.get_socket_fd()) == this->_clients.end())
         return (-1);
-    this->_operators.insert(std::pair<int, Client>(client.get_socket_fd(), client));
+    this->get_operators().insert(std::pair<int, Client>(client.get_socket_fd(), client));
     return (0);
+}
+
+std::map<int, Client> Channel::get_operators()
+{
+    return (this->_operators);
 }

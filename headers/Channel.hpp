@@ -14,9 +14,9 @@ private:
     std::map<int, Client> _clients;
     std::string _topic;
     std::map<char, char> _modes;
+    std::map<int, Client> _operators;
 
 public:
-    std::map<int, Client> _operators;
     /**
      * @brief Construct a new Channel object
      *
@@ -92,4 +92,10 @@ public:
      * @return status of the operation (0 if success).
      */
     int set_operator(Client &client);
+    /**
+     * @brief get the operator of the channel.
+     *
+     * @return std::map<int, Client>
+     */
+    std::map<int, Client> get_operators();
 };
