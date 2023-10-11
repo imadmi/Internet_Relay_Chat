@@ -11,54 +11,18 @@ bool client_already_exist(std::string nickname, std::map<int, Client> clients)
         std::cout << nickname << std::endl;
         if (cl.get_nickname() == nickname)
         {
-            return true; // Nickname already exists
+            return true;
         }
     }
-    return false; // Nickname does not exist
+    return false; 
 }
-
-// static bool checkForma(const std::string &username)
-// {
-//     std::istringstream iss(username);
-//     std::string word;
-//     int position = 1;
-//     while (iss >> word)
-//     {
-//         if (position == 1 || position == 4)
-//         {
-//         }
-//         else if (position == 2)
-//         {
-//             if (word != "0")
-//             {
-//                 return false;
-//             }
-//         }
-//         else if (position == 3)
-//         {
-//             if (word != "*")
-//             {
-//                 return false;
-//             }
-//         }
-//         else
-//         {
-//             return false;
-//         }
-
-//         position++;
-//     }
-
-//     // Check if all required parts were found
-//     return position == 5;
-// }
 
 std::string filteredString(std::string str)
 {
     std::string filteredString;
     for (int i = 0; i < (int)str.length(); i++)
     {
-        if (str[i] != '\n' && str[i] != '\r' && str[i] != '\t' && str[i] != '\v' && str[i] != '\f')
+        if (str[i] != '\n' && str[i] != '\r' && str[i] != '\t' && str[i] != '\v' && str[i] != '\f'  && str[i] != ' ')
         {
             filteredString += str[i];
         }
@@ -74,11 +38,11 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
         nick(command, client, channels, clients);
     else if (command.substr(0, 4) == "USER")
         user(command, client, channels, clients);
-    if (command.substr(0, 4) == "JOIN")
+    else if (command.substr(0, 4) == "JOIN")
     {
         join(command, client, channels);
     }
-    if (command.substr(0, 4) == "KICK")
+    else if (command.substr(0, 4) == "KICK")
     {
         kick(command, client, channels);
     }
@@ -86,5 +50,11 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
     {
         send(client.get_fd(), client.get_buff_to_send().c_str(), client.get_buff_to_send().length(), 0);
         client.set_buff_to_send("");
+    }
+
+    if (command.substr(0, 7) == "PRIVMSG" && client.is_authenticated())
+    {
+        std::cout<<"dsdsdsdsdsds"<<std::endl;
+        privmsg(command, client, clients, channels);
     }
 }
