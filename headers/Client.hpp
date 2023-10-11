@@ -10,7 +10,6 @@ private:
     int _pwd;
 
     std::string _buffer;
-    int _socket_fd;
     std::string _username;
     std::string _nickname;
     std::string _realname;

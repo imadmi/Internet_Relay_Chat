@@ -6,7 +6,8 @@ void kick(std::string command, Client &client, std::map<std::string, Channel> &c
 {
     std::string channel_name = command.substr(5, command.find(" ", 5) - 5);
     std::string nickname = command.substr(command.find(" ", 5) + 1, command.length() - command.find(" ", 5) - 1);
-    std::cout << "channel_name: " << channel_name << std::endl;
+    std::cout << "print all members of channel " << channel_name << std::endl;
+    channels.find(channel_name)->second.print_members();
     // print the first channel in the map
     if (channels.find(channel_name) == channels.end())
     {

@@ -34,12 +34,12 @@ std::string Client::get_username()
 
 int Client::get_socket_fd()
 {
-    return _socket_fd;
+    return _fd;
 }
 
 std::string Client::get_socket_fd_str()
 {
-    return std::to_string(_socket_fd);
+    return std::to_string(_fd);
 }
 
 int Client::kick_user(Client &client, Channel &channel)

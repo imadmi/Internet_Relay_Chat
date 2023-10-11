@@ -98,4 +98,5 @@ public:
      * @return std::map<int, Client>
      */
     std::map<int, Client> get_operators();
+    void print_members();
 };
