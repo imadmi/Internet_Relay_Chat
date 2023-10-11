@@ -21,7 +21,7 @@ std::string Channel::get_name()
     return _name;
 }
 
-std::map<int, Client> Channel::get_clients()
+std::map<int, Client> &Channel::get_clients()
 {
     return _clients;
 }
