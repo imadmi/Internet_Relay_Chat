@@ -56,8 +56,8 @@ std::string extract_channel_name(std::string message)
 void privmsg(std::string message, Client &client , std::map<int, Client> &clients, std::map<std::string, Channel> &channels)
 {
     std::string receiver = filteredString(  extractName(message.substr(7, message.length() - 8)) ) ;
-   // std::string channel_name =extract_channel_name( message.substr(message.find("#"), message.length() - message.find("#") -2 )) ;
-    //std::map<std::string, Channel>::iterator it = channels.find(channel_name);
+   std::string channel_name =extract_channel_name( message.substr(message.find("#"), message.length() - message.find("#") - 2 )) ;
+   std::map<std::string, Channel>::iterator it = channels.find(channel_name);
     
     std::map<int, Client>::iterator it2;
     if (receiver != "")
@@ -75,24 +75,24 @@ void privmsg(std::string message, Client &client , std::map<int, Client> &client
         if (flag == 0)
         {
             send(client.get_fd(), ERR_NOSUCHNICK(client.get_nickname(), receiver).c_str(), ERR_NOSUCHNICK(client.get_nickname(), receiver).length(), 0);
-            std::cout << RED << "zok" ;
         }   
     }
-    // else if (it != channels.end())
-    // {
-    //     std::map<int, Client>::iterator it3 = it->second.get_clients().begin();
-    //     if (it3 == it->second.get_clients().end())
-    //     {
-    //         std::cout<<"no clients in channel"<<std::endl;
-    //     }
-    //     else
-    //     {
+    else if (it != channels.end())
+    {
+        std::cout<< RED << it->second.get_name()<<std::endl;
+        std::map<int, Client>::iterator it3 = it->second.get_clients().begin();
+        if (it3 == it->second.get_clients().end())
+        {
+            std::cout<<"no clients in channel"<<std::endl;
+        }
+        else
+        {
 
-    //     while (it3 != it->second.get_clients().end())
-    //     {
-    //         send(it3->second.get_fd(), parseMessage(message).c_str(), parseMessage(message).length(), 0);
-    //         ++it3;
-    //     }
-    //     } 
-    // }
+        while (it3 != it->second.get_clients().end())
+        {
+            send(it3->second.get_fd(), parseMessage(message).c_str(), parseMessage(message).length(), 0);
+            ++it3;
+        }
+        } 
+    }
 }
