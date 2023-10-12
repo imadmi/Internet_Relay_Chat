@@ -15,8 +15,10 @@ private:
     std::string _topic;
     std::map<char, char> _modes;
     std::map<int, Client> _operators;
+    std::vector<std::string> _invitees;
 
 public:
+    Channel();
     /**
      * @brief Construct a new Channel object
      *
@@ -99,4 +101,14 @@ public:
      */
     std::map<int, Client> get_operators();
     void print_members();
+    /**
+     * Adds a user to the list of invitees for the channel.
+     * @param nickname The nickname of the user to be added.
+     */
+    void add_invitee(std::string nickname);
+    /**
+     * Returns a vector of strings containing the usernames of all users who have been invited to the channel.
+     * @return A vector of strings containing the usernames of all users who have been invited to the channel.
+     */
+    std::vector<std::string> get_invitees();
 };

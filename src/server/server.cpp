@@ -89,7 +89,6 @@ Client::Client(int fd)
     _start = time.tv_sec;
 }
 
-
 void Irc::handleLogTime(Client &client)
 {
     struct timeval time;
@@ -117,8 +116,8 @@ void Irc::addClient()
     pollfd client_pollfd = {_newSocket, POLLIN, 0};
     _pollfds.push_back(client_pollfd);
     _clients.insert(std::pair<int, Client>(_newSocket, new_client));
-    std::cout << GREEN << "[Server] Added client #" << _newSocket \
-    << " successfully" << RESET << std::endl;
+    std::cout << GREEN << "[Server] Added client #" << _newSocket
+              << " successfully" << RESET << std::endl;
 }
 
 void Irc::printc(std::string msg, std::string color, int ex)
@@ -159,8 +158,8 @@ void Irc::Handle_activity()
                     // handleQuotes(it->second);
                     // handleLogTime(it->second);
                     excute_command(it->second.get_buffer(), it->second, _channels, _clients);
-                    std::cout << BLUE << "Client [" << it->second.get_fd() << "] : " \
-                    << it->second.get_buffer()  << RESET << std::flush;
+                    std::cout << BLUE << "Client [" << it->second.get_fd() << "] : "
+                              << it->second.get_buffer() << RESET << std::flush;
                     it->second.set_buffer("");
                 }
             }
@@ -224,9 +223,9 @@ void Irc::handleQuotes(Client &client)
     struct timeval time;
 
     gettimeofday(&time, NULL);
-    long nbr = time.tv_sec ;
+    long nbr = time.tv_sec;
     nbr %= quotes.size();
-    
+
     if (quotes.find(nbr) != quotes.end())
     {
         std::string msg = ": 001 logtime : " + quotes[nbr] + "\n";
