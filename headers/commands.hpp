@@ -74,3 +74,14 @@ void pass(std::string command, Client &client, std::map<std::string, Channel> &c
  * @param clients The map of clients in the server.
  */
 void kick(std::string command, Client &client, std::map<std::string, Channel> &channels);
+
+/**
+ * @brief Invites a client to a channel.
+ *
+ * @param command The command string.
+ * @param client The client who executed the command.
+ * @param channels The map of channels.
+ * @param clients The map of clients.
+ * @return int Returns 0 if the invite was successful, -1 otherwise.
+ */
+int invite(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);

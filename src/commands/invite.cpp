@@ -4,30 +4,24 @@
 
 int invite(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients)
 {
-    std::cout << "the client " << client.get_socket_fd() << client.get_nickname() << " wants to invite a client" << std::endl;
-    std::string nickname = command.substr(7, command.length() - 7);
-    std::cout << "the nickname is " << nickname << std::endl;
-    // remove the \r\n if it exists or both
+    // INVITE <nickname> <channel>
+    std::string nickname = command.substr(7, command.find(" ", 7) - 7);
     nickname = filteredString(nickname);
+    std::string channel_name = command.substr(command.find(" ", 7) + 1, command.length() - command.find(" ", 7) - 1);
+    channel_name = filteredString(channel_name);
+
     if (client_already_exist(nickname, clients))
     {
         client.add_buffer_to_send(ERR_NOSUCHNICK(client.get_nickname(), nickname));
         return (1);
     }
-    if (channels.find(nickname) == channels.end())
+    if (channels.find(channel_name) == channels.end())
     {
-        client.add_buffer_to_send(ERR_NOSUCHCHANNEL(client.get_nickname(), nickname));
+        client.add_buffer_to_send(ERR_NOSUCHCHANNEL(client.get_nickname(), channel_name));
         return (1);
     }
-    std::map<std::string, Channel>::iterator it = channels.find(nickname);
-    if (it != channels.end())
-    {
-        it->second.add_client(client);
-    }
-    else
-    {
-        return (1);
-    }
+    Channel &channel = channels[channel_name];
+    std::cout << "channel name: " << channel.get_name() << std::endl;
     // client.add_buffer_to_send(RPL_INVITING(client.get_nickname(), nickname));
     return (0);
 }

@@ -46,12 +46,17 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
     {
         kick(command, client, channels);
     }
-    if (client.is_authenticated())
+    // if (client.is_authenticated())
+    if (1)
     {
         send(client.get_fd(), client.get_buff_to_send().c_str(), client.get_buff_to_send().length(), 0);
         client.set_buff_to_send("");
     }
-
+    // INVITE
+    if (command.substr(0, 6) == "INVITE")
+    {
+        invite(command, client, channels, clients);
+    }
     if (command.substr(0, 7) == "PRIVMSG" && client.is_authenticated())
     {
         std::cout << "dsdsdsdsdsds" << std::endl;
