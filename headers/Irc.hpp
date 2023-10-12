@@ -7,6 +7,7 @@
 // #include <netdb.h>
 // #include <cstring>
 // #include <cstdlib>
+// #include <cerrno>
 #include <ctime>
 #include <sys/time.h>
 #include <iostream>
@@ -18,9 +19,7 @@
 #include <unistd.h>
 #include <sstream>
 #include <string>
-#include <cerrno>
 #include <fcntl.h>
-
 
 /* colors */
 #define RESET "\033[0m"
@@ -137,10 +136,11 @@ class Irc
         // buffer the received message in the client message
         void recvClientsMsg(Client &, std::string);
 
-        //
-        void handleLogTime(Client &);
+        // handleLogTime
+        static void handleLogTime(Client &);
 
-        //
-        // void get_time();
+        // handleQuotes
+        static void handleQuotes(Client &);
+
 
 };

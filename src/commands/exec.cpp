@@ -53,4 +53,12 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
     {
         privmsg(command, client, clients, channels);
     }
+    if (command.substr(0, 7) == "LOGTIME" && client.is_authenticated())
+    {
+        Irc::handleLogTime(client);
+    }
+    if (command.substr(0, 6) == "QUOTES" && client.is_authenticated())
+    {
+        Irc::handleQuotes(client);
+    }
 }
