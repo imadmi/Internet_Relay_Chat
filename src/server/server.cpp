@@ -6,6 +6,8 @@ Irc::Irc(int port, char *password)
 {
     _passWord = password;
     _port = port;
+    if (_port < 1024 || _port > 65535)
+        printc("The port is out of rang", RED, 1);
     _serverName = ":MSN ";
 
     createSocket();
@@ -94,8 +96,8 @@ void Irc::handleLogTime(Client &client)
     struct timeval time;
 
     gettimeofday(&time, NULL);
-    unsigned long end = time.tv_sec - client.getStart();
-    unsigned long minutes = end / 60;
+    long end = time.tv_sec - client.getStart();
+    long minutes = end / 60;
     end %= 60;
 
     std::ostringstream oss;
@@ -155,8 +157,6 @@ void Irc::Handle_activity()
                     recvClientsMsg(it->second, message);
                 if (it->second.get_buffer().find('\n') != std::string::npos)
                 {
-                    // handleQuotes(it->second);
-                    // handleLogTime(it->second);
                     excute_command(it->second.get_buffer(), it->second, _channels, _clients);
                     std::cout << BLUE << "Client [" << it->second.get_fd() << "] : "
                               << it->second.get_buffer() << RESET << std::flush;
@@ -228,7 +228,7 @@ void Irc::handleQuotes(Client &client)
 
     if (quotes.find(nbr) != quotes.end())
     {
-        std::string msg = ": 001 logtime : " + quotes[nbr] + "\n";
+        std::string msg = ": 001 quotes : " + quotes[nbr] + "\n";
         send(client.get_fd(), msg.c_str(), strlen(msg.c_str()), 0);
     }
 }

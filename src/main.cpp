@@ -7,9 +7,19 @@ void signal_handler(int signal)
     exit(EXIT_SUCCESS);
 }
 
+static int IsDigit(char * argv)
+{
+    for (int i = 0; argv[i] != '\0'; i++)
+    {
+        if (!std::isdigit(argv[i]))
+            return (1);
+    }
+    return (0);
+}
+
 int main(int ac, char *argv[])
 {
-    if (ac != 3)
+    if (ac != 3 || IsDigit(argv[1]) || std::strlen(argv[2]) == 0)
     {
         std::cerr << RED << "try ./ircserv [port] [password]" << RESET << std::endl;
         exit(EXIT_FAILURE);
@@ -18,7 +28,7 @@ int main(int ac, char *argv[])
 
     try
     {
-        Irc irc(std::stoi(argv[1]), argv[2]);
+        Irc irc(std::atoi(argv[1]), argv[2]);
         irc.runServer();
     }
     catch (const std::exception &e)

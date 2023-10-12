@@ -4,7 +4,7 @@
 
 bool client_already_exist(std::string nickname, std::map<int, Client> clients)
 {
-    std::map<int, Client>::const_iterator it;
+    std::map<int, Client>::iterator it;
     for (it = clients.begin(); it != clients.end(); ++it)
     {
         Client cl = it->second;
