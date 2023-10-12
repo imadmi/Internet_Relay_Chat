@@ -12,12 +12,12 @@
 #define RPL_CREATED(client, datetime) (": 003 " + client + " :This server was created " + datetime + "\r\n")
 // channels
 #define RPL_JOIN(nickname, channel) (":" + nickname + " JOIN " + channel + "\r\n")
-#define ERR_USERONCHANNEL(client, nick, channel) (":localhost 443 " + client + " " + nick + " " + channel + " is already on channel\r\n")
-#define ERR_NOSUCHCHANNEL(client, channel) (":localhost 403 " + client + " " + channel + " :No such channel\r\n")
-#define ERR_NOTONCHANNEL(client, channel) (":localhost 442 " + client + " " + channel + " :You're not on that channel.\r\n")
-#define ERR_CHANOPRIVSNEEDED(client, channel) (":localhost 482 " + client + " " + channel + " :You're not channel operator.\r\n")
-#define RPL_KICK(client, channel) (":localhost 441  #KICK " + channel + " " + client + " :You have been kicked from the channel.\r\n")
-#define ERR_NOSUCHNICK(client, nickname) (":localhost 401 " + client + " " + nickname + " :No such nick/channel\r\n")
+#define ERR_USERONCHANNEL(client, nick, channel) (": 443 " + client + " " + nick + " " + channel + " is already on channel\r\n")
+#define ERR_NOSUCHCHANNEL(client, channel) (": 403 " + client + " " + channel + " :No such channel\r\n")
+#define ERR_NOTONCHANNEL(client, channel) (": 442 " + client + " " + channel + " :You're not on that channel.\r\n")
+#define ERR_CHANOPRIVSNEEDED(client, channel) (": 482 " + client + " " + channel + " :You're not channel operator.\r\n")
+#define RPL_KICK(client, channel) (": 441  #KICK " + channel + " " + client + " :You have been kicked from the channel.\r\n")
+#define ERR_NOSUCHNICK(client, nickname) (": 401 " + client + " " + nickname + " :No such nick/channel\r\n")
 /// end channels
 #define ERR_PASSWDMISMATCH(client) (": 464 " + client + " :Password incorrect\r\n")
 #define RPL_MYINFO(client, servername, version, user_modes, chan_modes, chan_param_modes) (":localhost 004 " + client + " " + servername + " " + version + " " + user_modes + " " + chan_modes + " " + chan_param_modes + "\r\n")
@@ -37,6 +37,7 @@
  */
 void excute_command(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
 void privmsg(std::string message, Client &client, std::map<int, Client> &clients, std::map<std::string, Channel> &channels);
+void broadcastTochannel(std::string message, std::string channel, std::map<std::string, Channel> &channels)
 /**
  * @brief join a channel
  * @param client the client who wants to join the channel

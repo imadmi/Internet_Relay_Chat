@@ -54,7 +54,6 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
 
     if (command.substr(0, 7) == "PRIVMSG" && client.is_authenticated())
     {
-        std::cout << "dsdsdsdsdsds" << std::endl;
         privmsg(command, client, clients, channels);
     }
 }
