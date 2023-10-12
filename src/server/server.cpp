@@ -21,10 +21,8 @@ void Irc::createSocket()
 {
     _serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
     if (_serverSocket < 0)
-    {
-        perror("socket");
-        exit(EXIT_FAILURE);
-    }
+        printc("ERROR : socket", RED, 1);
+
     _server_addr.sin_addr.s_addr = INADDR_ANY;
     _server_addr.sin_family = AF_INET;
     _server_addr.sin_port = htons(_port);
@@ -34,38 +32,26 @@ void Irc::settingsockopt()
 {
     int opt = 1;
     if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
-    {
-        perror("setsockopt");
-        exit(EXIT_FAILURE);
-    }
+        printc("ERROR : setsockopt", RED, 1);
 }
 
 void Irc::nonBlockFd()
 {
     if (fcntl(_serverSocket, F_SETFL, O_NONBLOCK) == -1)
-    {
-        perror("fcntl");
-        exit(EXIT_FAILURE);
-    }
+        printc("ERROR : fcntl", RED, 1);
 }
 
 void Irc::bindSocket()
 {
 
     if (bind(_serverSocket, (struct sockaddr *)&_server_addr, sizeof(_server_addr)) < 0)
-    {
-        perror("bind");
-        exit(EXIT_FAILURE);
-    }
+        printc("ERROR : bind", RED, 1);
 }
 
 void Irc::listeningToClients()
 {
     if (listen(_serverSocket, MAX_CLIENTS) < 0)
-    {
-        perror("listen");
-        exit(EXIT_FAILURE);
-    }
+        printc("ERROR : listen", RED, 1);
 }
 
 void Irc::runServer()
@@ -78,12 +64,11 @@ void Irc::runServer()
     while (true)
     {
         if (poll(&_pollfds[0], _pollfds.size(), -1) == -1)
-        {
-            std::cerr << RED << "Error in poll" << RESET << std::endl;
-            exit(EXIT_FAILURE);
-        }
+            printc("ERROR : poll", RED, 1);
+
         if (_pollfds[0].revents & POLLIN)
             addClient();
+
         Handle_activity();
     }
 }
@@ -116,7 +101,7 @@ void Irc::handleLogTime(Client &client)
     std::ostringstream oss;
     oss << minutes << " minutes and " << end << " seconds";
     std::string str = oss.str();
-    std::string msg = ":@ " + std::to_string(001) + " " + client.get_nickname() + " LOGTIME : " + str + "\n";
+    std::string msg = ": " + std::to_string(001) + " " + client.get_nickname() + " logtime : " + str + "\n";
     send(client.get_fd(), msg.c_str(), strlen(msg.c_str()), 0);
 }
 

@@ -6,6 +6,7 @@
 // #include <netdb.h>
 // #include <cstring>
 // #include <cstdlib>
+// #include <cerrno>
 #include <ctime>
 #include <sys/time.h>
 #include <iostream>
@@ -17,9 +18,7 @@
 #include <unistd.h>
 #include <sstream>
 #include <string>
-#include <cerrno>
 #include <fcntl.h>
-
 
 /* colors */
 #define RESET "\033[0m"
