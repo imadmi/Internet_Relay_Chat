@@ -11,7 +11,7 @@
 #define RPL_YOURHOST(client, servername) (": 002 " + client + " :Your host is " + servername + "\r\n")
 #define RPL_CREATED(client, datetime) (": 003 " + client + " :This server was created " + datetime + "\r\n")
 // channels
-#define RPL_JOIN(nickname, channel) (":" + nickname + " JOIN " + channel + "\r\n")
+#define RPL_JOIN(nickname, channel) (":nickiminage!othmane@localhost JOIN :" + channel + "\r\n")
 #define ERR_USERONCHANNEL(client, nick, channel) (":localhost 443 " + client + " " + nick + " " + channel + " is already on channel\r\n")
 #define ERR_NOSUCHCHANNEL(client, channel) (":localhost 403 " + client + " " + channel + " :No such channel\r\n")
 #define ERR_NOTONCHANNEL(client, channel) (":localhost 442 " + client + " " + channel + " :You're not on that channel.\r\n")

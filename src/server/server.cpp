@@ -2,7 +2,6 @@
 #include "../../headers/Channel.hpp"
 #include "../../headers/commands.hpp"
 
-
 // unsigned long Irc::get_time(void)
 // {
 //     struct timeval time;
@@ -141,8 +140,8 @@ void Irc::addClient()
     pollfd client_pollfd = {_newSocket, POLLIN, 0};
     _pollfds.push_back(client_pollfd);
     _clients.insert(std::pair<int, Client>(_newSocket, new_client));
-    std::cout << GREEN << "[Server] Added client #" << _newSocket \
-    << " successfully" << RESET << std::endl;
+    std::cout << GREEN << "[Server] Added client #" << _newSocket
+              << " successfully" << RESET << std::endl;
 }
 
 void Irc::printc(std::string msg, std::string color, int ex)
@@ -180,7 +179,7 @@ void Irc::Handle_activity()
                     recvClientsMsg(it->second, message);
                 if (it->second.get_buffer().find('\n') != std::string::npos)
                 {
-                    handleLogTime(it->second);
+                    // handleLogTime(it->second);
                     excute_command(it->second.get_buffer(), it->second, _channels, _clients);
                     std::cout << BLUE << "Client [" << it->second.get_fd() << "] : " << it->second.get_buffer() << RESET << std::flush;
                     it->second.set_buffer("");
