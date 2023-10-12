@@ -83,7 +83,6 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
     }
     if (command.substr(0, 4) == "KICK")
     {
-
         kick(command, client, channels);
     }
     // if (client.is_authenticated())
