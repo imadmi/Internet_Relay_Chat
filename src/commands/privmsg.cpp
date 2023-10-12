@@ -73,10 +73,13 @@ std::string extract_channel_name(std::string message)
 void privmsg(std::string message, Client &client , std::map<int, Client> &clients, std::map<std::string, Channel> &channels)
 {
     std::string receiver = message.find("!") == std::string::npos ? "": filteredString( extractName(message.substr(7, message.length() - 8))) ;
-   std::string channel_name =message.find("#") == std::string::npos ? "" :filteredString( extract_channel_name( message.substr(message.find("#") + 1 , message.length() - message.find("#") - 2 )))  ;
+   std::string channel_name =message.find("#") == std::string::npos ? "" :filteredString( extract_channel_name( message.substr(message.find("#") , message.length() - message.find("#") - 2 )))  ;
    std::map<std::string, Channel>::iterator it = channels.find(channel_name);
-   
+
     std::map<int, Client>::iterator it2;
+    if(parseMessage(message).empty())
+        send(client.get_fd(), ERR_NOTEXTTOSEND(client.get_nickname()).c_str(), ERR_NOTEXTTOSEND(client.get_nickname()).length(), 0);
+
     if (!receiver.empty())
     {
         int flag = 0;
@@ -94,6 +97,6 @@ void privmsg(std::string message, Client &client , std::map<int, Client> &client
             send(client.get_fd(), ERR_NOSUCHNICK(client.get_nickname(), receiver).c_str(), ERR_NOSUCHNICK(client.get_nickname(), receiver).length(), 0);
         }   
     }
-    if (!channel_name.empty())
+    else if (!channel_name.empty())
         broadcastTochannel(client,RPL_PRIVMSG(client.get_nickname(), client.get_username(), channel_name,  parseMessage(message)), channel_name, channels);
 }
