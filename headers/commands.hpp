@@ -18,6 +18,7 @@
 #define ERR_CHANOPRIVSNEEDED(client, channel) (":localhost 482 " + client + " " + channel + " :You're not channel operator.\r\n")
 #define RPL_KICK(client, channel) (":localhost 441  #KICK " + channel + " " + client + " :You have been kicked from the channel.\r\n")
 #define ERR_NOSUCHNICK(client, nickname) (":localhost 401 " + client + " " + nickname + " :No such nick/channel\r\n")
+#define RPL_INVITING(client, nickname, channel) (":localhost 341 " + client + " " + nickname + " " + channel + "\r\n")
 /// end channels
 #define ERR_PASSWDMISMATCH(client) (": 464 " + client + " :Password incorrect\r\n")
 #define RPL_MYINFO(client, servername, version, user_modes, chan_modes, chan_param_modes) (":localhost 004 " + client + " " + servername + " " + version + " " + user_modes + " " + chan_modes + " " + chan_param_modes + "\r\n")
@@ -54,6 +55,8 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
  * @return True if a client with the given nickname already exists in the map of clients, false otherwise.
  */
 bool client_already_exist(std::string nickname, std::map<int, Client> clients);
+
+Client &get_client_by_nickname(std::string &nick, std::map<int, Client> &clients);
 /**
  * @brief Filters a string by removing any unwanted characters.
  *
