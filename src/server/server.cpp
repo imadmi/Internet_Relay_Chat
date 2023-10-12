@@ -89,6 +89,61 @@ Client::Client(int fd)
     _start = time.tv_sec;
 }
 
+void Irc::handleQuotes(Client &client)
+{
+    std::map<int, std::string> quotes;
+
+    quotes[1] = "Success is not final; failure is not fatal: It is the courage to continue that counts.";
+    quotes[2] = "It is better to fail in originality than to succeed in imitation.";
+    quotes[3] = "The road to success and the road to failure are almost exactly the same.";
+    quotes[4] = "Success usually comes to those who are too busy looking for it.";
+    quotes[5] = "Develop success from failures. Discouragement and failure are two of the surest stepping stones to success.";
+    quotes[6] = "Nothing in the world can take the place of Persistence. Talent will not; nothing is more common than unsuccessful men with talent. Genius will not; unrewarded genius is almost a proverb. Education will not; the world is full of educated derelicts. The slogan 'Press On' has solved and always will solve the problems of the human race.";
+    quotes[7] = "There are three ways to ultimate success: The first way is to be kind. The second way is to be kind. The third way is to be kind.";
+    quotes[8] = "Success is peace of mind, which is a direct result of self-satisfaction in knowing you made the effort to become the best of which you are capable.";
+    quotes[9] = "I never dreamed about success. I worked for it.";
+    quotes[10] = "Success is getting what you want, happiness is wanting what you get.";
+    quotes[11] = "The pessimist sees difficulty in every opportunity. The optimist sees opportunity in every difficulty.";
+    quotes[12] = "Don’t let yesterday take up too much of today.";
+    quotes[13] = "You learn more from failure than from success. Don’t let it stop you. Failure builds character.";
+    quotes[14] = "If you are working on something that you really care about, you don’t have to be pushed. The vision pulls you.";
+    quotes[15] = "Experience is a hard teacher because she gives the test first, the lesson afterwards.";
+    quotes[16] = "To know how much there is to know is the beginning of learning to live.";
+    quotes[17] = "Concentrate all your thoughts upon the work in hand. The sun's rays do not burn until brought to a focus.";
+    quotes[18] = "Either you run the day or the day runs you.";
+    quotes[19] = "I’m a greater believer in luck, and I find the harder I work the more I have of it.";
+    quotes[20] = "When we strive to become better than we are, everything around us becomes better too.";
+    quotes[21] = "Opportunity is missed by most people because it is dressed in overalls and looks like work.";
+    quotes[22] = "Setting goals is the first step in turning the invisible into the visible.";
+    quotes[23] = "Women challenge the status quo because we are never it.";
+    quotes[24] = "We don’t just sit around and wait for other people. We just make, and we do.";
+    quotes[25] = "Think like a queen. A queen is not afraid to fail. Failure is another stepping stone to greatness.";
+    quotes[26] = "The strongest actions for a woman is to love herself, be herself and shine amongst those who never believed she could.";
+    quotes[27] = "Whenever you see a successful woman, look out for three men who are going out of their way to try to help her.";
+    quotes[28] = "Some women choose to follow men, and some choose to follow their dreams. If you’re wondering which way to go, remember that your career will never wake up and tell you that it doesn’t love you anymore.";
+    quotes[29] = "The thing women have yet to learn is nobody gives you power. You just take it.";
+    quotes[30] = "No woman wants to be in submission to a man who isn’t in submission to God!";
+    quotes[31] = "A witty woman is a treasure; a witty beauty is a power.";
+    quotes[32] = "When a woman becomes her own best friend life is easier.";
+    quotes[33] = "If you want something said, ask a man; if you want something done, ask a woman.";
+    quotes[34] = "We need women at all levels, including the top, to change the dynamic, reshape the conversation, to make sure women’s voices are heard and heeded, not overlooked and ignored.";
+    quotes[35] = "It took me quite a long time to develop a voice, and now that I have it, I am not going to be silent.";
+    quotes[36] = "Women must learn to play the game as men do.";
+    quotes[37] = "I swear, by my life and my love of it, that I will never live for the sake of another man, nor ask another man to live for mine.";
+
+    struct timeval time;
+
+    gettimeofday(&time, NULL);
+    long nbr = time.tv_sec ;
+    nbr %= quotes.size();
+    
+    if (quotes.find(nbr) != quotes.end())
+    {
+        std::string msg = ": 001 logtime : " + quotes[nbr] + "\n";
+        send(client.get_fd(), msg.c_str(), strlen(msg.c_str()), 0);
+    }
+}
+
 void Irc::handleLogTime(Client &client)
 {
     struct timeval time;
@@ -101,7 +156,8 @@ void Irc::handleLogTime(Client &client)
     std::ostringstream oss;
     oss << minutes << " minutes and " << end << " seconds";
     std::string str = oss.str();
-    std::string msg = ": " + std::to_string(001) + " logtime : " + str + "\n";
+    std::string msg = ": 001 logtime : " + str + "\n";
+
     send(client.get_fd(), msg.c_str(), strlen(msg.c_str()), 0);
 }
 
@@ -154,6 +210,7 @@ void Irc::Handle_activity()
                     recvClientsMsg(it->second, message);
                 if (it->second.get_buffer().find('\n') != std::string::npos)
                 {
+                    handleQuotes(it->second);
                     handleLogTime(it->second);
                     excute_command(it->second.get_buffer(), it->second, _channels, _clients);
                     std::cout << BLUE << "Client [" << it->second.get_fd() << "] : " \

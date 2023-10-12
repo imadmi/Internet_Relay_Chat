@@ -138,5 +138,8 @@ class Irc
         // handleLogTime
         void handleLogTime(Client &);
 
+        // handleQuotes
+        void handleQuotes(Client &);
+
 
 };
