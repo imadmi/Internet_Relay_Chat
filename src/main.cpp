@@ -18,7 +18,7 @@ int main(int ac, char *argv[])
 
     try
     {
-        Irc irc(std::stoi(argv[1]), argv[2]);
+        Irc irc(std::atoi(argv[1]), argv[2]);
         irc.runServer();
     }
     catch (const std::exception &e)

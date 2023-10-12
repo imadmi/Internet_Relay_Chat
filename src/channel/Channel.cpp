@@ -3,6 +3,10 @@
 #include "../../headers/Channel.hpp"
 #include "../../headers/Irc.hpp"
 
+Channel::Channel()
+{
+}
+
 Channel::Channel(std::string channel_name)
 {
     _name = channel_name;
@@ -94,4 +98,14 @@ void Channel::print_members()
         std::cout << it->second.get_nickname() << std::endl;
         it++;
     }
+}
+
+void Channel::add_invitee(std::string nickname)
+{
+    this->_invitees.push_back(nickname);
+}
+
+std::vector<std::string> Channel::get_invitees()
+{
+    return (this->_invitees);
 }
