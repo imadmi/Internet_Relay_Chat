@@ -2,16 +2,16 @@
 
 #include "Irc.hpp"
 #include "Channel.hpp"
-
+#define user_forma(nickname, username) (":" + nickname + "!" + username + "@localhost")
 #define ERR_NONICKNAMEGIVEN(client) (": 431 " + client + " :There is no nickname.\r\n")
 #define ERR_ERRONEUSNICKNAME(client, nickname) (": 432 " + client + " " + nickname + " :Erroneus nickname\r\n")
 #define RPL_NICK(oclient, uclient, client) (": " + oclient + "!" + uclient + "@localhost NICK " + client + "\r\n")
 #define ERR_NICKNAMEINUSE(client, nickname) (": 433 " + client + " " + nickname + " :Nickname is already in use.\r\n")
-#define RPL_WELCOME(user_id, nickname) (": 001 " + nickname + " :Welcome to the Internet Relay Network " + user_id + "\r\n")
+#define RPL_WELCOME(user_forma, nickname) (": 001 " + nickname + " :Welcome to the Internet Relay Network " + user_forma + "\r\n")
 #define RPL_YOURHOST(client, servername) (": 002 " + client + " :Your host is " + servername + "\r\n")
 #define RPL_CREATED(client, datetime) (": 003 " + client + " :This server was created " + datetime + "\r\n")
 // channels
-#define RPL_JOIN(nickname, channel) (":nickiminage!othmane@localhost JOIN :" + channel + "\r\n")
+#define RPL_JOIN(client, channel) (":" + client + " JOIN :" + channel + "\r\n")
 #define ERR_USERONCHANNEL(client, nick, channel) (":localhost 443 " + client + " " + nick + " " + channel + " is already on channel\r\n")
 #define ERR_NOSUCHCHANNEL(client, channel) (":localhost 403 " + client + " " + channel + " :No such channel\r\n")
 #define ERR_NOTONCHANNEL(client, channel) (":localhost 442 " + client + " " + channel + " :You're not on that channel.\r\n")
