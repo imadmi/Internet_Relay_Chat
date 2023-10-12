@@ -37,7 +37,7 @@
  */
 void excute_command(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
 void privmsg(std::string message, Client &client , std::map<int, Client> &clients, std::map<std::string, Channel> &channels);
-void broadcastTochannel(std::string message, std::string channel, std::map<std::string, Channel> &channels);
+void broadcastTochannel(Client client, std::string message, std::string channel, std::map<std::string, Channel> &channels);
 /**
  * @brief join a channel
  * @param client the client who wants to join the channel

@@ -3,7 +3,7 @@
 #include "../../headers/commands.hpp"
 
 
-void broadcastTochannel(std::string message, std::string channel, std::map<std::string, Channel> &channels)
+void broadcastTochannel(Client client , std::string message, std::string channel, std::map<std::string, Channel> &channels)
 {
     std::map<std::string, Channel>::iterator it = channels.find(channel);
     if (it != channels.end())
@@ -16,7 +16,7 @@ void broadcastTochannel(std::string message, std::string channel, std::map<std::
         }
     }
     else 
-        send(it->second.get_clients().begin()->second.get_fd(), ERR_NOSUCHCHANNEL(it->second.get_clients().begin()->second.get_nickname(), channel).c_str(), ERR_NOSUCHCHANNEL(it->second.get_clients().begin()->second.get_nickname(), channel).length(), 0);
+        send(client.get_fd(), ERR_NOSUCHCHANNEL(client.get_nickname(), channel).c_str(), ERR_NOSUCHCHANNEL(client.get_nickname(), channel).length(), 0);
 }
 
 std::string parseMessage(std::string message)
@@ -75,9 +75,7 @@ void privmsg(std::string message, Client &client , std::map<int, Client> &client
     std::string receiver = message.find("!") == std::string::npos ? "": filteredString( extractName(message.substr(7, message.length() - 8))) ;
    std::string channel_name =message.find("#") == std::string::npos ? "" :filteredString( extract_channel_name( message.substr(message.find("#") + 1 , message.length() - message.find("#") - 2 )))  ;
    std::map<std::string, Channel>::iterator it = channels.find(channel_name);
-    
-    std::cout<<RED<< "channel name : " << channel_name << std::endl;
-    std::cout<<RED<< "receiver : " << receiver << std::endl;
+   
     std::map<int, Client>::iterator it2;
     if (!receiver.empty())
     {
@@ -97,5 +95,5 @@ void privmsg(std::string message, Client &client , std::map<int, Client> &client
         }   
     }
     if (!channel_name.empty())
-        broadcastTochannel(RPL_PRIVMSG(client.get_nickname(), client.get_username(), channel_name,  parseMessage(message)), channel_name, channels);
+        broadcastTochannel(client,RPL_PRIVMSG(client.get_nickname(), client.get_username(), channel_name,  parseMessage(message)), channel_name, channels);
 }
