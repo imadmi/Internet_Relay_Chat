@@ -8,11 +8,8 @@ bool client_already_exist(std::string nickname, std::map<int, Client> clients)
     for (it = clients.begin(); it != clients.end(); ++it)
     {
         Client cl = it->second;
-        std::cout << nickname << std::endl;
         if (cl.get_nickname() == nickname)
-        {
             return true;
-        }
     }
     return false;
 }

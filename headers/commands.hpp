@@ -20,9 +20,9 @@
 #define ERR_NOSUCHNICK(client, nickname) (":localhost 401 " + client + " " + nickname + " :No such nick/channel\r\n")
 #define RPL_INVITING(client, nickname, channel) (":localhost 341 " + client + " " + nickname + " " + channel + "\r\n")
 /// end channels
-#define ERR_PASSWDMISMATCH(client) (": 464 " + client + " :Password incorrect\r\n")
+#define ERR_PASSWDMISMATCH(client) (":localhost 464 " + client + " :Password incorrect\r\n")
 #define RPL_MYINFO(client, servername, version, user_modes, chan_modes, chan_param_modes) (":localhost 004 " + client + " " + servername + " " + version + " " + user_modes + " " + chan_modes + " " + chan_param_modes + "\r\n")
-#define ERR_NEEDMOREPARAMS(client, command) (": 461 " + client + " " + command + " :Not enough parameters.\r\n")
+#define ERR_NEEDMOREPARAMS(client, command) (":localhost 461 " + client + " " + command + " :Not enough parameters.\r\n")
 
 // privmsg
 #define ERR_NORECIPIENT(client) ("411 " + client + " :No recipient given PRIVMSG\r\n")
@@ -38,6 +38,7 @@
  */
 void excute_command(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
 void privmsg(std::string message, Client &client, std::map<int, Client> &clients, std::map<std::string, Channel> &channels);
+void broadcastTochannel(Client client, std::string message, std::string channel, std::map<std::string, Channel> &channels);
 /**
  * @brief join a channel
  * @param client the client who wants to join the channel
