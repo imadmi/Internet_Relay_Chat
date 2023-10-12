@@ -101,7 +101,7 @@ void Irc::handleLogTime(Client &client)
     std::ostringstream oss;
     oss << minutes << " minutes and " << end << " seconds";
     std::string str = oss.str();
-    std::string msg = ": " + std::to_string(001) + " " + client.get_nickname() + " logtime : " + str + "\n";
+    std::string msg = ": " + std::to_string(001) + " " + "client.get_nickname()" + ": logtime : " + str + "\n";
     send(client.get_fd(), msg.c_str(), strlen(msg.c_str()), 0);
 }
 
