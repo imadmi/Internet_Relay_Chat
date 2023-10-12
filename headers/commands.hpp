@@ -16,7 +16,7 @@
 #define ERR_NOSUCHCHANNEL(client, channel) (":localhost 403 " + client + " " + channel + " :No such channel\r\n")
 #define ERR_NOTONCHANNEL(client, channel) (":localhost 442 " + client + " " + channel + " :You're not on that channel.\r\n")
 #define ERR_CHANOPRIVSNEEDED(client, channel) (":localhost 482 " + client + " " + channel + " :You're not channel operator.\r\n")
-#define RPL_KICK(channel, kicked, reason) (":@localhost KICK #" + channel + " " + kicked + " " + reason + "\r\n")
+#define RPL_KICK(channel, kicked, reason) (":@localhost KICK " + channel + " " + kicked + " " + reason + "\r\n")
 #define ERR_NOSUCHNICK(client, nickname) (":localhost 401 " + client + " " + nickname + " :No such nick/channel\r\n")
 #define RPL_INVITING(client, nickname, channel) (":localhost 341 " + client + " " + nickname + "" + channel + "\r\n")
 /// end channels
