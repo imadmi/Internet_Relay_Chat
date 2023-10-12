@@ -6,6 +6,8 @@ Irc::Irc(int port, char *password)
 {
     _passWord = password;
     _port = port;
+    if (_port < 1024 || _port > 65535)
+        printc("The port is out of rang", RED, 1);
     _serverName = ":MSN ";
 
     createSocket();
