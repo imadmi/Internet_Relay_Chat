@@ -137,10 +137,10 @@ class Irc
         void recvClientsMsg(Client &, std::string);
 
         // handleLogTime
-        void handleLogTime(Client &);
+        static void handleLogTime(Client &);
 
         // handleQuotes
-        void handleQuotes(Client &);
+        static void handleQuotes(Client &);
 
 
 };
