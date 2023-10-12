@@ -25,8 +25,6 @@ private:
 
 public:
     Client(int);
-    std::map<std::string, Channel> _channels;
-
     std::string get_nickname();
     std::string get_username();
     std::string view_topic(Channel &);
@@ -39,7 +37,6 @@ public:
     int set_topic(Channel &, std::string);
     bool is_operator(Channel &);
     int get_socket_fd();
-    int join_channel(Channel &channel);
     int leave_channel(Channel &channel);
     int kick_user(Client &, Channel &);
     bool is_registered();

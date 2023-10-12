@@ -3,7 +3,7 @@
 #include "../../headers/Irc.hpp"
 #include "../../headers/Channel.hpp"
 
-bool hasInvalidCharacters(const std::string& name)
+bool hasInvalidCharacters(const std::string &name)
 {
     char firstChar = name[0];
     if (firstChar == '$' || firstChar == ':' || firstChar == '#')
@@ -23,7 +23,6 @@ bool hasInvalidCharacters(const std::string& name)
     }
     return false;
 }
-
 
 void nick(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> clients)
 {

@@ -4,9 +4,10 @@
 
 int join(std::string command, Client &client, std::map<std::string, Channel> &channels)
 {
+    std::cout << "the client " << client.get_socket_fd() << client.get_nickname() << " wants to join a channel" << std::endl;
     std::string channel_name = command.substr(5, command.length() - 5);
-    // remove the \r\n
-    channel_name = channel_name.substr(0, channel_name.length() - 2);
+    // remove the \r\n if it exists or both
+    channel_name = filteredString(channel_name);
     if (channels.find(channel_name) == channels.end())
     {
         Channel new_channel(channel_name);
@@ -22,7 +23,6 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
     if (it != channels.end())
     {
         it->second.add_client(client);
-        client.join_channel(it->second);
     }
     else
     {

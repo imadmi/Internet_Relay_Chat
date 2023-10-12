@@ -52,7 +52,7 @@ public:
      * @brief get the clients of the channel.
      * @return std::map<std::string, Client>
      */
-    std::map<int, Client> get_clients();
+    std::map<int, Client> &get_clients();
 
     /**
      * set the topic of the channel.
@@ -98,4 +98,5 @@ public:
      * @return std::map<int, Client>
      */
     std::map<int, Client> get_operators();
+    void print_members();
 };

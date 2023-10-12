@@ -21,7 +21,7 @@ std::string Channel::get_name()
     return _name;
 }
 
-std::map<int, Client> Channel::get_clients()
+std::map<int, Client> &Channel::get_clients()
 {
     return _clients;
 }
@@ -84,4 +84,14 @@ int Channel::set_operator(Client &client)
 std::map<int, Client> Channel::get_operators()
 {
     return (this->_operators);
+}
+
+void Channel::print_members()
+{
+    std::map<int, Client>::iterator it = this->_clients.begin();
+    while (it != this->_clients.end())
+    {
+        std::cout << it->second.get_nickname() << std::endl;
+        it++;
+    }
 }

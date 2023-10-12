@@ -14,7 +14,7 @@ bool client_already_exist(std::string nickname, std::map<int, Client> clients)
             return true;
         }
     }
-    return false; 
+    return false;
 }
 
 std::string filteredString(std::string str)
@@ -22,7 +22,7 @@ std::string filteredString(std::string str)
     std::string filteredString;
     for (int i = 0; i < (int)str.length(); i++)
     {
-        if (str[i] != '\n' && str[i] != '\r' && str[i] != '\t' && str[i] != '\v' && str[i] != '\f'  && str[i] != ' ')
+        if (str[i] != '\n' && str[i] != '\r' && str[i] != '\t' && str[i] != '\v' && str[i] != '\f' && str[i] != ' ')
         {
             filteredString += str[i];
         }
@@ -54,7 +54,7 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
 
     if (command.substr(0, 7) == "PRIVMSG" && client.is_authenticated())
     {
-        std::cout<<"dsdsdsdsdsds"<<std::endl;
+        std::cout << "dsdsdsdsdsds" << std::endl;
         privmsg(command, client, clients, channels);
     }
 }
