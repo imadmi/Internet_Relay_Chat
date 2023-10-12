@@ -17,7 +17,6 @@ Client &get_client_by_nickname(std::string &nick, std::map<int, Client> &clients
 
 int invite(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients)
 {
-    // INVITE <nickname> <channel>
     std::string nickname = command.substr(7, command.find(" ", 7) - 7);
     nickname = filteredString(nickname);
     std::string channel_name = command.substr(command.find(" ", 7) + 1, command.length() - command.find(" ", 7) - 1);
@@ -46,8 +45,9 @@ int invite(std::string command, Client &client, std::map<std::string, Channel> &
     }
     channel.add_invitee(nickname);
     Client &invited_client = get_client_by_nickname(nickname, clients);
-    invited_client.add_buffer_to_send(RPL_INVITING(client.get_nickname(), nickname, channel_name));
+    std::cout << "you invted" << std::endl;
+    std::string message = "you have been invited to join " + channel_name + " by " + client.get_nickname() + "\n";
+    send(invited_client.get_fd(), message.c_str(), message.length(), 0);
 
-    // client.add_buffer_to_send(RPL_INVITING(client.get_nickname(), nickname));
     return (0);
 }
