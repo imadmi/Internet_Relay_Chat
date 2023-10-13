@@ -94,3 +94,5 @@ void kick(std::string command, Client &client, std::map<std::string, Channel> &c
  * @return int Returns 0 if the invite was successful, -1 otherwise.
  */
 int invite(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
+
+void mode(std::string command, Client &client, std::map<std::string, Channel> &channels);

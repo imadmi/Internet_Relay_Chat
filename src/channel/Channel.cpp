@@ -13,6 +13,7 @@ Channel::Channel(std::string channel_name)
     _modes['i'] = '+';
     _modes['t'] = '+';
     _modes['k'] = '+';
+    _modes['o'] = '+';
     _modes['l'] = '+';
 }
 
