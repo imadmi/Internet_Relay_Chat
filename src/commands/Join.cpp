@@ -4,22 +4,39 @@
 
 int join(std::string command, Client &client, std::map<std::string, Channel> &channels)
 {
-    std::string channel_name = command.substr(5, command.length() - 5);
+    // join #cha1 key
+    size_t spacePos = command.find(" ", 5);
+    std::string channel_name = command.substr(5, spacePos - 5);
     channel_name = filteredString(channel_name);
-    std::cout << channel_name << std::endl;
     if (channels.find(channel_name) == channels.end())
     {
         Channel new_channel(channel_name);
         channels.insert(std::pair<std::string, Channel>(channel_name, new_channel));
-        new_channel.set_operator(client);
     }
     std::map<std::string, Channel>::iterator it = channels.find(channel_name);
+
     if (it != channels.end())
     {
+        if (it->second.get_signe_mode('k') == '+')
+        {
+            // JOIN #cha1 key
+            size_t spacePos = command.find(" ", 5);
+            std::string key = command.substr(spacePos + 1);
+            key = filteredString(key);
+            if (it->second.get_key() != key)
+            {
+                client.add_buffer_to_send(ERR_BADCHANNELKEY(client.get_nickname(), channel_name));
+                return (1);
+            }
+        }
         if (it->second.add_client(client))
         {
             client.add_buffer_to_send(ERR_USERONCHANNEL(client.get_nickname(), client.get_nickname(), channel_name));
             return (1);
+        }
+        if (it->second.get_clients().size() == 1)
+        {
+            it->second.set_operator(client);
         }
     }
     else

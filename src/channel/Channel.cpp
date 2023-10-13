@@ -12,9 +12,10 @@ Channel::Channel(std::string channel_name)
     _name = channel_name;
     _modes['i'] = '+';
     _modes['t'] = '+';
-    _modes['k'] = '+';
+    _modes['k'] = '-';
     _modes['o'] = '+';
     _modes['l'] = '+';
+    _key = "pass";
 }
 
 Channel::~Channel()
@@ -87,7 +88,7 @@ int Channel::set_operator(Client &client)
     return (0);
 }
 
-std::map<int, Client> Channel::get_operators()
+std::map<int, Client> &Channel::get_operators()
 {
     return (this->_operators);
 }
@@ -123,4 +124,14 @@ std::string Channel::get_clients_nick()
             str_list += " ";
     }
     return (str_list);
+}
+
+std::string Channel::get_key()
+{
+    return (this->_key);
+}
+
+void Channel::set_key(std::string key)
+{
+    this->_key = key;
 }

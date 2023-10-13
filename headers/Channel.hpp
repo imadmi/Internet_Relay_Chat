@@ -16,6 +16,7 @@ private:
     std::map<char, char> _modes;
     std::map<int, Client> _operators;
     std::vector<std::string> _invitees;
+    std::string _key;
 
 public:
     Channel();
@@ -99,7 +100,7 @@ public:
      *
      * @return std::map<int, Client>
      */
-    std::map<int, Client> get_operators();
+    std::map<int, Client> &get_operators();
     void print_members();
     /**
      * Adds a user to the list of invitees for the channel.
@@ -118,4 +119,13 @@ public:
      * @return A vector of strings containing the list of clients currently in the channel.
      */
     std::string get_clients_nick();
+
+    /**
+     * Returns the key of the channel.
+     *
+     * @return The key of the channel.
+     */
+    std::string get_key();
+
+    void set_key(std::string key);
 };
