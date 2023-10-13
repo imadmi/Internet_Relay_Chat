@@ -40,11 +40,12 @@ int Channel::add_client(Client &new_client)
 
 int Channel::remove_client(Client &client)
 {
+    int fd = client.get_socket_fd();
     if (this->_clients.find(client.get_socket_fd()) == this->_clients.end())
         return (-1);
     this->_clients.erase(client.get_socket_fd());
-    if (this->get_operators().find(client.get_socket_fd()) != this->get_operators().end())
-        this->get_operators().erase(client.get_socket_fd());
+    if (this->get_operators().find(fd) != this->get_operators().end())
+        this->get_operators().erase(fd);
     return (0);
 }
 

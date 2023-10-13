@@ -7,8 +7,8 @@ void kick(std::string command, Client &client, std::map<std::string, Channel> &c
     std::string channel_name = command.substr(5, command.find(" ", 5) - 5);
     std::string nickname = command.substr(command.find(" ", 5) + 1, command.length() - command.find(" ", 5) - 1);
     nickname = nickname.substr(0, nickname.find(" "));
+    std::cout << "nickname : " << nickname << std::endl;
     std::string comment = command.substr(command.find(":", 5) + 1, command.length() - command.find(":", 5) - 1);
-
     // print the first channel in the map
     if (channels.find(channel_name) == channels.end())
     {
@@ -32,12 +32,15 @@ void kick(std::string command, Client &client, std::map<std::string, Channel> &c
     {
         if (it->second.get_nickname() == nickname)
         {
+            std::cout << RPL_KICK(channel_name, nickname, comment) << std::endl;
+            broadcastTochannel(client, RPL_KICK(channel_name, nickname, comment), channel_name, channels);
             channel.remove_client(it->second);
+
             // TODO : send a private message to the client
-            // it->second.add_buffer_to_send(RPL_KICK(it->second.get_nickname(), channel_name));
             return;
         }
         it++;
     }
+    std::cout << "im out " << std::endl;
     client.add_buffer_to_send(ERR_NOSUCHNICK(client.get_nickname(), channel_name));
 }
