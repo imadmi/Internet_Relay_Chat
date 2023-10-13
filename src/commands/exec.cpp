@@ -67,4 +67,12 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
     {
         Irc::handleQuotes(client);
     }
+    // if (command.substr(0, 3) == "BOT" && client.is_authenticated())
+    // {
+    //     Irc::handleBot(client);
+    // }
+    if (command.substr(0, 3) == "BOT")
+    {
+        Irc::handleBot(client);
+    }
 }

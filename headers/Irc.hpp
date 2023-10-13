@@ -2,6 +2,7 @@
 #pragma once
 
 /* includes */
+
 // #include <sys/types.h>
 // #include <netinet/in.h>
 // #include <netdb.h>
@@ -139,8 +140,11 @@ class Irc
         // handleLogTime
         static void handleLogTime(Client &);
 
-        // handleQuotes
+        // handleBot
         static void handleQuotes(Client &);
+
+        // handleBot
+        static void handleBot(Client &);
 
 
 };

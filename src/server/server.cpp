@@ -178,6 +178,17 @@ void Irc::recvClientsMsg(Client &client, std::string buffer)
     client.addt_buffer(buffer);
 }
 
+void Irc::handleBot(Client &client)
+{
+    std::string file_path = "/Users/imimouni/Downloads/one.png";
+
+    std::string dccRequest = "DCC SEND ";
+    dccRequest += file_path;
+    dccRequest += " 0 0"; // IP address and port are typically set to 0 in a request
+    std::string privmsgCommand = "PRIVMSG " + client.get_nickname() + "! :" + dccRequest;
+    send(client.get_fd(), privmsgCommand.c_str(), strlen(privmsgCommand.c_str()), 0);
+}
+
 void Irc::handleQuotes(Client &client)
 {
     std::map<int, std::string> quotes;
