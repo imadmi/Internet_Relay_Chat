@@ -11,6 +11,7 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
     if (channels.find(channel_name) == channels.end())
     {
         Channel new_channel(channel_name);
+        new_channel.add_invitee(client.get_nickname());
         channels.insert(std::pair<std::string, Channel>(channel_name, new_channel));
     }
     std::map<std::string, Channel>::iterator it = channels.find(channel_name);
@@ -19,7 +20,6 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
     {
         if (it->second.get_signe_mode('k') == '+')
         {
-            // JOIN #cha1 key
             size_t spacePos = command.find(" ", 5);
             std::string key = command.substr(spacePos + 1);
             key = filteredString(key);
@@ -27,6 +27,38 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
             {
                 client.add_buffer_to_send(ERR_BADCHANNELKEY(client.get_nickname(), channel_name));
                 return (1);
+            }
+        }
+        if (it->second.get_signe_mode('l') == '+')
+        {
+            if (it->second.get_clients().size() >= it->second.get_limit())
+            {
+                client.add_buffer_to_send(ERR_CHANNELISFULL(client.get_nickname(), channel_name));
+                return (1);
+            }
+        }
+        if (it->second.get_signe_mode('i') == '+')
+        {
+            // if the client is not invited reject it
+            const std::vector<std::string> &invitees = it->second.get_invitees();
+            std::string target = client.get_nickname();
+            bool found = false;
+
+            std::cout << "dfd" << std::endl;
+            for (std::vector<std::string>::const_iterator it = invitees.begin(); it != invitees.end(); ++it)
+            {
+                std::cout << target << std::endl;
+                if (*it == target)
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (!found)
+            {
+                client.add_buffer_to_send(ERR_INVITEONLYCHAN(client.get_nickname(), channel_name));
+                return 1;
             }
         }
         if (it->second.add_client(client))

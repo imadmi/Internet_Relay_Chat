@@ -62,5 +62,43 @@ void mode(std::string command, Client &client, std::map<std::string, Channel> &c
     {
         channel.set_mode('k', '+');
         channel.set_key(valuePart);
+        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " +k " + valuePart + "\r\n";
+        broadcastTochannel(client, message, channel_name, channels);
+    }
+    if ((modePart == "+o" || modePart == "-o") && !valuePart.empty() && modePart != valuePart)
+    {
+        std::map<int, Client>::iterator it;
+        for (it = channel.get_clients().begin(); it != channel.get_clients().end(); ++it)
+        {
+            Client &cl = it->second;
+            if (cl.get_nickname() == valuePart)
+            {
+                if (modePart == "+o")
+                {
+                    channel.set_operator(cl);
+                    std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " +o " + valuePart + "\r\n";
+                    broadcastTochannel(client, message, channel_name, channels);
+                }
+                else
+                {
+                    std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " -o " + valuePart + "\r\n";
+                    broadcastTochannel(client, message, channel_name, channels);
+                    channel.remove_operator(cl);
+                }
+                break;
+            }
+        }
+        if (it == channel.get_clients().end())
+        {
+            client.set_buff_to_send(":" + client.get_nickname() + " 441 " + client.get_nickname() + " " + channel_name + " " + valuePart + " :They aren't on that channel\r\n");
+            return;
+        }
+    }
+    if (modePart == "+l" && !valuePart.empty() && modePart != valuePart)
+    {
+        channel.set_mode('l', '+');
+        channel.set_limit(std::stoi(valuePart));
+        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " +l " + valuePart + "\r\n";
+        broadcastTochannel(client, message, channel_name, channels);
     }
 }

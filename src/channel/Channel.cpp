@@ -15,6 +15,7 @@ Channel::Channel(std::string channel_name)
     _modes['k'] = '-';
     _modes['o'] = '+';
     _modes['l'] = '+';
+    _limit = 10;
     _key = "pass";
 }
 
@@ -88,6 +89,14 @@ int Channel::set_operator(Client &client)
     return (0);
 }
 
+int Channel::remove_operator(Client &client)
+{
+    if (this->_clients.find(client.get_socket_fd()) == this->_clients.end())
+        return (-1);
+    this->get_operators().erase(client.get_socket_fd());
+    return (0);
+}
+
 std::map<int, Client> &Channel::get_operators()
 {
     return (this->_operators);
@@ -105,6 +114,7 @@ void Channel::print_members()
 
 void Channel::add_invitee(std::string nickname)
 {
+    std::cout << "adding invitee " << nickname << std::endl;
     this->_invitees.push_back(nickname);
 }
 
@@ -134,4 +144,14 @@ std::string Channel::get_key()
 void Channel::set_key(std::string key)
 {
     this->_key = key;
+}
+
+int Channel::get_limit()
+{
+    return (this->_limit);
+}
+
+void Channel::set_limit(int limit)
+{
+    this->_limit = limit;
 }

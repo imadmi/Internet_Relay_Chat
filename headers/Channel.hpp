@@ -17,6 +17,7 @@ private:
     std::map<int, Client> _operators;
     std::vector<std::string> _invitees;
     std::string _key;
+    int _limit;
 
 public:
     Channel();
@@ -95,6 +96,14 @@ public:
      * @return status of the operation (0 if success).
      */
     int set_operator(Client &client);
+
+    /**
+     * @brief remove the operator of the channel.
+     *
+     * @param client to remove as operator.
+     * @return status of the operation (0 if success).
+     */
+    int remove_operator(Client &client);
     /**
      * @brief get the operator of the channel.
      *
@@ -128,4 +137,13 @@ public:
     std::string get_key();
 
     void set_key(std::string key);
+
+    /**
+     * Returns the limit of the channel.
+     *
+     * @return The limit of the channel.
+     */
+    int get_limit();
+
+    void set_limit(int limit);
 };
