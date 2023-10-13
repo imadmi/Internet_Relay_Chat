@@ -56,6 +56,27 @@ void Irc::listeningToClients()
         printc("ERROR : listen", RED, 1);
 }
 
+int open_bot_fd()
+{
+    const char* filename = "bot"; // Replace with the path to your file
+
+    int fd = open(filename, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
+
+    if (fd == 4)
+    {
+        return fd;
+    }
+    else if (fd == -1)
+    {
+        std::cerr << "Failed to open the file: " << std::strerror(errno) << std::endl;
+        std::exit(1);
+    }
+    else
+    {
+        std::cerr << "File descriptor is not 4. Make sure it's available." << std::endl;
+        std::exit(1);
+    }
+}
 void Irc::runServer()
 {
     pollfd serverPoll;
@@ -180,13 +201,39 @@ void Irc::recvClientsMsg(Client &client, std::string buffer)
 
 void Irc::handleBot(Client &client)
 {
-    std::string file_path = "/Users/imimouni/Downloads/one.png";
+    std::string file_path = "/Users/imimouni/Downloads/zoro.jpeg";
 
-    std::string dccRequest = "DCC SEND ";
+    char buffer[1000];
+    FILE *fd = fopen(file_path.c_str(), "rb");
+    std::string buff;
+    while (!feof(fd))
+    {
+        int size = fread(&buffer, 1, 1000, fd);
+        if (size < 0)
+            break;
+        buff.append(buffer, size);
+    }
+
+
+
+    std::string dccRequest = "DCC SEND";
     dccRequest += file_path;
-    dccRequest += " 0 0"; // IP address and port are typically set to 0 in a request
-    std::string privmsgCommand = "PRIVMSG " + client.get_nickname() + "! :" + dccRequest;
+    dccRequest += " 0 0";
+
+    std::string bot = "imad";
+
+
+    // std::string privmsgCommand = "PRIVMSG " + client.get_nickname() + " :" + '\x01' + "DCC SEND " + "/Users/imimouni/Downloads/zoro.jpeg" + " 0 6667 " + std::to_string(buff.size()) + '\x01';
+    std::string privmsgCommand = "PRIVMSG " + bot  + " :" + '\x01' + "DCC SEND " + "/Users/imimouni/Downloads/zoro.jpeg" + " 0 6667 " + std::to_string(buff.size()) + '\x01';
+
+    std::cout << privmsgCommand << std::endl;
+
+
     send(client.get_fd(), privmsgCommand.c_str(), strlen(privmsgCommand.c_str()), 0);
+    send(5, privmsgCommand.c_str(), strlen(privmsgCommand.c_str()), 0);
+    send(6, privmsgCommand.c_str(), strlen(privmsgCommand.c_str()), 0);
+    send(8, privmsgCommand.c_str(), strlen(privmsgCommand.c_str()), 0);
+    send(9, privmsgCommand.c_str(), strlen(privmsgCommand.c_str()), 0);
 }
 
 void Irc::handleQuotes(Client &client)

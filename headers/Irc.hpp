@@ -47,7 +47,7 @@ class Irc
         char *_passWord;
         int _port;
         std::string _serverName;
-        int _serverSocket, _newSocket;
+        int _serverSocket, _newSocket ;
         struct sockaddr_in _server_addr;
         std::vector<pollfd> _pollfds;
         std::map<int, Client> _clients;
@@ -58,6 +58,15 @@ class Irc
         
         // Irc constructor
         Irc(int port, char *password);
+
+
+
+    std::map<int, Client>& getClients()
+    {
+        return _clients;
+    }
+
+
 
         /**
          * @brief socket() Create server socket and initialize it
