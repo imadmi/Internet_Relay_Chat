@@ -32,7 +32,7 @@
 // privmsg
 #define ERR_NORECIPIENT(client) ("411 " + client + " :No recipient given PRIVMSG\r\n")
 #define ERR_NOTEXTTOSEND(client) ("412 " + client + " :No text to send\r\n")
-#define RPL_PRIVMSG(nick, username, target, message) (":" + nick + "!" + username + "@localhost PRIVMSG " + target + " " + message + "\r\n")
+#define RPL_PRIVMSG(nick, username, target, message) (":" + nick + "!" + username + "@localhost PRIVMSG " + target + "  :" + message + "\r\n")
 
 /**
  * @brief execute the command given by the client
