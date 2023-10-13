@@ -11,7 +11,8 @@ void broadcastTochannel(Client client , std::string message, std::string channel
         std::map<int, Client>::iterator it2 = it->second.get_clients().begin();
         while (it2 != it->second.get_clients().end())
         {
-            send(it2->second.get_fd(), message.c_str(), message.length(), 0);
+            if (it2->second.get_nickname() != client.get_nickname())
+                send(it2->second.get_fd(), message.c_str(), message.length(), 0);
             ++it2;
         }
     }
@@ -19,7 +20,7 @@ void broadcastTochannel(Client client , std::string message, std::string channel
         send(client.get_fd(), ERR_NOSUCHCHANNEL(client.get_nickname(), channel).c_str(), ERR_NOSUCHCHANNEL(client.get_nickname(), channel).length(), 0);
 }
 
-std::string parseMessage(std::string message)
+std::string parseMessage_user(std::string message)
 {
     std::string parsedMessage;
     std::string::iterator it;
@@ -77,7 +78,7 @@ void privmsg(std::string message, Client &client , std::map<int, Client> &client
    std::map<std::string, Channel>::iterator it = channels.find(channel_name);
 
     std::map<int, Client>::iterator it2;
-    if(parseMessage(message).empty())
+    if(parseMessage_user(message).empty())
         send(client.get_fd(), ERR_NOTEXTTOSEND(client.get_nickname()).c_str(), ERR_NOTEXTTOSEND(client.get_nickname()).length(), 0);
 
     if (!receiver.empty())
@@ -87,7 +88,7 @@ void privmsg(std::string message, Client &client , std::map<int, Client> &client
         {
             if (it2->second.get_nickname() == receiver)
             {
-                send(it2->second.get_fd(), RPL_PRIVMSG(client.get_nickname(), client.get_username(), receiver,  parseMessage(message)).c_str(), RPL_PRIVMSG(client.get_nickname(), client.get_username(), receiver,  parseMessage(message)).length(), 0);
+                send(it2->second.get_fd(), RPL_PRIVMSG(client.get_nickname(), client.get_username(), receiver,  parseMessage_user(message)).c_str(), RPL_PRIVMSG(client.get_nickname(), client.get_username(), receiver,  parseMessage_user(message)).length(), 0);
                 flag = 1;
                 break;
             }
@@ -98,5 +99,7 @@ void privmsg(std::string message, Client &client , std::map<int, Client> &client
         }   
     }
     else if (!channel_name.empty())
-        broadcastTochannel(client,RPL_PRIVMSG(client.get_nickname(), client.get_username(), channel_name,  parseMessage(message)), channel_name, channels);
+    {
+        broadcastTochannel(client,RPL_PRIVMSG(client.get_nickname(), "Username", channel_name,  message.substr( 8 + channel_name.length() + 1, message.length())), channel_name, channels);
+    }
 }
