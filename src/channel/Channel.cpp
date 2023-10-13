@@ -50,12 +50,6 @@ int Channel::remove_client(Client &client)
     return (0);
 }
 
-int Channel::set_topic(std::string topic)
-{
-    this->_topic = topic;
-    return (0);
-}
-
 std::string Channel::get_topic()
 {
     return (this->_topic);
@@ -123,4 +117,9 @@ std::string Channel::get_clients_nick()
             str_list += " ";
     }
     return (str_list);
+}
+
+void  Channel::set_topic(std::string topic)
+{
+    _topic = topic;
 }

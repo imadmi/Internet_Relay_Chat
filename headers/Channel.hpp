@@ -17,6 +17,7 @@ private:
     std::map<int, Client> _operators;
     std::vector<std::string> _invitees;
 
+
 public:
     Channel();
     /**
@@ -61,7 +62,7 @@ public:
      * @param topic to set.
      * @return status of the operation (0 if success).
      */
-    int set_topic(std::string topic);
+    void set_topic(std::string topic);
     /**
      * @brief get the topic of the channel.
      *
