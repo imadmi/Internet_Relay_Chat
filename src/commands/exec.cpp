@@ -48,7 +48,12 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
     {
         invite(command, client, channels, clients);
     }
-    if (client.is_authenticated())
+    if (command.substr(0, 4) == "MODE")
+    {
+        mode(command, client, channels);
+    }
+    // if (client.is_authenticated())
+    if (1)
     {
         send(client.get_fd(), client.get_buff_to_send().c_str(), client.get_buff_to_send().length(), 0);
         client.set_buff_to_send("");

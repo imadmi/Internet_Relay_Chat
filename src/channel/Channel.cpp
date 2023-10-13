@@ -13,6 +13,7 @@ Channel::Channel(std::string channel_name)
     _modes['i'] = '+';
     _modes['t'] = '+';
     _modes['k'] = '+';
+    _modes['o'] = '+';
     _modes['l'] = '+';
 }
 
@@ -109,4 +110,17 @@ void Channel::add_invitee(std::string nickname)
 std::vector<std::string> Channel::get_invitees()
 {
     return (this->_invitees);
+}
+
+std::string Channel::get_clients_nick()
+{
+    std::string str_list;
+    std::map<int, Client>::iterator it = this->_clients.begin();
+    while (it != this->_clients.end())
+    {
+        str_list += it->second.get_nickname();
+        if (++it != this->_clients.end())
+            str_list += " ";
+    }
+    return (str_list);
 }

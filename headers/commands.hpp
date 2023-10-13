@@ -18,7 +18,12 @@
 #define ERR_CHANOPRIVSNEEDED(client, channel) (":localhost 482 " + client + " " + channel + " :You're not channel operator.\r\n")
 #define RPL_KICK(channel, kicked, reason) (":@localhost KICK " + channel + " " + kicked + " " + reason + "\r\n")
 #define ERR_NOSUCHNICK(client, nickname) (":localhost 401 " + client + " " + nickname + " :No such nick/channel\r\n")
-#define RPL_INVITING(client, nickname, channel) (":localhost 341 " + client + " " + nickname + "" + channel + "\r\n")
+#define RPL_NAMREPLY(client, channel, list_of_nicks) (":localhost 353 " + client + " @ " + channel + " :" + list_of_nicks + "\r\n")
+#define RPL_ENDOFNAMES(client, channel) (":localhost 366 " + client + " " + channel + " :End of /NAMES list.\r\n")
+// INVITE
+#define RPL_INVITING(client, nickname, channel) (":localhost 341 " + client + " " + nickname + " " + channel + "\r\n")
+// 301
+#define RPL_AWAY(client, nickname, away_message) (":localhost 301 " + client + " " + nickname + " :" + away_message + "\r\n")
 /// end channels
 #define ERR_PASSWDMISMATCH(client) (":localhost 464 " + client + " :Password incorrect\r\n")
 #define RPL_MYINFO(client, servername, version, user_modes, chan_modes, chan_param_modes) (":localhost 004 " + client + " " + servername + " " + version + " " + user_modes + " " + chan_modes + " " + chan_param_modes + "\r\n")
@@ -89,3 +94,5 @@ void kick(std::string command, Client &client, std::map<std::string, Channel> &c
  * @return int Returns 0 if the invite was successful, -1 otherwise.
  */
 int invite(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
+
+void mode(std::string command, Client &client, std::map<std::string, Channel> &channels);

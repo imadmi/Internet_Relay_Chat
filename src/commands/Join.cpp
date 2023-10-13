@@ -27,7 +27,9 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
         return (1);
     }
 
-    client.add_buffer_to_send(RPL_JOIN(client.get_nickname(), channel_name));
+    // client.add_buffer_to_send(RPL_JOIN(client.get_nickname(), channel_name));
     broadcastTochannel(client, RPL_JOIN(client.get_nickname(), channel_name), channel_name, channels);
+    std::string nick_list = it->second.get_clients_nick();
+    broadcastTochannel(client, RPL_NAMREPLY(client.get_nickname(), channel_name, nick_list), channel_name, channels);
     return (0);
 }
