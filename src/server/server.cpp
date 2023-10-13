@@ -220,20 +220,18 @@ void Irc::handleBot(Client &client)
     dccRequest += file_path;
     dccRequest += " 0 0";
 
-    std::string bot = "imad";
+    std::string bot = "user";
 
 
     // std::string privmsgCommand = "PRIVMSG " + client.get_nickname() + " :" + '\x01' + "DCC SEND " + "/Users/imimouni/Downloads/zoro.jpeg" + " 0 6667 " + std::to_string(buff.size()) + '\x01';
     std::string privmsgCommand = "PRIVMSG " + bot  + " :" + '\x01' + "DCC SEND " + "/Users/imimouni/Downloads/zoro.jpeg" + " 0 6667 " + std::to_string(buff.size()) + '\x01';
 
+
     std::cout << privmsgCommand << std::endl;
 
 
     send(client.get_fd(), privmsgCommand.c_str(), strlen(privmsgCommand.c_str()), 0);
-    send(5, privmsgCommand.c_str(), strlen(privmsgCommand.c_str()), 0);
-    send(6, privmsgCommand.c_str(), strlen(privmsgCommand.c_str()), 0);
-    send(8, privmsgCommand.c_str(), strlen(privmsgCommand.c_str()), 0);
-    send(9, privmsgCommand.c_str(), strlen(privmsgCommand.c_str()), 0);
+
 }
 
 void Irc::handleQuotes(Client &client)
