@@ -45,8 +45,9 @@ int invite(std::string command, Client &client, std::map<std::string, Channel> &
     }
     channel.add_invitee(nickname);
     Client &invited_client = get_client_by_nickname(nickname, clients);
-    std::cout << "you invted" << std::endl;
-    std::string message = "you have been invited to join " + channel_name + " by " + client.get_nickname() + "\n";
+    std::string message = RPL_INVITING(client.get_nickname(), nickname, channel_name);
+    broadcastTochannel(client, message, channel_name, channels);
+    message = RPL_AWAY(client.get_nickname(), nickname, "You have been invited to join the channel");
     send(invited_client.get_fd(), message.c_str(), message.length(), 0);
 
     return (0);
