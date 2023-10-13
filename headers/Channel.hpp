@@ -111,4 +111,11 @@ public:
      * @return A vector of strings containing the usernames of all users who have been invited to the channel.
      */
     std::vector<std::string> get_invitees();
+
+    /**
+     * Returns a vector of strings containing the list of clients nick currently in the channel.
+     *
+     * @return A vector of strings containing the list of clients currently in the channel.
+     */
+    std::string get_clients_nick();
 };
