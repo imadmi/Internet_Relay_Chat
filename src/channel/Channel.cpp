@@ -81,6 +81,19 @@ char Channel::get_signe_mode(char mode)
     return (this->_modes[mode]);
 }
 
+std::string Channel::get_mode_string()
+{
+    std::string mode_string;
+    std::map<char, char>::iterator it = this->_modes.begin();
+    while (it != this->_modes.end())
+    {
+        mode_string += it->second;
+        mode_string += it->first;
+        it++;
+    }
+    return (mode_string);
+}
+
 int Channel::set_operator(Client &client)
 {
     if (this->_clients.find(client.get_socket_fd()) == this->_clients.end())

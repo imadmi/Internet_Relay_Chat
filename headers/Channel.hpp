@@ -89,6 +89,9 @@ public:
      * @return  the signe of the mode.
      */
     char get_signe_mode(char mode);
+
+    std::string get_mode_string();
+
     /**
      * @brief set the operator of the channel.
      *

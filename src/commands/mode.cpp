@@ -101,4 +101,23 @@ void mode(std::string command, Client &client, std::map<std::string, Channel> &c
         std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " +l " + valuePart + "\r\n";
         broadcastTochannel(client, message, channel_name, channels);
     }
+    if (modePart == "-l" && !valuePart.empty() && modePart != valuePart)
+    {
+        channel.set_mode('l', '-');
+        channel.set_limit(10);
+        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " -l " + valuePart + "\r\n";
+        broadcastTochannel(client, message, channel_name, channels);
+    }
+    if (modePart == "+i" && !valuePart.empty())
+    {
+        channel.set_mode('i', '+');
+        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " +i " + valuePart + "\r\n";
+        broadcastTochannel(client, message, channel_name, channels);
+    }
+    if (modePart == "-i" && !valuePart.empty())
+    {
+        channel.set_mode('i', '-');
+        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " " + valuePart + "\r\n";
+        broadcastTochannel(client, message, channel_name, channels);
+    }
 }
