@@ -10,7 +10,7 @@ Channel::Channel()
 Channel::Channel(std::string channel_name)
 {
     _name = channel_name;
-    _modes['i'] = '+';
+    _modes['i'] = '-';
     _modes['t'] = '+';
     _modes['k'] = '-';
     _modes['o'] = '+';

@@ -8,9 +8,17 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
     size_t spacePos = command.find(" ", 5);
     std::string channel_name = command.substr(5, spacePos - 5);
     channel_name = filteredString(channel_name);
+    std::string key = command.substr(spacePos + 1);
+    key = filteredString(key);
+    std::cout << "key: " << key << std::endl;
     if (channels.find(channel_name) == channels.end())
     {
         Channel new_channel(channel_name);
+        if (key != "")
+        {
+            new_channel.set_key(key);
+            new_channel.set_mode('k', '+');
+        }
         new_channel.add_invitee(client.get_nickname());
         channels.insert(std::pair<std::string, Channel>(channel_name, new_channel));
     }
