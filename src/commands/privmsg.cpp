@@ -103,19 +103,18 @@ void privmsg_user(std::string to_send, Client &client , std::map<int, Client> &c
     std::map<int, Client>::iterator it2;
     if(to_send.empty())
         send(client.get_fd(), ERR_NOTEXTTOSEND(client.get_nickname()).c_str(), ERR_NOTEXTTOSEND(client.get_nickname()).length(), 0);
-    else if (!receiver.empty())
+    else
     {
-        int flag = 0;
         for (it2 = clients.begin(); it2 != clients.end(); ++it2)
         {
             if (it2->second.get_nickname() == receiver)
             {
-                send(it2->second.get_fd(), RPL_PRIVMSG(client.get_nickname(), "USername", receiver, to_send).c_str(), RPL_PRIVMSG(client.get_nickname(), "USername", receiver, to_send).length(), 0);
-                flag = 1;
+                //std::cout<<RED<< receiver<<std::endl; 
+                send(it2->second.get_fd(), RPL_PRIVMSG(client.get_nickname(), client.get_username() , receiver, to_send).c_str(), RPL_PRIVMSG(client.get_nickname(), client.get_username(), receiver, to_send).length(), 0);
                 break;
             }
     }
-        if (flag == 0)
+        if (it2 == clients.end())
         {
             send(client.get_fd(), ERR_NOSUCHNICK(client.get_nickname(), receiver).c_str(), ERR_NOSUCHNICK(client.get_nickname(), receiver).length(), 0);
         }   
@@ -130,19 +129,19 @@ void privmsg(std::string message, Client &client , std::map<int, Client> &client
     std::string to_send = message.substr(8 + receiver.length() + 1 + spaces , message.length());
    std::map<std::string, Channel>::iterator it = channels.find(channel_name);
 
-//    std::cout<<RED<< receiver<<std::endl;
     std::map<int, Client>::iterator it2;
     if( receiver.empty() && channel_name.empty())
         send(client.get_fd(), ERR_NORECIPIENT(client.get_nickname()).c_str(), ERR_NORECIPIENT(client.get_nickname()).length(), 0);
-    if (!receiver.empty() && channel_name.empty())
+    else if (!receiver.empty() && channel_name.empty())
+    { 
         privmsg_user(to_send, client, clients, receiver);
-    if (!channel_name.empty())
+    }
+    else if (!channel_name.empty())
     {
-        std::cout<<RED<< "channel"<<std::endl;
          if(to_send.empty())
             send(client.get_fd(), ERR_NOTEXTTOSEND(client.get_nickname()).c_str(), ERR_NOTEXTTOSEND(client.get_nickname()).length(), 0);
         else
-            broadcastTochannel_1(client,RPL_PRIVMSG(client.get_nickname(), "Username", channel_name,  to_send), channel_name, channels);
+            broadcastTochannel_1(client,RPL_PRIVMSG(client.get_nickname(), client.get_username(), channel_name,  to_send), channel_name, channels);
     }
 }
 

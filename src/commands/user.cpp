@@ -13,7 +13,7 @@ static std::string getCurrentTime()
     strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeInfo);
     return std::string(buffer);
 }
-static bool checkForma(const std::string &username)
+static bool checkForma(const std::string &username, std::string &user)
 {
     std::istringstream iss(username);
     std::string word;
@@ -22,6 +22,7 @@ static bool checkForma(const std::string &username)
     {
         if (position == 1 || position == 4)
         {
+            user = position == 1 ? word:user;
         }
         else if (position == 2)
         {
@@ -53,15 +54,16 @@ void user(std::string command, Client &client, std::map<std::string, Channel> &c
     ss << client.get_fd();
     std::string str = ss.str();
     std::string username = command.substr(5, command.length() - 5);
+    std::string user;
     if (client.is_authenticated() == false && client.get_pass() != "" && client.get_nickname() != "")
     {
         if (username.empty())
             send(client.get_fd(), ERR_NEEDMOREPARAMS(client.get_nickname(), "USER").c_str(), ERR_NEEDMOREPARAMS(client.get_nickname(), "USER").length(), 0);
-        else if (checkForma(username) == false)
+        else if (checkForma(username, user) == false)
             send(client.get_fd(), ERR_NEEDMOREPARAMS(client.get_nickname(), "USER").c_str(), ERR_NEEDMOREPARAMS(client.get_nickname(), "USER").length(), 0);
         else
         {
-            client.set_username(username);
+            client.set_username(user);
             client.set_authenticated(true);
             client.add_buffer_to_send(RPL_WELCOME(str, client.get_nickname()));
             client.add_buffer_to_send(RPL_YOURHOST(client.get_nickname(), "1337-ft_irc"));

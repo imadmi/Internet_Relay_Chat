@@ -82,8 +82,8 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
     {
         Irc::handleQuotes(client);
     }
-    // if (command.substr(0, 5) == "TOPIC")
-    // {
-    //     topic(command, client, channels, clients);
-    // }
+    if (command.substr(0, 5) == "TOPIC")
+    {
+        topic(command, client, channels, clients);
+    }
 }

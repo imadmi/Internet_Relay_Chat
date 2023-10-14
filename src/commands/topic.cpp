@@ -158,6 +158,18 @@
 // }
 //version 3
 
+static bool is_in_channel(Client client, Channel channel)
+{
+    std::map<int, Client>::iterator it;
+    for (it = channel.get_clients().begin(); it != channel.get_clients().end(); ++it)
+    {
+        if (it->second.get_nickname() == client.get_nickname())
+            return true;
+    }
+    return false;
+}
+
+
 static bool is_operator(Client & client,  Channel& channel)
 {
     std::map<int, Client>::iterator it;
@@ -171,13 +183,17 @@ static bool is_operator(Client & client,  Channel& channel)
 
 static std::string extract_channel_name(std::string command)
 {
-    std::istringstream iss(command);
-    std::string word;
-
-    // Split the input string by space and get the first word
-    iss >> word;
-
-    return word;
+    std::string channel_name = ""   ;
+    int start = 0;
+    while(command[start] != '#' && start < (int)command.length())
+        start++;
+    for(int i = start; i < (int)command.length(); i++)
+    {
+        if (command[i] == ' ')
+            break;
+        channel_name += command[i];
+    }
+    return channel_name;
 }
 
 static std::string extract_topic(std::string command)
@@ -204,13 +220,14 @@ static std::string extract_topic(std::string command)
 
 void topic(std::string& command, Client& client, std::map<std::string, Channel>& channels, std::map<int, Client>& clients)
 {
-    std::string channel_name = extract_channel_name(command.substr(5));
-    std::string topic = extract_topic(command.substr(5 + channel_name.length()));
+    std::string channel_name = extract_channel_name(command);
+    std::string topic = extract_topic(command.substr(5 + channel_name.length(), command.length() - 5 - channel_name.length()));
 
-    std::cout << RED << channel_name << RESET << std::endl;
-    std::cout << YELLOW << topic << RESET << std::endl;
+    // std::cout << RED << channel_name << RESET << std::endl;
+    // std::cout << YELLOW << topic << RESET << std::endl;
+    // std::cout << BLUE << is_operator(client , channels.find(channel_name)->second) << RESET << std::endl;
 
-    if (channel_name.empty() || topic.empty())
+    if (channel_name.empty() && topic.empty())
     {
         // Handle missing parameters
         send(client.get_fd(), ERR_NEEDMOREPARAMS(client.get_nickname(), "TOPIC").c_str(), ERR_NEEDMOREPARAMS(client.get_nickname(), "TOPIC").length(), 0);
@@ -222,18 +239,23 @@ void topic(std::string& command, Client& client, std::map<std::string, Channel>&
         send(client.get_fd(), ERR_NOSUCHCHANNEL(client.get_nickname(), channel_name).c_str(), ERR_NOSUCHCHANNEL(client.get_nickname(), channel_name).length(), 0);
         return;
     }
-    else if (channels[channel_name].get_topic().empty() && topic.empty())
+    // else if (channels[channel_name].get_topic().empty() && topic.empty())
+    // {
+    //     // Handle topic already set
+    //     send(client.get_fd(), ERR_TOPIC(client.get_nickname(), channel_name).c_str(), ERR_TOPIC(client.get_nickname(), channel_name).length(), 0);
+    //     return;
+    // }
+    else if ( !is_in_channel(client, channels[channel_name]))
     {
-        // Handle topic already set
-        send(client.get_fd(), ERR_TOPIC(client.get_nickname(), channel_name).c_str(), ERR_TOPIC(client.get_nickname(), channel_name).length(), 0);
+        send(client.get_fd(), ERR_NOTONCHANNEL(client.get_nickname(), channel_name).c_str(), ERR_NOTONCHANNEL(client.get_nickname(), channel_name).length(), 0);
         return;
     }
-    else if (is_operator(client, channels[channel_name]))
+    else if ( !channel_name.empty() && !topic.empty() &&  is_in_channel(client, channels[channel_name]) && is_operator(client , channels[channel_name]))
     {
         channels[channel_name].set_topic(topic);
     }
-    else
+    else if ( !channel_name.empty() && is_in_channel(client, channels[channel_name]) && !topic.empty())
     {
-        send(client.get_fd(), RPL_TOPIC(client.get_nickname(), channel_name, topic).c_str(), RPL_TOPIC(client.get_nickname(), channel_name, topic).length(), 0);
+        send(client.get_fd(), RPL_TOPIC(client.get_nickname(), channel_name, channels[channel_name].get_topic()).c_str(), RPL_TOPIC(client.get_nickname(), channel_name, channels[channel_name].get_topic()).length(), 0);
     }
 }
