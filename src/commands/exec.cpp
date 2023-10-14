@@ -2,6 +2,18 @@
 #include "../../headers/Channel.hpp"
 #include "../../headers/commands.hpp"
 
+
+static bool is_operator(Client & client,  Channel& channel)
+{
+    std::map<int, Client>::iterator it;
+    for (it = channel.get_operators().begin(); it != channel.get_operators().end(); ++it)
+    {
+        if (it->second.get_nickname() == client.get_nickname())
+            return true;
+    }
+    return false;
+}
+
 bool client_already_exist(std::string nickname, std::map<int, Client> clients)
 {
     std::map<int, Client>::iterator it;
@@ -52,8 +64,7 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
     {
         mode(command, client, channels);
     }
-    // if (client.is_authenticated())
-    if (1)
+    if (client.is_authenticated())
     {
         send(client.get_fd(), client.get_buff_to_send().c_str(), client.get_buff_to_send().length(), 0);
         client.set_buff_to_send("");

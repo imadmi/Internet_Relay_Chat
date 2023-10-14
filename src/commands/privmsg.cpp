@@ -59,10 +59,20 @@ std::string parseMessage(std::string message)
     return parsedMessage;
 }
 
-std::string extractName(std::string message)
+std::string extractName(std::string message, int *spaces)
 {
     std::string name;
     std::string::iterator it;
+    //skip all spaces 
+    for (it = message.begin(); it != message.end(); ++it)
+    {
+        if (*it != ' ')
+        {
+            break;
+        }
+        *spaces += 1;
+    }
+
     for (it = message.begin(); it != message.end(); ++it)
     {
         if (*it == ' ')
@@ -88,11 +98,9 @@ std::string extract_channel_name(std::string message)
     return channel_name;
 }
 
-void privmsg_user(std::string message, Client &client , std::map<int, Client> &clients, std::string receiver)
+void privmsg_user(std::string to_send, Client &client , std::map<int, Client> &clients, std::string receiver)
 {
     std::map<int, Client>::iterator it2;
-    std::string to_send = message.substr(8 + receiver.length() + 1 , message.length());
-    std::cout<< RED<< to_send<<std::endl;
     if(to_send.empty())
         send(client.get_fd(), ERR_NOTEXTTOSEND(client.get_nickname()).c_str(), ERR_NOTEXTTOSEND(client.get_nickname()).length(), 0);
     else if (!receiver.empty())
@@ -116,18 +124,19 @@ void privmsg_user(std::string message, Client &client , std::map<int, Client> &c
 
 void privmsg(std::string message, Client &client , std::map<int, Client> &clients, std::map<std::string, Channel> &channels)
 {
-    std::string receiver = extractName(message.substr(8, message.length() - 8));
+    int spaces = 0;
+    std::string receiver = extractName(message.substr(8, message.length() - 8), &spaces);
    std::string channel_name =receiver.find("#") == std::string::npos ? "" :receiver;
-    std::string to_send = message.substr(8 + receiver.length() + 1 , message.length());
+    std::string to_send = message.substr(8 + receiver.length() + 1 + spaces , message.length());
    std::map<std::string, Channel>::iterator it = channels.find(channel_name);
 
-   std::cout<<RED<< receiver<<std::endl;
+//    std::cout<<RED<< receiver<<std::endl;
     std::map<int, Client>::iterator it2;
     if( receiver.empty() && channel_name.empty())
         send(client.get_fd(), ERR_NORECIPIENT(client.get_nickname()).c_str(), ERR_NORECIPIENT(client.get_nickname()).length(), 0);
-    else if (!receiver.empty() && channel_name.empty())
-        privmsg_user(message, client, clients, receiver);
-    else if (!channel_name.empty())
+    if (!receiver.empty() && channel_name.empty())
+        privmsg_user(to_send, client, clients, receiver);
+    if (!channel_name.empty())
     {
         std::cout<<RED<< "channel"<<std::endl;
          if(to_send.empty())
