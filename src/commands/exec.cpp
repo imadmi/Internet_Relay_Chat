@@ -71,12 +71,58 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
     {
         Irc::handleQuotes(client);
     }
-    // if (command.substr(0, 3) == "BOT" && client.is_authenticated())
-    // {
-    //     Irc::handleBot(client);
-    // }
-    if (command.substr(0, 3) == "BOT")
+    if (command.substr(0, 3) == "BOT" && client.is_authenticated())
     {
+        // pthread_t dccThread;
+        // if (pthread_create(&dccThread, NULL, dccFileTransfer, &client) != 0)
+        // {
+        //     std::cerr << "Error creating DCC thread" << std::endl;
+        //     return ;
+        // }
+        // if (pthread_detach(dccThread) != 0)
+        // {
+        //     std::cerr << "Error detaching DCC thread" << std::endl;
+        //     return ;
+        // }
         Irc::handleBot(client);
+        // pthread_join(dccThread, NULL);
     }
+    // if (command.substr(0, 3) == "BOT")
+    // {
+    //     std::string file_path = "/goinfre/imimouni/zoro.jpeg";
+
+    //     char buffer[1000];
+    //     FILE *fd = fopen(file_path.c_str(), "rb");
+    //     std::string buff;
+    //     while (!feof(fd))
+    //     {
+    //         int size = fread(&buffer, 1, 1000, fd);
+    //         if (size < 0)
+    //             break;
+    //         buff.append(buffer, size);
+    //     }
+
+
+
+    //     std::string dccRequest = "DCC SEND";
+    //     dccRequest += file_path;
+    //     dccRequest += " 0 0";
+
+    //     std::string bot = "#ch";
+
+
+    //     // std::string privmsgCommand = "PRIVMSG " + client.get_nickname() + " :" + '\x01' + "DCC SEND " + "/goinfre/imimouni/zoro.jpeg" + " 0 6667 " + std::to_string(buff.size()) + '\x01';
+    //     std::string privmsgCommand = "PRIVMSG " + bot  + " " + '\x01' + "DCC SEND " + "/goinfre/imimouni/zoro.jpeg" + " 10.12.11.2 6667 " + std::to_string(buff.size()) + '\x01';
+    //     // std::string privmsgCommand = "PRIVMSG " + bot  + " DCC SEND " + "/goinfre/imimouni/zoro.jpeg" + " 10.12.11.2 6667 " + std::to_string(buff.size());
+
+
+    // // PRIVMSG imad \x01 DCC SEND /goinfre/imimouni/zoro.jpeg 10.12.11.2 6667 420782\x01
+    // // PRIVMSG #ch \x01 DCC SEND /goinfre/imimouni/zoro.jpeg 10.12.11.2 6667 420782\x01
+
+    //     std::cout << privmsgCommand << std::endl;
+
+
+    //     //send(client.get_fd(), privmsgCommand.c_str(), strlen(privmsgCommand.c_str()), 0);
+    //     privmsg(privmsgCommand,client, clients, channels);
+    // }
 }

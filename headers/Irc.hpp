@@ -21,6 +21,8 @@
 #include <sstream>
 #include <string>
 #include <fcntl.h>
+#include <pthread.h>
+
 
 /* colors */
 #define RESET "\033[0m"
@@ -61,11 +63,7 @@ class Irc
 
 
 
-    std::map<int, Client>& getClients()
-    {
-        return _clients;
-    }
-
+        void getClientIPAddress(int);
 
 
         /**
@@ -157,3 +155,5 @@ class Irc
 
 
 };
+
+void*  dccFileTransfer(void* arg);
