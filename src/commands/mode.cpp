@@ -62,7 +62,7 @@ void mode(std::string command, Client &client, std::map<std::string, Channel> &c
     {
         channel.set_mode('k', '+');
         channel.set_key(valuePart);
-        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " +k " + valuePart + "\r\n";
+        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + "  " + valuePart + "\r\n";
         broadcastTochannel(client, message, channel_name, channels);
     }
     if ((modePart == "+o" || modePart == "-o") && !valuePart.empty() && modePart != valuePart)
@@ -76,12 +76,12 @@ void mode(std::string command, Client &client, std::map<std::string, Channel> &c
                 if (modePart == "+o")
                 {
                     channel.set_operator(cl);
-                    std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " +o " + valuePart + "\r\n";
+                    std::string message = ":" + client.get_nickname() + " MODE " + channel_name + "  " + valuePart + "\r\n";
                     broadcastTochannel(client, message, channel_name, channels);
                 }
                 else
                 {
-                    std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " -o " + valuePart + "\r\n";
+                    std::string message = ":" + client.get_nickname() + " MODE " + channel_name + "  " + valuePart + "\r\n";
                     broadcastTochannel(client, message, channel_name, channels);
                     channel.remove_operator(cl);
                 }
@@ -98,20 +98,20 @@ void mode(std::string command, Client &client, std::map<std::string, Channel> &c
     {
         channel.set_mode('l', '+');
         channel.set_limit(std::stoi(valuePart));
-        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " +l " + valuePart + "\r\n";
+        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + "  " + valuePart + "\r\n";
         broadcastTochannel(client, message, channel_name, channels);
     }
     if (modePart == "-l" && !valuePart.empty() && modePart != valuePart)
     {
         channel.set_mode('l', '-');
         channel.set_limit(10);
-        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " -l " + valuePart + "\r\n";
+        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + "  " + valuePart + "\r\n";
         broadcastTochannel(client, message, channel_name, channels);
     }
     if (modePart == "+i" && !valuePart.empty())
     {
         channel.set_mode('i', '+');
-        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " +i " + valuePart + "\r\n";
+        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + "  " + valuePart + "\r\n";
         broadcastTochannel(client, message, channel_name, channels);
     }
     if (modePart == "-i" && !valuePart.empty())
