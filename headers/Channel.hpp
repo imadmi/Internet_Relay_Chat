@@ -16,6 +16,8 @@ private:
     std::map<char, char> _modes;
     std::map<int, Client> _operators;
     std::vector<std::string> _invitees;
+    std::string _key;
+    int _limit;
 
 
 public:
@@ -88,6 +90,9 @@ public:
      * @return  the signe of the mode.
      */
     char get_signe_mode(char mode);
+
+    std::string get_mode_string();
+
     /**
      * @brief set the operator of the channel.
      *
@@ -95,12 +100,20 @@ public:
      * @return status of the operation (0 if success).
      */
     int set_operator(Client &client);
+
+    /**
+     * @brief remove the operator of the channel.
+     *
+     * @param client to remove as operator.
+     * @return status of the operation (0 if success).
+     */
+    int remove_operator(Client &client);
     /**
      * @brief get the operator of the channel.
      *
      * @return std::map<int, Client>
      */
-    std::map<int, Client> get_operators();
+    std::map<int, Client> &get_operators();
     void print_members();
     /**
      * Adds a user to the list of invitees for the channel.
@@ -119,4 +132,22 @@ public:
      * @return A vector of strings containing the list of clients currently in the channel.
      */
     std::string get_clients_nick();
+
+    /**
+     * Returns the key of the channel.
+     *
+     * @return The key of the channel.
+     */
+    std::string get_key();
+
+    void set_key(std::string key);
+
+    /**
+     * Returns the limit of the channel.
+     *
+     * @return The limit of the channel.
+     */
+    int get_limit();
+
+    void set_limit(int limit);
 };

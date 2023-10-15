@@ -10,11 +10,13 @@ Channel::Channel()
 Channel::Channel(std::string channel_name)
 {
     _name = channel_name;
-    _modes['i'] = '+';
+    _modes['i'] = '-';
     _modes['t'] = '+';
-    _modes['k'] = '+';
+    _modes['k'] = '-';
     _modes['o'] = '+';
     _modes['l'] = '+';
+    _limit = 10;
+    _key = "pass";
 }
 
 Channel::~Channel()
@@ -73,6 +75,19 @@ char Channel::get_signe_mode(char mode)
     return (this->_modes[mode]);
 }
 
+std::string Channel::get_mode_string()
+{
+    std::string mode_string;
+    std::map<char, char>::iterator it = this->_modes.begin();
+    while (it != this->_modes.end())
+    {
+        mode_string += it->second;
+        mode_string += it->first;
+        it++;
+    }
+    return (mode_string);
+}
+
 int Channel::set_operator(Client &client)
 {
     if (this->_clients.find(client.get_socket_fd()) == this->_clients.end())
@@ -81,7 +96,15 @@ int Channel::set_operator(Client &client)
     return (0);
 }
 
-std::map<int, Client> Channel::get_operators()
+int Channel::remove_operator(Client &client)
+{
+    if (this->_clients.find(client.get_socket_fd()) == this->_clients.end())
+        return (-1);
+    this->get_operators().erase(client.get_socket_fd());
+    return (0);
+}
+
+std::map<int, Client> &Channel::get_operators()
 {
     return (this->_operators);
 }
@@ -98,6 +121,7 @@ void Channel::print_members()
 
 void Channel::add_invitee(std::string nickname)
 {
+    std::cout << "adding invitee " << nickname << std::endl;
     this->_invitees.push_back(nickname);
 }
 
@@ -119,7 +143,22 @@ std::string Channel::get_clients_nick()
     return (str_list);
 }
 
-void  Channel::set_topic(std::string topic)
+std::string Channel::get_key()
 {
-    _topic = topic;
+    return (this->_key);
+}
+
+void Channel::set_key(std::string key)
+{
+    this->_key = key;
+}
+
+int Channel::get_limit()
+{
+    return (this->_limit);
+}
+
+void Channel::set_limit(int limit)
+{
+    this->_limit = limit;
 }
