@@ -1,8 +1,8 @@
 
 
 NAME = ircserv
-# FLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
-FLAGS = -fsanitize=address -std=c++98
+FLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
+# FLAGS = -fsanitize=address -std=c++98
 CC = c++  
 OBJ_DIR = obj
 SRC_DIR = src
@@ -18,14 +18,14 @@ HEADER = $(wildcard $(HEADER_DIR)/*.hpp)
 
 $(NAME): $(OBJ) $(HEADER)
 	@$(CC) $(FLAGS) $(OBJ) -o $@
-	# @clear
+	@clear
 	@echo ./$(NAME) "\033[0;31m6667\033[0m pass"
 	@./$(NAME) 6667 pass
 
 bonus:
 	@c++ fileTransfer/filetransfer.cpp -o fileTransfer/bot
-	# @clear
-	# @./fileTransfer/bot
+	@clear
+	@echo ./fileTransfer/bot
 
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER)
 	@mkdir -p $(@D)

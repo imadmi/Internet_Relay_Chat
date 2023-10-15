@@ -19,7 +19,6 @@ private:
     std::string _key;
     int _limit;
 
-
 public:
     Channel();
     /**
@@ -147,7 +146,7 @@ public:
      *
      * @return The limit of the channel.
      */
-    int get_limit();
+    size_t get_limit();
 
     void set_limit(int limit);
 };

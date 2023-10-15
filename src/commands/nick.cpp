@@ -26,6 +26,7 @@ bool hasInvalidCharacters(const std::string &name)
 
 void nick(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> clients)
 {
+    (void)channels;
     std::string nickname = filteredString(command.substr(5, command.length() - 5));
     if (client.is_authenticated() == false && client.get_pass() != "" && client.get_nickname() == "")
     {

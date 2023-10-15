@@ -5,10 +5,18 @@
 Irc::Irc(int port, char *password)
 {
     _passWord = password;
+    _serverName = ":MSN ";
     _port = port;
+
     if (_port < 1024 || _port > 65535)
         printc("The port is out of rang", RED, 1);
-    _serverName = ":MSN ";
+
+    std::cout << GREEN << "\n :::::    :::::    :::::::::    ::::   :::" << std::endl;
+    std::cout << " ::::::  ::::::    :::          :::::  :::" << std::endl;
+    std::cout << " ::: :::::: :::    :::::::::    ::: :: :::" << std::endl;
+    std::cout << " :::   ::   :::          :::    :::  :::::" << std::endl;
+    std::cout << " :::        :::    :::::::::    :::   ::::" << std::endl;
+    std::cout << RESET << std::endl;
 
     createSocket();
     settingsockopt();
@@ -56,27 +64,6 @@ void Irc::listeningToClients()
         printc("ERROR : listen", RED, 1);
 }
 
-int open_bot_fd()
-{
-    const char* filename = "bot"; // Replace with the path to your file
-
-    int fd = open(filename, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
-
-    if (fd == 4)
-    {
-        return fd;
-    }
-    else if (fd == -1)
-    {
-        std::cerr << "Failed to open the file: " << std::strerror(errno) << std::endl;
-        std::exit(1);
-    }
-    else
-    {
-        std::cerr << "File descriptor is not 4. Make sure it's available." << std::endl;
-        std::exit(1);
-    }
-}
 void Irc::runServer()
 {
     pollfd serverPoll;
@@ -129,7 +116,6 @@ void Irc::handleLogTime(Client &client)
     send(client.get_fd(), msg.c_str(), strlen(msg.c_str()), 0);
 }
 
-
 void Irc::addClient()
 {
     _newSocket = accept(_serverSocket, NULL, NULL);
@@ -151,83 +137,35 @@ void Irc::printc(std::string msg, std::string color, int ex)
         exit(EXIT_SUCCESS);
 }
 
-
-void*  dccFileTransfer(void* arg)
+void Irc::handleBot(Client &client)
 {
-    std::string* file = static_cast<std::string*>(arg);
+    std::string msg;
+    char buffer[1000];
+    std::string file;
+    FILE *fd = fopen(FILE_PATH, "rb");
+    if (fd == NULL)
+    {
+        msg = "PRIVMSG " + client.get_nickname() + " :" + "Error opening file" + "\r\n";
+        send(client.get_fd(), msg.c_str(), msg.size(), 0);
+        return;
+    }
+    while (!feof(fd))
+    {
+        int size = fread(&buffer, 1, 1024, fd);
+        if (size < 0)
+            break;
+        file.append(buffer, size);
+    }
+    fclose(fd);
 
-    int send_fd = socket(AF_INET, SOCK_STREAM, 0);
-    if (send_fd < 0)
-    {
-        std::cout << "Error creating socket" << std::endl;
-        return NULL;
-    }
-    int opt = 1;
-    if (setsockopt(send_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)))
-    {
-        std::cout << "Error setting socket options" << std::endl;
-        return NULL;
-    }
-    struct sockaddr_in addr;
-    int addrlen = sizeof(addr);
-    memset(&addr, 0, addrlen);
-    addr.sin_family = AF_INET;
-    addr.sin_port = htons(9999);
-    addr.sin_addr.s_addr = INADDR_ANY;
-
-    if (bind(send_fd, (struct sockaddr *)&addr, sizeof(addr)) < 0)
-    {
-        std::cout << "Error binding bot socket" << std::endl;
-        return NULL;
-    }
-    if (listen(send_fd, 1) < 0)
-    {
-        std::cout << "Error listening on socket" << std::endl;
-        return NULL;
-    }
-    int new_socket = accept(send_fd, (struct sockaddr *)&addr, (socklen_t *)&addrlen);
-    if (new_socket < 0)
-    {
-        std::cout << "Error accepting connection" << std::endl;
-        return NULL;
-    }
-    send(new_socket, file->c_str(), file->size(), 0);
-    while(true);
-    // sleep(10);
-    close(new_socket);
-    close(send_fd);
-    return NULL;
-}
-
-void  Irc::handleBot(Client &client)
-{
-	std::string msg;
-	char buffer[1000];
-	std::string file;
-	FILE *fd = fopen(FILE_PATH, "rb");
-	if (fd == NULL)
-	{
-		msg = "PRIVMSG " + client.get_nickname() + " :" + "Error opening file" + "\r\n";
-		send(client.get_fd(), msg.c_str(), msg.size(), 0);
-		return ;
-	}
-	while (!feof(fd))
-	{
-		int size = fread(&buffer, 1, 1024, fd);
-		if (size < 0)
-			break;
-		file.append(buffer, size);
-	}
-	fclose(fd);
-
-	msg = "PRIVMSG " + client.get_nickname() + " :" + '\x01' + "DCC SEND " + FILE_PATH + " 0 9999 " + std::to_string(file.size()) + '\x01';
-	msg += "\r\n";
-	send(client.get_fd(), msg.c_str(), msg.size(), 0);
+    msg = "PRIVMSG " + client.get_nickname() + " :" + '\x01' + "DCC SEND " + FILE_PATH + " 0 9999 " + std::to_string(file.size()) + '\x01';
+    msg += "\r\n";
+    send(client.get_fd(), msg.c_str(), msg.size(), 0);
 }
 
 void Irc::Handle_activity()
 {
-    for (int i = 1; i < _pollfds.size(); i++)
+    for (size_t i = 1; i < _pollfds.size(); i++)
     {
         if (_pollfds[i].revents & POLLIN)
         {
@@ -273,42 +211,6 @@ void Irc::recvClientsMsg(Client &client, std::string buffer)
 {
     client.addt_buffer(buffer);
 }
-
-// void Irc::handleBot(Client &client)
-// {
-//     std::string file_path = "/goinfre/imimouni/zoro.jpeg";
-
-//     char buffer[1000];
-//     FILE *fd = fopen(file_path.c_str(), "rb");
-//     std::string buff;
-//     while (!feof(fd))
-//     {
-//         int size = fread(&buffer, 1, 1000, fd);
-//         if (size < 0)
-//             break;
-//         buff.append(buffer, size);
-//     }
-
-
-
-//     std::string dccRequest = "DCC SEND";
-//     dccRequest += file_path;
-//     dccRequest += " 0 0";
-
-//     std::string bot = "user";
-
-
-//     // std::string privmsgCommand = "PRIVMSG " + client.get_nickname() + " :" + '\x01' + "DCC SEND " + "/goinfre/imimouni/zoro.jpeg" + " 0 6667 " + std::to_string(buff.size()) + '\x01';
-//     std::string privmsgCommand = "PRIVMSG " + bot  + " " + '\x01' + "DCC SEND " + "/goinfre/imimouni/zoro.jpeg" + " 10.12.11.2 6667 " + std::to_string(buff.size()) + '\x01';
-
-
-// // PRIVMSG user \x01 DCC SEND /goinfre/imimouni/zoro.jpeg 10.12.11.2 6667 420782\x01
-
-//     std::cout << privmsgCommand << std::endl;
-
-
-//     // send(client.get_fd(), privmsgCommand.c_str(), strlen(privmsgCommand.c_str()), 0);
-// }
 
 void Irc::handleQuotes(Client &client)
 {
