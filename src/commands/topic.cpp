@@ -68,6 +68,7 @@ static std::string extract_topic(std::string command)
 
 void topic(std::string &command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients)
 {
+    (void)clients;
     std::string channel_name = filteredString(extract_channel_name(command));
     std::string topic = extract_topic(command.substr(5 + channel_name.length(), command.length() - 5 - channel_name.length()));
     if (!channel_name.empty() && channels.find(channel_name) != channels.end())

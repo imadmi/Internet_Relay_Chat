@@ -58,7 +58,7 @@ void Irc::listeningToClients()
 
 int open_bot_fd()
 {
-    const char* filename = "bot"; // Replace with the path to your file
+    const char *filename = "bot"; // Replace with the path to your file
 
     int fd = open(filename, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
 
@@ -129,7 +129,6 @@ void Irc::handleLogTime(Client &client)
     send(client.get_fd(), msg.c_str(), strlen(msg.c_str()), 0);
 }
 
-
 void Irc::addClient()
 {
     _newSocket = accept(_serverSocket, NULL, NULL);
@@ -151,10 +150,9 @@ void Irc::printc(std::string msg, std::string color, int ex)
         exit(EXIT_SUCCESS);
 }
 
-
-void*  dccFileTransfer(void* arg)
+void *dccFileTransfer(void *arg)
 {
-    std::string* file = static_cast<std::string*>(arg);
+    std::string *file = static_cast<std::string *>(arg);
 
     int send_fd = socket(AF_INET, SOCK_STREAM, 0);
     if (send_fd < 0)
@@ -192,42 +190,43 @@ void*  dccFileTransfer(void* arg)
         return NULL;
     }
     send(new_socket, file->c_str(), file->size(), 0);
-    while(true);
+    while (true)
+        ;
     // sleep(10);
     close(new_socket);
     close(send_fd);
     return NULL;
 }
 
-void  Irc::handleBot(Client &client)
+void Irc::handleBot(Client &client)
 {
-	std::string msg;
-	char buffer[1000];
-	std::string file;
-	FILE *fd = fopen(FILE_PATH, "rb");
-	if (fd == NULL)
-	{
-		msg = "PRIVMSG " + client.get_nickname() + " :" + "Error opening file" + "\r\n";
-		send(client.get_fd(), msg.c_str(), msg.size(), 0);
-		return ;
-	}
-	while (!feof(fd))
-	{
-		int size = fread(&buffer, 1, 1024, fd);
-		if (size < 0)
-			break;
-		file.append(buffer, size);
-	}
-	fclose(fd);
+    std::string msg;
+    char buffer[1000];
+    std::string file;
+    FILE *fd = fopen(FILE_PATH, "rb");
+    if (fd == NULL)
+    {
+        msg = "PRIVMSG " + client.get_nickname() + " :" + "Error opening file" + "\r\n";
+        send(client.get_fd(), msg.c_str(), msg.size(), 0);
+        return;
+    }
+    while (!feof(fd))
+    {
+        int size = fread(&buffer, 1, 1024, fd);
+        if (size < 0)
+            break;
+        file.append(buffer, size);
+    }
+    fclose(fd);
 
-	msg = "PRIVMSG " + client.get_nickname() + " :" + '\x01' + "DCC SEND " + FILE_PATH + " 0 9999 " + std::to_string(file.size()) + '\x01';
-	msg += "\r\n";
-	send(client.get_fd(), msg.c_str(), msg.size(), 0);
+    msg = "PRIVMSG " + client.get_nickname() + " :" + '\x01' + "DCC SEND " + FILE_PATH + " 0 9999 " + std::to_string(file.size()) + '\x01';
+    msg += "\r\n";
+    send(client.get_fd(), msg.c_str(), msg.size(), 0);
 }
 
 void Irc::Handle_activity()
 {
-    for (int i = 1; i < _pollfds.size(); i++)
+    for (size_t i = 1; i < _pollfds.size(); i++)
     {
         if (_pollfds[i].revents & POLLIN)
         {
@@ -289,23 +288,18 @@ void Irc::recvClientsMsg(Client &client, std::string buffer)
 //         buff.append(buffer, size);
 //     }
 
-
-
 //     std::string dccRequest = "DCC SEND";
 //     dccRequest += file_path;
 //     dccRequest += " 0 0";
 
 //     std::string bot = "user";
 
-
 //     // std::string privmsgCommand = "PRIVMSG " + client.get_nickname() + " :" + '\x01' + "DCC SEND " + "/goinfre/imimouni/zoro.jpeg" + " 0 6667 " + std::to_string(buff.size()) + '\x01';
 //     std::string privmsgCommand = "PRIVMSG " + bot  + " " + '\x01' + "DCC SEND " + "/goinfre/imimouni/zoro.jpeg" + " 10.12.11.2 6667 " + std::to_string(buff.size()) + '\x01';
-
 
 // // PRIVMSG user \x01 DCC SEND /goinfre/imimouni/zoro.jpeg 10.12.11.2 6667 420782\x01
 
 //     std::cout << privmsgCommand << std::endl;
-
 
 //     // send(client.get_fd(), privmsgCommand.c_str(), strlen(privmsgCommand.c_str()), 0);
 // }

@@ -2,17 +2,6 @@
 #include "../../headers/Channel.hpp"
 #include "../../headers/commands.hpp"
 
-static bool is_operator(Client &client, Channel &channel)
-{
-    std::map<int, Client>::iterator it;
-    for (it = channel.get_operators().begin(); it != channel.get_operators().end(); ++it)
-    {
-        if (it->second.get_nickname() == client.get_nickname())
-            return true;
-    }
-    return false;
-}
-
 bool client_already_exist(std::string nickname, std::map<int, Client> clients)
 {
     std::map<int, Client>::iterator it;

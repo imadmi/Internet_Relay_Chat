@@ -154,7 +154,7 @@ void Channel::set_key(std::string key)
     this->_key = key;
 }
 
-int Channel::get_limit()
+size_t Channel::get_limit()
 {
     return (this->_limit);
 }

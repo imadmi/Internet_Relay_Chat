@@ -3,16 +3,6 @@
 #include "../../headers/Irc.hpp"
 #include "../../headers/Channel.hpp"
 
-static std::string getCurrentTime()
-{
-    time_t currentTime;
-    struct tm *timeInfo;
-    char buffer[80];
-    time(&currentTime);
-    timeInfo = localtime(&currentTime);
-    strftime(buffer, sizeof(buffer), "%Y-%m-%d %H:%M:%S", timeInfo);
-    return std::string(buffer);
-}
 static bool checkForma(const std::string &username, std::string &user)
 {
     std::istringstream iss(username);
@@ -22,7 +12,7 @@ static bool checkForma(const std::string &username, std::string &user)
     {
         if (position == 1 || position == 4)
         {
-            user = position == 1 ? word:user;
+            user = position == 1 ? word : user;
         }
         else if (position == 2)
         {
@@ -50,6 +40,8 @@ static bool checkForma(const std::string &username, std::string &user)
 
 void user(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> clients)
 {
+    (void)channels;
+    (void)clients;
     std::stringstream ss;
     ss << client.get_fd();
     std::string str = ss.str();

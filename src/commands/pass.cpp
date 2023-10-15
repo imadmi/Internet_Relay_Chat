@@ -3,10 +3,11 @@
 #include "../../headers/Irc.hpp"
 #include "../../headers/Channel.hpp"
 
-
-void pass( std::string command, Client &client, std::map<std::string, Channel> &channels , std::map<int, Client> &clients)
+void pass(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients)
 {
-    std::string pass = filteredString (command.substr(5, command.length() - 5)) ;
+    (void)channels;
+    (void)clients;
+    std::string pass = filteredString(command.substr(5, command.length() - 5));
     if (client.is_authenticated() == false && client.get_pass() == "")
     {
         if (pass.empty())
