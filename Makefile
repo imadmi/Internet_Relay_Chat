@@ -39,6 +39,7 @@ clean:
 
 fclean: clean
 	@rm -f $(NAME)
+	@rm -f ./fileTransfer/bot
 	@ clear
 	@echo "\033[0;93mThe object files and the executable are removed.\033[0m"
 
