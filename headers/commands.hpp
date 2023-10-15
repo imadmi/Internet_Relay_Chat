@@ -36,10 +36,10 @@
 #define ERR_NORECIPIENT(client) ("411 " + client + " :No recipient given PRIVMSG\r\n")
 #define ERR_NOTEXTTOSEND(client) ("412 " + client + " :No text to send\r\n")
 #define RPL_PRIVMSG(nick, username, target, message) (":" + nick + "!" + username + "@localhost PRIVMSG " + target + "  :" + message + "\r\n")
-//TOPIC
-# define RPL_TOPIC(client, channel, topic) (":localhost 332 " + client + " "+ channel + " " + topic + "\r\n")
-# define RPL_NOTOPIC(client, channel) (":localhost 331 " + client + channel + " :No topic is set\r\n")
-# define ERR_TOPIC(client, channel) (":localhost 442 " + client + channel + " :You're not on that channel.\r\n")
+// TOPIC
+#define RPL_TOPIC(client, channel, topic) (":localhost 332 " + client + " " + channel + " :<< " + topic + " >>\r\n")
+#define RPL_NOTOPIC(client, channel) (":localhost 331 " + client + channel + " :No topic is set\r\n")
+#define ERR_TOPIC(client, channel) (":localhost 442 " + client + channel + " :You're not on that channel.\r\n")
 /**
  * @brief execute the command given by the client
  * @param command the command to execute
@@ -50,7 +50,7 @@
 void excute_command(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
 void privmsg(std::string message, Client &client, std::map<int, Client> &clients, std::map<std::string, Channel> &channels);
 void broadcastTochannel(Client client, std::string message, std::string channel, std::map<std::string, Channel> &channels);
-void topic(std::string& command, Client& client, std::map<std::string, Channel>& channels, std::map<int, Client>& clients);
+void topic(std::string &command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
 /**
  * @brief join a channel
  * @param client the client who wants to join the channel
