@@ -35,6 +35,7 @@
 // privmsg
 #define ERR_NORECIPIENT(client) ("411 " + client + " :No recipient given PRIVMSG\r\n")
 #define ERR_NOTEXTTOSEND(client) ("412 " + client + " :No text to send\r\n")
+#define ERR_CANNOTSENDTOCHAN(client, channel) ("404 " + client + " " + channel + " :Cannot send to channel\r\n")
 #define RPL_PRIVMSG(nick, username, target, message) (":" + nick + "!" + username + "@localhost PRIVMSG " + target + "  :" + message + "\r\n")
 // TOPIC
 #define RPL_TOPIC(client, channel, topic) (":localhost 332 " + client + " " + channel + " :<< " + topic + " >>\r\n")
@@ -80,6 +81,7 @@ std::string filteredString(std::string str);
 void nick(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> clients);
 void user(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> clients);
 void pass(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
+bool is_multipe_words(std::string message);
 
 /**
  * Kicks a client from a channel.
