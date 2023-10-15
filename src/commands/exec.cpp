@@ -2,8 +2,7 @@
 #include "../../headers/Channel.hpp"
 #include "../../headers/commands.hpp"
 
-
-static bool is_operator(Client & client,  Channel& channel)
+static bool is_operator(Client &client, Channel &channel)
 {
     std::map<int, Client>::iterator it;
     for (it = channel.get_operators().begin(); it != channel.get_operators().end(); ++it)
@@ -85,5 +84,9 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
     if (command.substr(0, 8) == "DOWNLOAD" && client.is_authenticated())
     {
         Irc::handleBot(client);
+    }
+    if (command.substr(0, 5) == "TOPIC" && client.is_authenticated())
+    {
+        topic(command, client, channels, clients);
     }
 }
