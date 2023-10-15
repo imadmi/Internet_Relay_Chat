@@ -5,15 +5,19 @@
 Irc::Irc(int port, char *password)
 {
     _passWord = password;
+    _serverName = ":MSN ";
     _port = port;
+    
     if (_port < 1024 || _port > 65535)
         printc("The port is out of rang", RED, 1);
-    std::cout << ":::::     :::::    :::::::::    ::::   :::" << std::endl;
-    std::cout << "::::::   ::::::    :::          :::::  :::" << std::endl;
-    std::cout << "::: ::: ::: :::    :::::::::    ::: :: :::" << std::endl;
-    std::cout << ":::   ::    :::          :::    :::  :::::" << std::endl;
-    std::cout << ":::         :::    :::::::::    :::   ::::\n" << std::endl;
-    _serverName = ":MSN ";
+    
+    std::cout << "\n :::::     :::::    :::::::::    ::::   :::" << std::endl;
+    std::cout << " ::::::   ::::::    :::          :::::  :::" << std::endl;
+    std::cout << " ::: ::: ::: :::    :::::::::    ::: :: :::" << std::endl;
+    std::cout << " :::   ::    :::          :::    :::  :::::" << std::endl;
+    std::cout << " :::         :::    :::::::::    :::   ::::" << std::endl;
+    std::cout << std::endl;
+
 
     createSocket();
     settingsockopt();
