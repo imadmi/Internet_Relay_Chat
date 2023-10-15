@@ -5,9 +5,9 @@
 #include <unistd.h>
 #define BUFFER_SIZE 1000
 
-int main(int argc, const char *argv[])
+int main(int ac, const char *av[])
 {
-    if (argc != 4)
+    if (ac != 4)
     {
         std::cout << "Usage: ./DwnloadBot <client_fd> <client_nickname> <file_path>" << std::endl;
         std::string a;
@@ -15,19 +15,19 @@ int main(int argc, const char *argv[])
         return (EXIT_FAILURE);
     }
 
-    int clientFd = std::atoi(argv[1]);
+    int clientFd = std::atoi(av[1]);
     if (clientFd < 3 || clientFd > 1000)
      {
         std::cout << "Error in client fd" <<  std::endl;
         return (EXIT_FAILURE);
     }
-    std::string nick(argv[2]);
+    std::string nick(av[2]);
     if (nick.empty())
     {
         std::cout << "Nick name should not be empty" <<  std::endl;
         return (EXIT_FAILURE);
     }
-    std::string file_path(argv[3]);
+    std::string file_path(av[3]);
     if (file_path.empty())
     {
         std::cout << "file path should not be empty" <<  std::endl;
