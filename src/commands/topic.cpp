@@ -70,6 +70,7 @@ void topic(std::string &command, Client &client, std::map<std::string, Channel> 
 {
     std::string channel_name = filteredString(extract_channel_name(command));
     std::string topic = extract_topic(command.substr(5 + channel_name.length(), command.length() - 5 - channel_name.length()));
+    topic = is_multipe_words(topic) ? topic.substr(1, topic.length() - 2) : topic;
     if (!channel_name.empty() && channels.find(channel_name) != channels.end())
     {
         if (is_in_channel(client, channels[channel_name]) == false)

@@ -81,6 +81,7 @@ std::string filteredString(std::string str);
 void nick(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> clients);
 void user(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> clients);
 void pass(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
+bool is_multipe_words(std::string message);
 
 /**
  * Kicks a client from a channel.
