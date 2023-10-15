@@ -35,47 +35,54 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
         nick(command, client, channels, clients);
     else if (command.substr(0, 4) == "USER")
         user(command, client, channels, clients);
-    else if (command.substr(0, 4) == "JOIN")
+
+
+    else if (command.substr(0, 4) == "JOIN" && client.is_authenticated())
     {
         join(command, client, channels);
     }
-    else if (command.substr(0, 4) == "KICK")
+    else if (command.substr(0, 4) == "KICK" && client.is_authenticated())
     {
         kick(command, client, channels);
     }
     // INVITE
-    if (command.substr(0, 6) == "INVITE")
+    if (command.substr(0, 6) == "INVITE" && client.is_authenticated())
     {
         invite(command, client, channels, clients);
     }
-    if (command.substr(0, 4) == "MODE")
+    if (command.substr(0, 4) == "MODE" && client.is_authenticated())
     {
         mode(command, client, channels);
     }
-    if (client.is_authenticated())
-    {
-        send(client.get_fd(), client.get_buff_to_send().c_str(), client.get_buff_to_send().length(), 0);
-        client.set_buff_to_send("");
-    }
-
     if (command.substr(0, 7) == "PRIVMSG" && client.is_authenticated())
     {
         privmsg(command, client, clients, channels);
     }
-    if (command.substr(0, 7) == "LOGTIME" && client.is_authenticated())
+    if (filteredString(command) == "LOGTIME" && client.is_authenticated())
     {
         Irc::handleLogTime(client);
     }
-    if (command.substr(0, 6) == "QUOTES" && client.is_authenticated())
+    if (filteredString(command) == "QUOTES" && client.is_authenticated())
     {
         Irc::handleQuotes(client);
     }
-    if (command.substr(0, 8) == "DOWNLOAD" && client.is_authenticated())
+    if (filteredString(command) == "DOWNLOAD" && client.is_authenticated())
     {
         Irc::handleBot(client);
     }
     if (command.substr(0, 5) == "TOPIC" && client.is_authenticated())
     {
         topic(command, client, channels, clients);
+    }
+    // else
+    // {
+    //     // send(client.get_fd(), );
+    // }
+
+
+    if (client.is_authenticated())
+    {
+        send(client.get_fd(), client.get_buff_to_send().c_str(), client.get_buff_to_send().length(), 0);
+        client.set_buff_to_send("");
     }
 }
