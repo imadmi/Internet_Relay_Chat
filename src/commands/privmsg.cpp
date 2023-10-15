@@ -19,6 +19,21 @@ void broadcastTochannel(Client client , std::string message, std::string channel
         send(client.get_fd(), ERR_NOSUCHCHANNEL(client.get_nickname(), channel).c_str(), ERR_NOSUCHCHANNEL(client.get_nickname(), channel).length(), 0);
 }
 
+bool is_on_channel(Client &client, Channel &channel)
+{
+    std::map<int, Client> clients = channel.get_clients();
+
+    for (std::map<int, Client>::iterator it = clients.begin(); it != clients.end(); ++it)
+    {
+        if (it->second.get_nickname() == client.get_nickname())
+        {
+            return true;
+        }
+    }
+
+    return false;
+}
+
 void broadcastTochannel_1(Client client , std::string message, std::string channel, std::map<std::string, Channel> &channels)
 {
     std::cout << channel << std::endl;
@@ -140,8 +155,10 @@ void privmsg(std::string message, Client &client , std::map<int, Client> &client
     {
          if(to_send.empty())
             send(client.get_fd(), ERR_NOTEXTTOSEND(client.get_nickname()).c_str(), ERR_NOTEXTTOSEND(client.get_nickname()).length(), 0);
-        else
+        else if(is_on_channel(client, channels[channel_name]))
             broadcastTochannel_1(client,RPL_PRIVMSG(client.get_nickname(), client.get_username(), channel_name,  to_send), channel_name, channels);
+        else
+            send(client.get_fd(), ERR_CANNOTSENDTOCHAN(client.get_nickname(), channel_name).c_str(), ERR_CANNOTSENDTOCHAN(client.get_nickname(), channel_name).length(), 0);
     }
 }
 
