@@ -7,7 +7,7 @@
 #define ERR_ERRONEUSNICKNAME(client, nickname) (": 432 " + client + " " + nickname + " :Erroneus nickname\r\n")
 #define RPL_NICK(oclient, uclient, client) (": " + oclient + "!" + uclient + "@localhost NICK " + client + "\r\n")
 #define ERR_NICKNAMEINUSE(client, nickname) (": 433 " + client + " " + nickname + " :Nickname is already in use.\r\n")
-#define RPL_WELCOME(user_forma, nickname) (": 001 " + nickname + " :Welcome to the Internet Relay Network " + user_forma + "\r\n")
+#define RPL_WELCOME(user_forma, nickname) (": 001 " + nickname + " :Welcome " + nickname + " to the Internet Relay Chat " + user_forma + "\r\n")
 #define RPL_YOURHOST(client, servername) (": 002 " + client + " :Your host is " + servername + "\r\n")
 #define RPL_CREATED(client, datetime) (": 003 " + client + " :This server was created " + datetime + "\r\n")
 // channels

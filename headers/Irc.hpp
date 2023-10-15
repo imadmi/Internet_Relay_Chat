@@ -2,13 +2,6 @@
 #pragma once
 
 /* includes */
-
-// #include <sys/types.h>
-// #include <netinet/in.h>
-// #include <netdb.h>
-// #include <cstring>
-// #include <cstdlib>
-// #include <cerrno>
 #include <ctime>
 #include <sys/time.h>
 #include <iostream>
@@ -23,7 +16,6 @@
 #include <fcntl.h>
 #include <pthread.h>
 
-
 /* colors */
 #define RESET "\033[0m"
 #define RED "\033[0;31m"
@@ -34,6 +26,7 @@
 #define BLUE "\033[0;34m"
 #define PURPLE "\033[0;35m"
 
+#define FILE_PATH "/Users/imimouni/Desktop/Internet_Relay_Chat/Makefile"
 #define BUFFER_SIZE 20
 #define MAX_CLIENTS 10
 #define PRINT(x) std::cout << x << std::endl;

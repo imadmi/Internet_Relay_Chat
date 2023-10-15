@@ -64,9 +64,6 @@ void user(std::string command, Client &client, std::map<std::string, Channel> &c
             client.set_username(username);
             client.set_authenticated(true);
             client.add_buffer_to_send(RPL_WELCOME(str, client.get_nickname()));
-            client.add_buffer_to_send(RPL_YOURHOST(client.get_nickname(), "1337-ft_irc"));
-            client.add_buffer_to_send(RPL_CREATED(client.get_nickname(), getCurrentTime()));
-            client.add_buffer_to_send(RPL_MYINFO(client.get_nickname(), "localhost", "1.1", "io", "kost", "k"));
         }
     }
 }

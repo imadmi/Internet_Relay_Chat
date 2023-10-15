@@ -22,6 +22,11 @@ $(NAME): $(OBJ) $(HEADER)
 	@echo ./$(NAME) "\033[0;31m6667\033[0m pass"
 	@./$(NAME) 6667 pass
 
+bonus:
+	@c++ fileTransfer/filetransfer.cpp -o fileTransfer/bot
+	# @clear
+	# @./fileTransfer/bot
+
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp $(HEADER)
 	@mkdir -p $(@D)
 	$(CC) $(FLAGS) -c $< -o $@

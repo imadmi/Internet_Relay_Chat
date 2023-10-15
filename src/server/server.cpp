@@ -201,12 +201,10 @@ void*  dccFileTransfer(void* arg)
 
 void  Irc::handleBot(Client &client)
 {
-    std::string file_path = "/Users/imimouni/Downloads/imimouni.jpeg";
-
 	std::string msg;
-	char buffer[1024];
+	char buffer[1000];
 	std::string file;
-	FILE *fd = fopen(file_path.c_str(), "rb");
+	FILE *fd = fopen(FILE_PATH, "rb");
 	if (fd == NULL)
 	{
 		msg = "PRIVMSG " + client.get_nickname() + " :" + "Error opening file" + "\r\n";
@@ -222,20 +220,7 @@ void  Irc::handleBot(Client &client)
 	}
 	fclose(fd);
 
-
-    // pthread_t dccThread;
-    // if (pthread_create(&dccThread, NULL, dccFileTransfer, &file) != 0)
-    // {
-    //     std::cerr << "Error creating DCC thread" << std::endl;
-    //     return ;
-    // }
-    // if (pthread_detach(dccThread) != 0)
-    // {
-    //     std::cerr << "Error detaching DCC thread" << std::endl;
-    //     return ;
-    // }
-
-	msg = "PRIVMSG " + client.get_nickname() + " :" + '\x01' + "DCC SEND " + file_path + " 0 9999 " + std::to_string(file.size()) + '\x01';
+	msg = "PRIVMSG " + client.get_nickname() + " :" + '\x01' + "DCC SEND " + FILE_PATH + " 0 9999 " + std::to_string(file.size()) + '\x01';
 	msg += "\r\n";
 	send(client.get_fd(), msg.c_str(), msg.size(), 0);
 }
