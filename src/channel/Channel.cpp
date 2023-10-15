@@ -162,3 +162,8 @@ void Channel::set_limit(int limit)
 {
     this->_limit = limit;
 }
+
+void Channel::set_topic(std::string topic)
+{
+    this->_topic = topic;
+}
