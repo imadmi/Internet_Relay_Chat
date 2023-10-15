@@ -97,5 +97,6 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
         std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " " + it->second.get_mode_string() + "\r\n";
         send(client.get_socket_fd(), message.c_str(), message.size(), 0);
     }
+
     return (0);
 }
