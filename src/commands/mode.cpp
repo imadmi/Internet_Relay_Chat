@@ -120,4 +120,16 @@ void mode(std::string command, Client &client, std::map<std::string, Channel> &c
         std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " " + modePart + " " + valuePart + "\r\n";
         broadcastTochannel(client, message, channel_name, channels);
     }
+    if (modePart == "+t" && !valuePart.empty())
+    {
+        channel.set_mode('t', '+');
+        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " " + valuePart + "\r\n";
+        broadcastTochannel(client, message, channel_name, channels);
+    }
+    if (modePart == "-t" && !valuePart.empty())
+    {
+        channel.set_mode('t', '-');
+        std::string message = ":" + client.get_nickname() + " MODE " + channel_name + " " + valuePart + "\r\n";
+        broadcastTochannel(client, message, channel_name, channels);
+    }
 }
