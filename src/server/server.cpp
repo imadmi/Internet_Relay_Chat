@@ -11,12 +11,12 @@ Irc::Irc(int port, char *password)
     if (_port < 1024 || _port > 65535)
         printc("The port is out of rang", RED, 1);
     
-    std::cout << "\n :::::     :::::    :::::::::    ::::   :::" << std::endl;
-    std::cout << " ::::::   ::::::    :::          :::::  :::" << std::endl;
-    std::cout << " ::: ::: ::: :::    :::::::::    ::: :: :::" << std::endl;
-    std::cout << " :::   ::    :::          :::    :::  :::::" << std::endl;
-    std::cout << " :::         :::    :::::::::    :::   ::::" << std::endl;
-    std::cout << std::endl;
+    std::cout << GREEN << "\n :::::    :::::    :::::::::    ::::   :::" << std::endl;
+    std::cout << " ::::::  ::::::    :::          :::::  :::" << std::endl;
+    std::cout << " ::: :::::: :::    :::::::::    ::: :: :::" << std::endl;
+    std::cout << " :::   ::   :::          :::    :::  :::::" << std::endl;
+    std::cout << " :::        :::    :::::::::    :::   ::::" << std::endl;
+    std::cout << RESET<< std::endl;
 
 
     createSocket();
@@ -65,27 +65,6 @@ void Irc::listeningToClients()
         printc("ERROR : listen", RED, 1);
 }
 
-int open_bot_fd()
-{
-    const char* filename = "bot"; // Replace with the path to your file
-
-    int fd = open(filename, O_CREAT | O_RDWR, S_IRUSR | S_IWUSR);
-
-    if (fd == 4)
-    {
-        return fd;
-    }
-    else if (fd == -1)
-    {
-        std::cerr << "Failed to open the file: " << std::strerror(errno) << std::endl;
-        std::exit(1);
-    }
-    else
-    {
-        std::cerr << "File descriptor is not 4. Make sure it's available." << std::endl;
-        std::exit(1);
-    }
-}
 void Irc::runServer()
 {
     pollfd serverPoll;
