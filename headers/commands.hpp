@@ -3,7 +3,8 @@
 #include "Irc.hpp"
 #include "Channel.hpp"
 #define user_forma(nickname, username) (":" + nickname + "!" + username + "@localhost")
-#define ERR_NONICKNAMEGIVEN(client) (": 431 " + client + " :There is no nickname.\r\n")
+#define ERR_UNKNOWNCOMMAND(command) (": 421 " + command + " :Unknown command\r\n")
+#define ERR_NONICKNAMEGIVEN ": 431 :There is no nickname.\r\n"
 #define ERR_ERRONEUSNICKNAME(client, nickname) (": 432 " + client + " " + nickname + " :Erroneus nickname\r\n")
 #define RPL_NICK(oclient, uclient, client) (": " + oclient + "!" + uclient + "@localhost NICK " + client + "\r\n")
 #define ERR_NICKNAMEINUSE(client, nickname) (": 433 " + client + " " + nickname + " :Nickname is already in use.\r\n")
@@ -39,8 +40,6 @@
 #define RPL_PRIVMSG(nick, username, target, message) (":" + nick + "!" + username + "@localhost PRIVMSG " + target + "  :" + message + "\r\n")
 // TOPIC
 #define RPL_TOPIC(client, channel, topic) (":localhost 332 " + client + " " + channel + " :<< " + topic + " >>\r\n")
-#define RPL_NOTOPIC(client, channel) (":localhost 331 " + client + channel + " :No topic is set\r\n")
-#define ERR_TOPIC(client, channel) (":localhost 442 " + client + channel + " :You're not on that channel.\r\n")
 /**
  * @brief execute the command given by the client
  * @param command the command to execute

@@ -46,38 +46,39 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
         kick(command, client, channels);
     }
     // INVITE
-    if (command.substr(0, 6) == "INVITE" && client.is_authenticated())
+    else if (command.substr(0, 6) == "INVITE" && client.is_authenticated())
     {
         invite(command, client, channels, clients);
     }
-    if (command.substr(0, 4) == "MODE" && client.is_authenticated())
+    else if (command.substr(0, 4) == "MODE" && client.is_authenticated())
     {
         mode(command, client, channels);
     }
-    if (command.substr(0, 7) == "PRIVMSG" && client.is_authenticated())
+    else if (command.substr(0, 7) == "PRIVMSG" && client.is_authenticated())
     {
         privmsg(command, client, clients, channels);
     }
-    if (filteredString(command) == "LOGTIME" && client.is_authenticated())
+    else if (filteredString(command) == "LOGTIME" && client.is_authenticated())
     {
         Irc::handleLogTime(client);
     }
-    if (filteredString(command) == "QUOTES" && client.is_authenticated())
+    else if (filteredString(command) == "QUOTES" && client.is_authenticated())
     {
         Irc::handleQuotes(client);
     }
-    if (filteredString(command) == "DOWNLOAD" && client.is_authenticated())
+    else if (filteredString(command) == "DOWNLOAD" && client.is_authenticated())
     {
         Irc::handleBot(client);
     }
-    if (command.substr(0, 5) == "TOPIC" && client.is_authenticated())
+    else if (command.substr(0, 5) == "TOPIC" && client.is_authenticated())
     {
         topic(command, client, channels, clients);
     }
-    // else
-    // {
-    //     // send(client.get_fd(), );
-    // }
+    else
+    {
+        
+        send(client.get_fd(), ERR_UNKNOWNCOMMAND(command.substr(0, command.find(" "))).c_str(), ERR_UNKNOWNCOMMAND(command.substr(0, command.find(" "))).length(), 0);
+    }
 
 
     if (client.is_authenticated())
