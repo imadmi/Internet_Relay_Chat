@@ -17,6 +17,7 @@ Channel::Channel(std::string channel_name)
     _modes['l'] = '+';
     _limit = 10;
     _key = "pass";
+    _topic = "awesome likfd dff ";
 }
 
 Channel::~Channel()

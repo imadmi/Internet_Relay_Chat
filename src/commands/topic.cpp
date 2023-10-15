@@ -17,7 +17,7 @@ static bool is_in_channel(Client client, Channel channel)
 static bool is_operator(Client &client, Channel &channel)
 {
     std::map<int, Client> operators = channel.get_operators();
-    
+
     for (std::map<int, Client>::iterator it = operators.begin(); it != operators.end(); ++it)
     {
         if (it->second.get_nickname() == client.get_nickname())
@@ -25,10 +25,9 @@ static bool is_operator(Client &client, Channel &channel)
             return true;
         }
     }
-    
+
     return false;
 }
-
 
 static std::string extract_channel_name(std::string command)
 {
@@ -78,11 +77,15 @@ void topic(std::string &command, Client &client, std::map<std::string, Channel> 
             send(client.get_fd(), ERR_NOTONCHANNEL(client.get_nickname(), channel_name).c_str(), ERR_NOTONCHANNEL(client.get_nickname(), channel_name).length(), 0);
             return;
         }
-        else if (!topic.empty() && is_operator(client, channels[channel_name]))
+        else if (!topic.empty() && (is_operator(client, channels[channel_name]) || channels[channel_name].get_signe_mode('t') == '-'))
         {
             channels[channel_name].set_topic(topic);
-            std::cout << "channel: " <<  channels[channel_name].get_topic() << std::endl;
             send(client.get_fd(), RPL_TOPIC(client.get_nickname(), channel_name, topic).c_str(), RPL_TOPIC(client.get_nickname(), channel_name, topic).length(), 0);
+        }
+        else if (!topic.empty() && !is_operator(client, channels[channel_name]))
+        {
+            send(client.get_fd(), ERR_CHANOPRIVSNEEDED(client.get_nickname(), channel_name).c_str(), ERR_CHANOPRIVSNEEDED(client.get_nickname(), channel_name).length(), 0);
+            return;
         }
         else if (topic.empty())
         {
@@ -90,9 +93,8 @@ void topic(std::string &command, Client &client, std::map<std::string, Channel> 
             return;
         }
     }
-    else if (channels.find(channel_name) == channels.end())
+    else if (channels.find(channel_name) == channels.end() && !channel_name.empty())
         send(client.get_fd(), ERR_NOSUCHCHANNEL(client.get_nickname(), channel_name).c_str(), ERR_NOSUCHCHANNEL(client.get_nickname(), channel_name).length(), 0);
     else
         send(client.get_fd(), ERR_NEEDMOREPARAMS(client.get_nickname(), "TOPIC").c_str(), ERR_NEEDMOREPARAMS(client.get_nickname(), "TOPIC").length(), 0);
-    std::cout<< YELLOW<< "is operator :"<<is_operator(client, channels[channel_name])<<std::endl;
 }
