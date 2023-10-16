@@ -26,7 +26,7 @@
 #define BLUE "\033[0;34m"
 #define PURPLE "\033[0;35m"
 
-#define FILE_PATH "/Users/imimouni/Desktop/Internet_Relay_Chat/Makefile"
+#define FILE_PATH "/Users/imimouni/Downloads/zoro.jpeg"
 #define BUFFER_SIZE 20
 #define MAX_CLIENTS 100
 #define PRINT(x) std::cout << x << std::endl;
