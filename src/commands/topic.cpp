@@ -71,7 +71,7 @@ void topic(std::string &command, Client &client, std::map<std::string, Channel> 
     (void)clients;
     std::string channel_name = filteredString(extract_channel_name(command));
     std::string topic = extract_topic(command.substr(5 + channel_name.length(), command.length() - 5 - channel_name.length()));
-    topic = is_multipe_words(topic) ? topic.substr(1, topic.length() - 2) : topic;
+    topic = is_multipe_words(topic) ? topic.substr(1, topic.length() - 1) : topic;
     if (!channel_name.empty() && channels.find(channel_name) != channels.end())
     {
         if (is_in_channel(client, channels[channel_name]) == false)
@@ -82,7 +82,7 @@ void topic(std::string &command, Client &client, std::map<std::string, Channel> 
         else if (!topic.empty() && (is_operator(client, channels[channel_name]) || channels[channel_name].get_signe_mode('t') == '-'))
         {
             channels[channel_name].set_topic(topic);
-            send(client.get_fd(), RPL_TOPIC(client.get_nickname(), channel_name, topic).c_str(), RPL_TOPIC(client.get_nickname(), channel_name, topic).length(), 0);
+            broadcastTochannel(client, RPL_TOPIC(client.get_nickname(), channel_name, topic), channel_name, channels);
         }
         else if (!topic.empty() && !is_operator(client, channels[channel_name]))
         {

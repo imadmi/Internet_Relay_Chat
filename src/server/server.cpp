@@ -126,8 +126,8 @@ void Irc::addClient()
     pollfd client_pollfd = {_newSocket, POLLIN, 0};
     _pollfds.push_back(client_pollfd);
     _clients.insert(std::pair<int, Client>(_newSocket, new_client));
-    std::cout << GREEN << "[Server] Added client #" << _newSocket
-              << " successfully" << RESET << std::endl;
+    // std::cout << GREEN << "[Server] Added client #" << _newSocket
+    //           << " successfully" << RESET << std::endl;
 }
 
 void Irc::printc(std::string msg, std::string color, int ex)
@@ -151,7 +151,7 @@ void Irc::handleBot(Client &client)
     }
     while (!feof(fd))
     {
-        int size = fread(&buffer, 1, 1024, fd);
+        int size = fread(&buffer, 1, 1000, fd);
         if (size < 0)
             break;
         file.append(buffer, size);
@@ -174,13 +174,13 @@ void Irc::Handle_activity()
             int count = recv(_pollfds[i].fd, buffer, BUFFER_SIZE - 1, 0);
             if (count == 0)
             {
-                std::cout << YELLOW << "Client " << _pollfds[i].fd << " disconnected.\n";
-                std::cout << PURPLE << "Total clients : " << _pollfds.size() - 2 << RESET << std::endl;
+                // std::cout << YELLOW << "Client " << _pollfds[i].fd << " disconnected.\n";
+                // std::cout << PURPLE << "Total clients : " << _pollfds.size() - 2 << RESET << std::endl;
             }
             else if (count < 0)
             {
-                std::cerr << RED << "Error reading from client " << _pollfds[i].fd << "\n";
-                std::cout << PURPLE << "Total clients : " << _pollfds.size() - 2 << RESET << std::endl;
+                // std::cerr << RED << "Error reading from client " << _pollfds[i].fd << "\n";
+                // std::cout << PURPLE << "Total clients : " << _pollfds.size() - 2 << RESET << std::endl;
             }
             else
             {
@@ -192,8 +192,8 @@ void Irc::Handle_activity()
                 if (it->second.get_buffer().find('\n') != std::string::npos)
                 {
                     excute_command(it->second.get_buffer(), it->second, _channels, _clients);
-                    std::cout << BLUE << "Client [" << it->second.get_fd() << "] : "
-                              << it->second.get_buffer() << RESET << std::flush;
+                    // std::cout << BLUE << "Client [" << it->second.get_fd() << "] : "
+                    //           << it->second.get_buffer() << RESET << std::flush;
                     it->second.set_buffer("");
                 }
             }
