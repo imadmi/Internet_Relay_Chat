@@ -115,14 +115,12 @@ void Channel::print_members()
     std::map<int, Client>::iterator it = this->_clients.begin();
     while (it != this->_clients.end())
     {
-        std::cout << it->second.get_nickname() << std::endl;
         it++;
     }
 }
 
 void Channel::add_invitee(std::string nickname)
 {
-    std::cout << "adding invitee " << nickname << std::endl;
     this->_invitees.push_back(nickname);
 }
 

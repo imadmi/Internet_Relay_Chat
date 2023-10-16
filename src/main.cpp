@@ -3,11 +3,10 @@
 void signal_handler(int signal)
 {
     (void)signal;
-    std::cout << RED << "\nBYE BYE" << RESET << std::endl;
     exit(EXIT_SUCCESS);
 }
 
-static int IsDigit(char * argv)
+static int IsDigit(char *argv)
 {
     for (int i = 0; argv[i] != '\0'; i++)
     {

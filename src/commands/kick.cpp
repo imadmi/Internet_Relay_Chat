@@ -7,7 +7,6 @@ void kick(std::string command, Client &client, std::map<std::string, Channel> &c
     std::string channel_name = command.substr(5, command.find(" ", 5) - 5);
     std::string nickname = command.substr(command.find(" ", 5) + 1, command.length() - command.find(" ", 5) - 1);
     nickname = nickname.substr(0, nickname.find(" "));
-    std::cout << "nickname : " << nickname << std::endl;
     std::string comment = command.substr(command.find(":", 5) + 1, command.length() - command.find(":", 5) - 1);
     // print the first channel in the map
     if (channels.find(channel_name) == channels.end())
@@ -40,6 +39,5 @@ void kick(std::string command, Client &client, std::map<std::string, Channel> &c
         }
         it++;
     }
-    std::cout << "im out " << std::endl;
     client.add_buffer_to_send(ERR_NOSUCHNICK(client.get_nickname(), channel_name));
 }

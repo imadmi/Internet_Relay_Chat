@@ -54,7 +54,6 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
 
             for (std::vector<std::string>::const_iterator it = invitees.begin(); it != invitees.end(); ++it)
             {
-                std::cout << target << std::endl;
                 if (*it == target)
                 {
                     found = true;
@@ -89,7 +88,6 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
     if (it->second.get_topic() != "")
     {
         std::string topic = it->second.get_topic();
-        std::cout << "topic: " << topic << std::endl;
         broadcastTochannel(client, RPL_TOPIC(client.get_nickname(), channel_name, topic), channel_name, channels);
     }
     if (client.is_operator(it->second))

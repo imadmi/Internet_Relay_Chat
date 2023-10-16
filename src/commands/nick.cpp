@@ -55,7 +55,6 @@ void nick(std::string command, Client &client, std::map<std::string, Channel> &c
         {
             client.set_old_nick(client.get_nickname());
             client.set_nickname(nickname);
-            std::cout << "[Server] Nickname change registered. new nickname is now : " << client.get_nickname() << std::endl;
             client.set_buff_to_send(RPL_NICK(client.get_old_nick(), client.get_username(), nickname));
         }
         else if (client.is_authenticated() == true && nickname.empty())
