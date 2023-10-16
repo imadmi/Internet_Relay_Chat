@@ -3,6 +3,7 @@
 void signal_handler(int signal)
 {
     (void)signal;
+    std::cout << RED << "\nBYE BYE" << RESET << std::endl;
     exit(EXIT_SUCCESS);
 }
 

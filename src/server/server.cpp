@@ -130,8 +130,7 @@ void Irc::addClient()
 
 void Irc::printc(std::string msg, std::string color, int ex)
 {
-    (void)msg;
-    (void)color;
+    std::cerr << color << msg << RESET << std::endl;
     if (ex)
         exit(EXIT_SUCCESS);
 }
