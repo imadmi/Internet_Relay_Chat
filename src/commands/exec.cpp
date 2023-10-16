@@ -27,10 +27,10 @@ std::string filteredString(std::string str)
     return filteredString;
 }
 
-void excute_command(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients)
+void excute_command(std::string password , std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients)
 {
     if (command.substr(0, 4) == "PASS")
-        pass(command, client, channels, clients);
+        pass(password, command, client, channels, clients);
     else if (command.substr(0, 4) == "NICK")
         nick(command, client, channels, clients);
     else if (command.substr(0, 4) == "USER")
