@@ -20,7 +20,6 @@ $(NAME): $(OBJ) $(HEADER)
 	@$(CC) $(FLAGS) $(OBJ) -o $@
 	@clear
 	@echo ./$(NAME) "\033[0;31m6667\033[0m pass"
-	@./$(NAME) 6667 pass
 
 bonus:
 	@c++ fileTransfer/filetransfer.cpp -o fileTransfer/bot
