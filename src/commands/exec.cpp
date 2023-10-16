@@ -74,14 +74,15 @@ void excute_command(std::string command, Client &client, std::map<std::string, C
     {
         topic(command, client, channels, clients);
     }
-    else
+
+    else if (filteredString(command.substr(0, 4))!= "QUIT")
     {
         
         send(client.get_fd(), ERR_UNKNOWNCOMMAND(command.substr(0, command.find(" "))).c_str(), ERR_UNKNOWNCOMMAND(command.substr(0, command.find(" "))).length(), 0);
     }
 
 
-    if (client.is_authenticated())
+    if (client.is_authenticated() && !client.get_buff_to_send().empty())
     {
         send(client.get_fd(), client.get_buff_to_send().c_str(), client.get_buff_to_send().length(), 0);
         client.set_buff_to_send("");
