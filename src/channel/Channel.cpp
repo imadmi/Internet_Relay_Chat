@@ -17,7 +17,7 @@ Channel::Channel(std::string channel_name)
     _modes['l'] = '+';
     _limit = 10;
     _key = "pass";
-    _topic = "awesome likfd dff ";
+    _topic = " ";
 }
 
 Channel::~Channel()
@@ -135,6 +135,8 @@ std::string Channel::get_clients_nick()
     std::map<int, Client>::iterator it = this->_clients.begin();
     while (it != this->_clients.end())
     {
+        if (this->get_operators().find(it->first) != this->get_operators().end())
+            str_list += "@";
         str_list += it->second.get_nickname();
         if (++it != this->_clients.end())
             str_list += " ";
