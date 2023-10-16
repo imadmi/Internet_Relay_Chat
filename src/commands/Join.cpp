@@ -47,14 +47,12 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
         }
         if (it->second.get_signe_mode('i') == '+')
         {
-            // if the client is not invited reject it
             const std::vector<std::string> &invitees = it->second.get_invitees();
             std::string target = client.get_nickname();
             bool found = false;
 
             for (std::vector<std::string>::const_iterator it = invitees.begin(); it != invitees.end(); ++it)
             {
-                std::cout << target << std::endl;
                 if (*it == target)
                 {
                     found = true;
@@ -83,13 +81,12 @@ int join(std::string command, Client &client, std::map<std::string, Channel> &ch
         return (1);
     }
 
-    broadcastTochannel(client, RPL_JOIN(client.get_nickname(), channel_name), channel_name, channels);
+    broadcastTochannel(client, RPL_JOIN(user_forma(client.get_nickname(), client.get_username()), client.get_nickname(), channel_name), channel_name, channels);
     std::string nick_list = it->second.get_clients_nick();
     broadcastTochannel(client, RPL_NAMREPLY(client.get_nickname(), channel_name, nick_list), channel_name, channels);
     if (it->second.get_topic() != "")
     {
         std::string topic = it->second.get_topic();
-        std::cout << "topic: " << topic << std::endl;
         broadcastTochannel(client, RPL_TOPIC(client.get_nickname(), channel_name, topic), channel_name, channels);
     }
     if (client.is_operator(it->second))

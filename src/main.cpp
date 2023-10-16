@@ -7,7 +7,7 @@ void signal_handler(int signal)
     exit(EXIT_SUCCESS);
 }
 
-static int IsDigit(char * argv)
+static int IsDigit(char *argv)
 {
     for (int i = 0; argv[i] != '\0'; i++)
     {

@@ -12,7 +12,7 @@ bool is_multipe_words(std::string message)
     return false;
 }
 
-void broadcastTochannel(Client client , std::string message, std::string channel, std::map<std::string, Channel> &channels)
+void broadcastTochannel(Client client, std::string message, std::string channel, std::map<std::string, Channel> &channels)
 {
     std::map<std::string, Channel>::iterator it = channels.find(channel);
     if (it != channels.end())
@@ -43,9 +43,8 @@ bool is_on_channel(Client &client, Channel &channel)
     return false;
 }
 
-void broadcastTochannel_1(Client client , std::string message, std::string channel, std::map<std::string, Channel> &channels)
+void broadcastTochannel_1(Client client, std::string message, std::string channel, std::map<std::string, Channel> &channels)
 {
-    std::cout << channel << std::endl;
     std::map<std::string, Channel>::iterator it = channels.find(channel);
     if (it != channels.end())
     {
@@ -111,7 +110,6 @@ void privmsg_user(std::string to_send, Client &client, std::map<int, Client> &cl
         {
             if (it2->second.get_nickname() == receiver)
             {
-                // std::cout<<RED<< receiver<<std::endl;
                 send(it2->second.get_fd(), RPL_PRIVMSG(client.get_nickname(), client.get_username(), receiver, to_send).c_str(), RPL_PRIVMSG(client.get_nickname(), client.get_username(), receiver, to_send).length(), 0);
                 break;
             }
@@ -127,14 +125,14 @@ void privmsg(std::string message, Client &client, std::map<int, Client> &clients
 {
     int spaces = 0;
     std::string receiver = extractName(message.substr(8, message.length() - 8), &spaces);
-    std::string channel_name =receiver.find("#") == std::string::npos ? "" :receiver;
-    std::string to_send = message.substr(8 + receiver.length() + 1 + spaces , message.length());
+    std::string channel_name = receiver.find("#") == std::string::npos ? "" : receiver;
+    std::string to_send = message.substr(8 + receiver.length() + 1 + spaces, message.length());
 
     std::map<int, Client>::iterator it2;
 
     to_send = (is_multipe_words(to_send) ? to_send.substr(1, to_send.length() - 1) : to_send);
-    
-    if( receiver.empty() && channel_name.empty())
+
+    if (receiver.empty() && channel_name.empty())
         send(client.get_fd(), ERR_NORECIPIENT(client.get_nickname()).c_str(), ERR_NORECIPIENT(client.get_nickname()).length(), 0);
     else if (!receiver.empty() && channel_name.empty())
     {
@@ -144,8 +142,8 @@ void privmsg(std::string message, Client &client, std::map<int, Client> &clients
     {
         if (to_send.empty())
             send(client.get_fd(), ERR_NOTEXTTOSEND(client.get_nickname()).c_str(), ERR_NOTEXTTOSEND(client.get_nickname()).length(), 0);
-        else if(is_on_channel(client, channels[channel_name]))
-            broadcastTochannel_1(client,RPL_PRIVMSG(client.get_nickname(), client.get_username(), channel_name,  to_send), channel_name, channels);
+        else if (is_on_channel(client, channels[channel_name]))
+            broadcastTochannel_1(client, RPL_PRIVMSG(client.get_nickname(), client.get_username(), channel_name, to_send), channel_name, channels);
         else
             send(client.get_fd(), ERR_CANNOTSENDTOCHAN(client.get_nickname(), channel_name).c_str(), ERR_CANNOTSENDTOCHAN(client.get_nickname(), channel_name).length(), 0);
     }
