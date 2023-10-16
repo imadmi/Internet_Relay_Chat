@@ -191,7 +191,7 @@ void Irc::Handle_activity()
                     recvClientsMsg(it->second, message);
                 if (it->second.get_buffer().find('\n') != std::string::npos)
                 {
-                    excute_command(it->second.get_buffer(), it->second, _channels, _clients);
+                    excute_command(this->getPassword(),it->second.get_buffer(), it->second, _channels, _clients);
                     // std::cout << BLUE << "Client [" << it->second.get_fd() << "] : "
                     //           << it->second.get_buffer() << RESET << std::flush;
                     it->second.set_buffer("");

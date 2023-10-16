@@ -142,6 +142,10 @@ public:
 
     // handleBot
     static void handleBot(Client &);
+    std::string getPassword()
+    {
+        return _passWord;
+    };
 };
 
 void *dccFileTransfer(void *arg);

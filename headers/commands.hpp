@@ -47,7 +47,7 @@
  * @param channels the channels of the server
  * @return void
  */
-void excute_command(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
+void excute_command(std::string password, std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
 void privmsg(std::string message, Client &client, std::map<int, Client> &clients, std::map<std::string, Channel> &channels);
 void broadcastTochannel(Client client, std::string message, std::string channel, std::map<std::string, Channel> &channels);
 void topic(std::string &command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
@@ -79,7 +79,7 @@ Client &get_client_by_nickname(std::string &nick, std::map<int, Client> &clients
 std::string filteredString(std::string str);
 void nick(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> clients);
 void user(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> clients);
-void pass(std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
+void pass(std::string password, std::string command, Client &client, std::map<std::string, Channel> &channels, std::map<int, Client> &clients);
 bool is_multipe_words(std::string message);
 
 /**
