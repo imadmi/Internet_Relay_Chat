@@ -31,11 +31,8 @@ void kick(std::string command, Client &client, std::map<std::string, Channel> &c
     {
         if (it->second.get_nickname() == nickname)
         {
-            std::cout << comment << std::endl;
             broadcastTochannel(client, RPL_KICK(client.get_nickname(), channel_name, nickname, comment), channel_name, channels);
             channel.remove_client(it->second);
-
-            // TODO : send a private message to the client
             return;
         }
         it++;
