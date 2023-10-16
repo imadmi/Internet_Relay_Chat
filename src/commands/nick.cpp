@@ -33,7 +33,7 @@ void nick(std::string command, Client &client, std::map<std::string, Channel> &c
 
         if (nickname.empty())
         {
-            client.add_buffer_to_send(ERR_NONICKNAMEGIVEN(client.get_nickname()));
+            send(client.get_fd(), ERR_NONICKNAMEGIVEN , sizeof(ERR_NONICKNAMEGIVEN), 0);
         }
 
         else if (client_already_exist(nickname, clients))
@@ -58,6 +58,6 @@ void nick(std::string command, Client &client, std::map<std::string, Channel> &c
             client.set_buff_to_send(RPL_NICK(client.get_old_nick(), client.get_username(), nickname));
         }
         else if (client.is_authenticated() == true && nickname.empty())
-            send(client.get_fd(), ERR_NONICKNAMEGIVEN(client.get_nickname()).c_str(), ERR_NONICKNAMEGIVEN(client.get_nickname()).length(), 0);
+            send(client.get_fd(), ERR_NONICKNAMEGIVEN , sizeof(ERR_NONICKNAMEGIVEN), 0);
     }
 }
