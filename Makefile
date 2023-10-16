@@ -1,7 +1,7 @@
 
 
 NAME = ircserv
-FLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
+# FLAGS = -Wall -Wextra -Werror -std=c++98 -fsanitize=address
 # FLAGS = -fsanitize=address -std=c++98
 CC = c++  
 OBJ_DIR = obj
@@ -39,6 +39,7 @@ clean:
 
 fclean: clean
 	@rm -f $(NAME)
+	@ rm -rf ./fileTransfer/bot
 	@ clear
 	@echo "\033[0;93mThe object files and the executable are removed.\033[0m"
 

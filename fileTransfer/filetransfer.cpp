@@ -9,8 +9,7 @@ int main(int ac, const char *av[])
 {
     if (ac != 4)
     {
-        std::string a;
-
+        std::cout << "./fileTransfer/bot <serverFd> <nickName> <Pathfile>\n";
         return (EXIT_FAILURE);
     }
 
