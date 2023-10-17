@@ -16,8 +16,6 @@ III. [Mandatory Part](#mandatory-part)
 
 IV. [Bonus Part](#bonus-part)
 
-V. [Submission and Peer-Evaluation](#submission-and-peer-evaluation)
-
 ## Chapter I: Introduction
 
 Internet Relay Chat (IRC) is a text-based communication protocol on the Internet, offering real-time messaging, both public and private. Users can exchange direct messages and join group channels. IRC clients connect to IRC servers to join channels, and these servers form a network.
@@ -59,11 +57,10 @@ Testing should involve various error and issue scenarios, including partial data
 
 Extra features, such as handling file transfers or implementing a bot, can be added to make your IRC server more like an actual IRC server. The bonus part is evaluated only if the mandatory part is perfect.
 
-## Chapter V: Submission and Peer-Evaluation
-
-Submit your project in your Git repository. The work inside your repository will be evaluated during the defense. Creating test programs for your project is encouraged, even though they won't be graded, as they can be helpful during defense and peer evaluation.
-
 ## To run the server:
-``` make && ./ircserv <port> <server_password>
+``` make && ./ircserv <port> <server_password>```
 
-Your reference client will be used during the evaluation process.
+## To transfer data:
+```make bonus && ./fileTransfer/bot <serverFd> <nickName> <Pathfile>```
+
+## The client we used as reference is LimeChat
