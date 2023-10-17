@@ -1,6 +1,6 @@
 # Internet Relay Chat
 
-This project involves creating your own IRC server and testing it with a real IRC client. The Internet operates on solid standard protocols that enable connected computers to interact seamlessly. Developing an IRC server is a valuable exercise in understanding these protocols and real-time communication. 
+This project involves creating our own IRC server and testing it with a real IRC client (we choosed LimeChat). The Internet operates on solid standard protocols that enable connected computers to interact seamlessly. Developing an IRC server is a valuable exercise in understanding these protocols and real-time communication. 
 
 ## Table of Contents
 
@@ -22,7 +22,7 @@ Internet Relay Chat (IRC) is a text-based communication protocol on the Internet
 
 ## Chapter II: General Rules
 
-- Your program should not crash under any circumstances and must not quit unexpectedly.
+- tHE program should not crash under any circumstances and must not quit unexpectedly.
 - A Makefile is required, which should compile your source files without relinking.
 - The Makefile should include rules such as `$(NAME)`, `all`, `clean`, `fclean`, and `re`.
 - Compile your code with `c++` and the flags `-Wall -Wextra -Werror`.
